@@ -1,0 +1,28 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:WPF="clr-namespace:SharpGL.WPF;assembly=SharpGL.WPF" x:Class="WaveDev.ModelR.MainWindow"
+        xmlns:ntc="clr-namespace:Neumann.TouchControls;assembly=Neumann.TouchControls"
+        Title="MainWindow" Height="600" Width="800">
+    <Grid>
+        <WPF:OpenGLControl OpenGLDraw="OnOpenGLControlDraw" OpenGLInitialized="OnOpenGLControlInitialized" MouseLeftButtonDown="OnOpenGLControlMouseLeftButtonDown" MouseRightButtonDown="OnOpenGLControlMouseRightButtonDown"/>
+
+        <!--<ntc:RadialMenuPopup x:Name="MenuPopup" Placement="MousePoint">-->
+            <ntc:RadialMenu x:Name="RadialMenu" Background="Transparent" Visibility="Hidden" Margin="100">
+                <ntc:RadialMenuItem Header="Bild" ImageSource="Images/Picture.png" />
+                <ntc:RadialMenuItem Header="Tabelle" ImageSource="Images/Table.png"/>
+                <ntc:RadialMenuItem Header="Liste" ImageSource="Images/List.png" >
+                    <ntc:RadialMenuItem Header="" ImageSource="Images/List1.png" />
+                    <ntc:RadialMenuItem Header="" ImageSource="Images/List2.png" />
+                    <ntc:RadialMenuItem Header="" ImageSource="Images/List3.png" />
+                    <ntc:RadialMenuItem Header="" ImageSource="Images/List4.png" />
+                    <ntc:RadialMenuItem Header="" ImageSource="Images/List5.png" />
+                    <ntc:RadialMenuItem Header="" ImageSource="Images/List6.png" />
+                    <ntc:RadialMenuItem Header="" ImageSource="Images/List7.png" />
+                    <ntc:RadialMenuItem Header="" ImageSource="Images/List8.png" />
+                </ntc:RadialMenuItem>
+            </ntc:RadialMenu>
+        <!--</ntc:RadialMenuPopup>-->
+
+    </Grid>
+</Window>
