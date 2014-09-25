@@ -1,8 +1,12 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 using SharpGL;
 using SharpGL.SceneGraph;
+using SharpGL.SceneGraph.Core;
 using SharpGL.SceneGraph.Primitives;
+using SharpGL.SceneGraph.Transformations;
+using WaveDev.ModelR.ViewModels;
 
 namespace WaveDev.ModelR
 {
@@ -11,14 +15,24 @@ namespace WaveDev.ModelR
     /// </summary>
     public partial class MainWindow : Window
     {
-        private float _rotation = 0;
+        private SceneModel _model;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            _model = new SceneModel();
+
+            DataContext = _model;
+
+            MenuPopup.Loaded += (s, ee) =>
+            {
+                MenuPopup.IsOpen = true;
+                MenuPopup.IsOpen = false;
+            };
         }
 
-        private void OnOpenGLControlDraw(object sender, OpenGLEventArgs args)
+        private void OnOpenGlControlDraw(object sender, OpenGLEventArgs args)
         {
             OpenGL gl = args.OpenGL;
 
@@ -27,61 +41,81 @@ namespace WaveDev.ModelR
 
             // Move Left And Into The Screen
             gl.LoadIdentity();
-            gl.Translate(0.0f, 0.0f, -6.0f);
+            gl.Rotate(20.0f, 1.0f, 0.0f, 0.0f);
+            gl.Translate(0.0f, -5.0f, -10.0f);
+
+            foreach (var model in _model.SceneObjectModels)
+            {
+                var renderable = model.SceneElement as IRenderable;
+
+                if (renderable != null)
+                    renderable.Render(gl, RenderMode.Design);
 
 
-            gl.Rotate(_rotation, 0.0f, 1.0f, 0.0f);
+                var polygon = model.SceneElement as Polygon;
 
-            Teapot tp = new Teapot();
-            tp.Draw(gl, 14, 1, OpenGL.GL_FILL);
+                if (polygon != null)
+                {
+                    polygon.PushObjectSpace(gl);
 
-            _rotation += 3.0f;
+                    var transformation = new LinearTransformation();
+
+                    transformation.TranslateX = 5;
+                    transformation.Transform(gl);
+
+                    polygon.PopObjectSpace(gl);
+                }
+
+            }
         }
 
-        private void OnOpenGLControlInitialized(object sender, OpenGLEventArgs args)
+        private void OnOpenGlControlInitialized(object sender, OpenGLEventArgs args)
         {
             OpenGL gl = args.OpenGL;
 
             gl.Enable(OpenGL.GL_DEPTH_TEST);
 
-            float[] global_ambient = new float[] { 0.5f, 0.5f, 0.5f, 1.0f };
-            float[] light0pos = new float[] { 0.0f, 5.0f, 10.0f, 1.0f };
-            float[] light0ambient = new float[] { 0.2f, 0.2f, 0.2f, 1.0f };
-            float[] light0diffuse = new float[] { 0.3f, 0.3f, 0.3f, 1.0f };
-            float[] light0specular = new float[] { 0.8f, 0.8f, 0.8f, 1.0f };
+            var globalAmbient = new[] { 0.5f, 0.5f, 0.5f, 1.0f };
+            var light0Position = new[] { 0.0f, 5.0f, 10.0f, 1.0f };
+            var light0Ambient = new[] { 0.2f, 0.2f, 0.2f, 1.0f };
+            var light0Diffuse = new[] { 0.3f, 0.3f, 0.3f, 1.0f };
+            var light0Specular = new[] { 0.8f, 0.8f, 0.8f, 1.0f };
+            var lightAmbient = new[] { 0.2f, 0.2f, 0.2f, 1.0f };
 
-            float[] lmodel_ambient = new float[] { 0.2f, 0.2f, 0.2f, 1.0f };
-            gl.LightModel(OpenGL.GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
-
-            gl.LightModel(OpenGL.GL_LIGHT_MODEL_AMBIENT, global_ambient);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_POSITION, light0pos);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_AMBIENT, light0ambient);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_DIFFUSE, light0diffuse);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPECULAR, light0specular);
+            gl.LightModel(OpenGL.GL_LIGHT_MODEL_AMBIENT, lightAmbient);
+            gl.LightModel(OpenGL.GL_LIGHT_MODEL_AMBIENT, globalAmbient);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_POSITION, light0Position);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_AMBIENT, light0Ambient);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_DIFFUSE, light0Diffuse);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPECULAR, light0Specular);
             gl.Enable(OpenGL.GL_LIGHTING);
             gl.Enable(OpenGL.GL_LIGHT0);
-
             gl.ShadeModel(OpenGL.GL_SMOOTH);
         }
 
-        private void OnOpenGLControlMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void OnOpenGlControlMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (RadialMenu.Visibility == Visibility.Hidden || RadialMenu.Visibility == Visibility.Collapsed)
-            {
-                RadialMenu.Visibility = Visibility.Visible;
-                RadialMenu.IsOpen = true;
-            }
-            else
-            {
-                RadialMenu.IsOpen = false;
-                RadialMenu.Visibility = Visibility.Hidden;
-            }
+            var position = e.GetPosition(this);
+
+            MenuPopup.HorizontalOffset = position.X - (MenuPopup.RenderSize.Width / 2);
+            MenuPopup.VerticalOffset = position.Y - (MenuPopup.RenderSize.Height / 2);
+            MenuPopup.IsOpen = true;
+            MenuPopup.InvalidateVisual();
         }
 
-        private void OnOpenGLControlMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void OnMenuPopupClosed(object sender, EventArgs e)
         {
-            RadialMenu.Visibility = Visibility.Hidden;
+            MenuPopup.IsOpen = false;
+        }
 
+        private void OnCreateTeapotClick(object sender, EventArgs e)
+        {
+            _model.CreateTeapotCommand.Execute(null);
+        }
+
+        private void OnCreateCubeClick(object sender, EventArgs e)
+        {
+            _model.CreateCubeCommand.Execute(null);
         }
     }
 }
