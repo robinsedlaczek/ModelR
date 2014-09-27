@@ -16,6 +16,9 @@ namespace WaveDev.ModelR
     public partial class MainWindow : Window
     {
         private SceneModel _model;
+        private Point _lastPosition;
+        private bool _leftButtonDown;
+        private Point _positionDelta;
 
         public MainWindow()
         {
@@ -42,7 +45,8 @@ namespace WaveDev.ModelR
             // Move Left And Into The Screen
             gl.LoadIdentity();
             gl.Rotate(20.0f, 1.0f, 0.0f, 0.0f);
-            gl.Translate(0.0f, -5.0f, -10.0f);
+            gl.Rotate(-30.0f, 0.0f, 1.0f, 0.0f);
+            gl.Translate(-5.0f, -5.0f, -10.0f);
 
             foreach (var model in _model.SceneObjectModels)
             {
@@ -54,16 +58,18 @@ namespace WaveDev.ModelR
 
                 var polygon = model.SceneElement as Polygon;
 
-                if (polygon != null)
+                if (polygon != null && _leftButtonDown)
                 {
-                    polygon.PushObjectSpace(gl);
+                    //polygon.PushObjectSpace(gl);
 
                     var transformation = new LinearTransformation();
 
-                    transformation.TranslateX = 5;
+                    transformation.TranslateX = (float)_positionDelta.X / 10.0f;
+                    transformation.TranslateY = (float)_positionDelta.Y / 10.0f;
+
                     transformation.Transform(gl);
 
-                    polygon.PopObjectSpace(gl);
+                    //polygon.PopObjectSpace(gl);
                 }
 
             }
@@ -116,6 +122,40 @@ namespace WaveDev.ModelR
         private void OnCreateCubeClick(object sender, EventArgs e)
         {
             _model.CreateCubeCommand.Execute(null);
+        }
+
+        private void OnCreateSphereClick(object sender, EventArgs e)
+        {
+            _model.CreateSphereCommand.Execute(null);
+        }
+
+        private void OnCreatCylinderClick(object sender, EventArgs e)
+        {
+            _model.CreateCylinderCommand.Execute(null);
+        }
+
+        private void OnCreateDiskClick(object sender, EventArgs e)
+        {
+            _model.CreateDiscCommand.Execute(null);
+        }
+
+        private void OnOpenGLControlMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            _leftButtonDown = true;
+        }
+
+        private void OnOpenGLControlMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            _leftButtonDown = false;
+        }
+
+        private void OnOpenGLControlMouseMove(object sender, MouseEventArgs e)
+        {
+            var position = e.GetPosition(OpenGLControl);
+
+            _positionDelta = new Point(position.X - _lastPosition.X, position.Y - _lastPosition.Y);
+
+            _lastPosition = position;
         }
     }
 }

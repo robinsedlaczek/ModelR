@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
+using SharpGL.SceneGraph.Core;
 using SharpGL.SceneGraph.Primitives;
+using SharpGL.SceneGraph.Quadrics;
 
 namespace WaveDev.ModelR.ViewModels
 {
@@ -9,14 +11,21 @@ namespace WaveDev.ModelR.ViewModels
         private ObservableCollection<ObjectModel> _objects;
         private RelayCommand _createTeapotCommand;
         private RelayCommand _createCubeCommand;
+        private RelayCommand _createSphereCommand;
+        private RelayCommand _createCylinderCommand;
+        private RelayCommand _createDiscCommand;
+
+        public SceneModel()
+        {
+            _objects = new ObservableCollection<ObjectModel>();
+
+            CreateObjectModel<Axies>();
+        }
 
         public ObservableCollection<ObjectModel> SceneObjectModels
         {
             get
             {
-                if (_objects == null)
-                    _objects = new ObservableCollection<ObjectModel>();
-
                 return _objects;
             }
         }
@@ -26,7 +35,7 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createTeapotCommand == null)
-                    _createTeapotCommand = new RelayCommand(CreateTeapot, () => true);
+                    _createTeapotCommand = new RelayCommand(CreateObjectModel<Teapot>, () => true);
 
                 return _createTeapotCommand;
             }
@@ -37,26 +46,51 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createCubeCommand == null)
-                    _createCubeCommand = new RelayCommand(CreateCube, () => true);
+                    _createCubeCommand = new RelayCommand(CreateObjectModel<Cube>, () => true);
 
                 return _createCubeCommand;
             }
         }
 
-        private void CreateCube()
+        public ICommand CreateSphereCommand
         {
-            var cube = new Cube();
-            var model = new ObjectModel(cube);
+            get
+            {
+                if (_createSphereCommand == null)
+                    _createSphereCommand = new RelayCommand(CreateObjectModel<Sphere>, () => true);
+
+                return _createSphereCommand;
+            }
+        }
+
+        public ICommand CreateCylinderCommand
+        {
+            get
+            {
+                if (_createCylinderCommand == null)
+                    _createCylinderCommand = new RelayCommand(CreateObjectModel<Cylinder>, () => true);
+
+                return _createCylinderCommand;
+            }
+        }
+
+        public ICommand CreateDiscCommand
+        {
+            get
+            {
+                if (_createDiscCommand == null)
+                    _createDiscCommand = new RelayCommand(CreateObjectModel<Disk>, () => true);
+
+                return _createDiscCommand;
+            }
+        }
+
+        private void CreateObjectModel<T>() where T : SceneElement, new()
+        {
+            var model = new ObjectModel(new T());
 
             _objects.Add(model);
         }
 
-        private void CreateTeapot()
-        {
-            var teapot = new Teapot();
-            var model = new ObjectModel(teapot);
-
-            _objects.Add(model);
-        }
     }
 }

@@ -37,15 +37,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpGL">
-      <HintPath>packages\SharpGLCore.2.3.0.1\lib\net40\SharpGL.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpGL.SceneGraph">
-      <HintPath>packages\SharpGLCore.2.3.0.1\lib\net40\SharpGL.SceneGraph.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpGL.WPF">
-      <HintPath>packages\SharpGLforWPF.2.3.0.1\lib\net40\SharpGL.WPF.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -111,12 +102,28 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SharpGL\source\SharpGL\Core\SharpGL.SceneGraph\SharpGL.SceneGraph.csproj">
+      <Project>{47bcaa39-edad-4404-b6bd-4742b0abb523}</Project>
+      <Name>SharpGL.SceneGraph</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpGL\source\SharpGL\Core\SharpGL.WPF\SharpGL.WPF.csproj">
+      <Project>{53e67055-13d2-4467-bb57-79589afac2cd}</Project>
+      <Name>SharpGL.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpGL\source\SharpGL\Core\SharpGL\SharpGL.csproj">
+      <Project>{5ef45533-e2c7-46f2-b4a3-b8f36cd406e0}</Project>
+      <Name>SharpGL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Neumann.TouchControls\Neumann.TouchControls.csproj">
       <Project>{e66a9455-7aa9-4271-8cd5-06c71d8dd5c8}</Project>
       <Name>Neumann.TouchControls</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\Cylinder.png" />
+    <Resource Include="Images\Disk.png" />
+    <Resource Include="Images\Sphere.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Cube.png" />
     <Resource Include="Images\Teapot.png" />

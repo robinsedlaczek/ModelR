@@ -2,6 +2,7 @@
 using System.Windows.Media.Imaging;
 using SharpGL.SceneGraph.Core;
 using SharpGL.SceneGraph.Primitives;
+using SharpGL.SceneGraph.Quadrics;
 
 namespace WaveDev.ModelR.ViewModels
 {
@@ -48,6 +49,21 @@ namespace WaveDev.ModelR.ViewModels
                 else if (SceneElement is Teapot)
                 {
                     var uri = new Uri("/WaveDev.ModelR;component/Images/Teapot.png", UriKind.Relative);
+                    image = new BitmapImage(uri);
+                }
+                else if (SceneElement is Sphere)
+                {
+                    var uri = new Uri("/WaveDev.ModelR;component/Images/Sphere.png", UriKind.Relative);
+                    image = new BitmapImage(uri);
+                }
+                else if (SceneElement is Cylinder)
+                {
+                    var uri = new Uri("/WaveDev.ModelR;component/Images/Cylinder.png", UriKind.Relative);
+                    image = new BitmapImage(uri);
+                }
+                else if (SceneElement is Disk)
+                {
+                    var uri = new Uri("/WaveDev.ModelR;component/Images/Disk.png", UriKind.Relative);
                     image = new BitmapImage(uri);
                 }
 

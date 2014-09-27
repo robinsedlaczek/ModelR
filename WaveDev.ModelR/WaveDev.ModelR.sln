@@ -14,6 +14,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F58DEE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neumann.TouchControls", "..\Neumann.TouchControls\Neumann.TouchControls.csproj", "{E66A9455-7AA9-4271-8CD5-06C71D8DD5C8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharpGL", "SharpGL", "{430668BC-5619-462D-90DE-913EE9C27386}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGL", "..\..\SharpGL\source\SharpGL\Core\SharpGL\SharpGL.csproj", "{5EF45533-E2C7-46F2-B4A3-B8F36CD406E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGL.SceneGraph", "..\..\SharpGL\source\SharpGL\Core\SharpGL.SceneGraph\SharpGL.SceneGraph.csproj", "{47BCAA39-EDAD-4404-B6BD-4742B0ABB523}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGL.Serialization", "..\..\SharpGL\source\SharpGL\Core\SharpGL.Serialization\SharpGL.Serialization.csproj", "{FDFA2632-A960-4778-A517-CA9E337C037C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGL.WPF", "..\..\SharpGL\source\SharpGL\Core\SharpGL.WPF\SharpGL.WPF.csproj", "{53E67055-13D2-4467-BB57-79589AFAC2CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,8 +38,30 @@ Global
 		{E66A9455-7AA9-4271-8CD5-06C71D8DD5C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E66A9455-7AA9-4271-8CD5-06C71D8DD5C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E66A9455-7AA9-4271-8CD5-06C71D8DD5C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EF45533-E2C7-46F2-B4A3-B8F36CD406E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EF45533-E2C7-46F2-B4A3-B8F36CD406E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EF45533-E2C7-46F2-B4A3-B8F36CD406E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EF45533-E2C7-46F2-B4A3-B8F36CD406E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47BCAA39-EDAD-4404-B6BD-4742B0ABB523}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47BCAA39-EDAD-4404-B6BD-4742B0ABB523}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47BCAA39-EDAD-4404-B6BD-4742B0ABB523}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47BCAA39-EDAD-4404-B6BD-4742B0ABB523}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDFA2632-A960-4778-A517-CA9E337C037C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDFA2632-A960-4778-A517-CA9E337C037C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDFA2632-A960-4778-A517-CA9E337C037C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDFA2632-A960-4778-A517-CA9E337C037C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53E67055-13D2-4467-BB57-79589AFAC2CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53E67055-13D2-4467-BB57-79589AFAC2CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53E67055-13D2-4467-BB57-79589AFAC2CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53E67055-13D2-4467-BB57-79589AFAC2CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5EF45533-E2C7-46F2-B4A3-B8F36CD406E0} = {430668BC-5619-462D-90DE-913EE9C27386}
+		{47BCAA39-EDAD-4404-B6BD-4742B0ABB523} = {430668BC-5619-462D-90DE-913EE9C27386}
+		{FDFA2632-A960-4778-A517-CA9E337C037C} = {430668BC-5619-462D-90DE-913EE9C27386}
+		{53E67055-13D2-4467-BB57-79589AFAC2CD} = {430668BC-5619-462D-90DE-913EE9C27386}
 	EndGlobalSection
 EndGlobal
