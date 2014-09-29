@@ -101,10 +101,17 @@ namespace WaveDev.ModelR
 
         private void OnOpenGlControlMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var position = e.GetPosition(this);
+            //var position = e.GetPosition(this);
 
-            MenuPopup.HorizontalOffset = position.X - (MenuPopup.RenderSize.Width / 2);
-            MenuPopup.VerticalOffset = position.Y - (MenuPopup.RenderSize.Height / 2);
+            //MenuPopup.HorizontalOffset = position.X - (MenuPopup.RenderSize.Width / 2);
+            //MenuPopup.VerticalOffset = position.Y - (MenuPopup.RenderSize.Height / 2);
+            //MenuPopup.IsOpen = true;
+            //MenuPopup.InvalidateVisual();
+
+            var position = PointToScreen(e.GetPosition(this));
+
+            MenuPopup.HorizontalOffset = position.X - (RadialMenu.RenderSize.Width / 2);
+            MenuPopup.VerticalOffset = position.Y - (RadialMenu.RenderSize.Height / 2);
             MenuPopup.IsOpen = true;
             MenuPopup.InvalidateVisual();
         }
