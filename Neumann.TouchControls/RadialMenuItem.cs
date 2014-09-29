@@ -89,6 +89,7 @@ namespace Neumann.TouchControls
             if (command != null)
             {
                 command.CanExecuteChanged += element.OnCommandCanExecuteChanged;
+                element.IsEnabled = command.CanExecute(null);
             }
             else
             {
@@ -185,6 +186,10 @@ namespace Neumann.TouchControls
         public event EventHandler Click;
         protected virtual void OnClick()
         {
+            if (this.Command != null)
+            {
+                this.Command.Execute(null);
+            }
             if (Click != null)
                 Click(this, EventArgs.Empty);
         }
