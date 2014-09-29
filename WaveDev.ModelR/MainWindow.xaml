@@ -44,7 +44,7 @@
                            MouseMove="OnOpenGLControlMouseMove"
                            />
 
-        <ntc:RadialMenuPopup x:Name="MenuPopup" Placement="Relative" PlacementTarget="{Binding ElementName=root}" IsOpen="True" AllowsTransparency="True" StaysOpen="False" Closed="OnMenuPopupClosed">
+        <ntc:RadialMenuPopup x:Name="MenuPopup" Placement="Absolute" PlacementTarget="{Binding ElementName=root}" IsOpen="True" AllowsTransparency="True" StaysOpen="False" Closed="OnMenuPopupClosed">
             <ntc:RadialMenu x:Name="RadialMenu" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ntc:RadialMenuItem Header="Transform">
                     <ntc:RadialMenuItem Header="Move" ImageSource="Images/Teapot.png" />
