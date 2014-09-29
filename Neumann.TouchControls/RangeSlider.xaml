@@ -1,0 +1,93 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Neumann.TouchControls">
+
+    <Style x:Key="RangeSliderThumbStyle" TargetType="Thumb">
+        <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Grid>
+                        <Ellipse Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}" RenderTransformOrigin="0.5,0.5"
+                                 Opacity="0.6">
+                            <Ellipse.RenderTransform>
+                                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                            </Ellipse.RenderTransform>
+                        </Ellipse>
+                        <Ellipse Fill="White" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}" RenderTransformOrigin="0.5,0.5">
+                            <Ellipse.RenderTransform>
+                                <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
+                            </Ellipse.RenderTransform>
+                        </Ellipse>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="local:RangeSlider">
+        <Setter Property="Background" Value="Gainsboro"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:RangeSlider">
+                    <Grid>
+                        
+                        <Rectangle Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}"
+                                   RenderTransformOrigin="0.5,0.5">
+                            <Rectangle.RenderTransform>
+                                <ScaleTransform ScaleY="0.5"/>
+                            </Rectangle.RenderTransform>
+                        </Rectangle>
+                        
+                        <Rectangle x:Name="PART_TrackBar" Fill="Purple" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}"
+                                   RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left">
+                            <Rectangle.RenderTransform>
+                                <TransformGroup x:Name="PART_TrackBarTransform">
+                                    <ScaleTransform ScaleY="0.5"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Rectangle.RenderTransform>
+                        </Rectangle>
+                        
+                        <Grid x:Name="PART_Grid1" HorizontalAlignment="Left">
+                            <Grid.RenderTransform>
+                                <TranslateTransform x:Name="PART_Transform1"/>
+                            </Grid.RenderTransform>
+                            <Thumb x:Name="PART_Thumb1" MinWidth="24" MinHeight="24" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                   Background="Purple" BorderThickness="0" BorderBrush="Purple"
+                                   Style="{StaticResource RangeSliderThumbStyle}"/>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,-30"
+                                       Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Value1}"/>
+                        </Grid>
+                        
+                        <Grid x:Name="PART_Grid2" HorizontalAlignment="Left">
+                            <Grid.RenderTransform>
+                                <TranslateTransform x:Name="PART_Transform2"/>
+                            </Grid.RenderTransform>
+                            <Thumb x:Name="PART_Thumb2" MinWidth="24" MinHeight="24" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                   Background="Purple" BorderThickness="0" BorderBrush="Purple"
+                                   Style="{StaticResource RangeSliderThumbStyle}"/>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,-30"
+                                       Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Value2}"/>
+                        </Grid>
+                        
+                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-10,-10,0,0" FontSize="9" Foreground="Gray"
+                                   Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Minimum}"/>
+                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-10,-10,0" FontSize="9" Foreground="Gray"
+                                   Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Maximum}"/>
+                        <TextBlock x:Name="PART_RangeLabel" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,-10,-20"
+                                   Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Range}">
+                            <TextBlock.RenderTransform>
+                                <TranslateTransform x:Name="PART_RangeTransform"/>
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+                        
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

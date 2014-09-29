@@ -1,0 +1,260 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
+                    xmlns:local="clr-namespace:Neumann.TouchControls">
+
+    <SolidColorBrush x:Key="RadialMenu_OuteCircleBackgroundBrush" Color="#FFF1DAEA"/>
+    <SolidColorBrush x:Key="RadialMenu_InnerCircleBackgroundBrush" Color="White"/>
+
+    <Style TargetType="local:RadialMenu">
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="ImageSource" Value="Images/Menu.png"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:RadialMenu">
+                    <Grid>
+                        <Grid x:Name="Container" RenderTransformOrigin="0.5,0.5" Opacity="0">
+                            <Grid.RenderTransform>
+                                <RotateTransform Angle="-45"/>
+                            </Grid.RenderTransform>
+                            <Ellipse Name="OuterCircle" Height="268" Width="268" RenderTransformOrigin="0.5,0.5" SnapsToDevicePixels="True"
+                                     Fill="{StaticResource RadialMenu_OuteCircleBackgroundBrush}" Opacity="1">
+                                <Ellipse.RenderTransform>
+                                    <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                </Ellipse.RenderTransform>
+                            </Ellipse>
+                            <Grid x:Name="PART_ExpanderGrid" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True" RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                </Grid.RenderTransform>
+                            </Grid>
+                            <Ellipse x:Name="InnerCircle" Height="216" Width="216" HorizontalAlignment="Center" VerticalAlignment="Center"
+				                     Fill="{StaticResource RadialMenu_InnerCircleBackgroundBrush}" SnapsToDevicePixels="True" Opacity="1" RenderTransformOrigin="0.5,0.5">
+                                <Ellipse.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                </Ellipse.RenderTransform>
+                            </Ellipse>
+                            <Grid x:Name="PART_ItemsGrid" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Opacity="1">
+                                <Grid.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                </Grid.RenderTransform>
+                            </Grid>
+                        </Grid>
+
+                        <local:RadialImageButton x:Name="PART_CenterButton" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                 ImageSource="{TemplateBinding ImageSource}"/>
+                        
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="Common">
+                                <VisualState Name="Normal"/>
+                                <VisualState Name="Opened">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Container"
+										                 Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(RotateTransform.Angle)"
+										                 To="0" Duration="0:0:0.3">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="Container"
+										                 Storyboard.TargetProperty="Opacity"
+										                 To="1" Duration="0:0:0.1">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="InnerCircle"
+										                 Storyboard.TargetProperty="Opacity"
+										                 To="1" Duration="0:0:0.1">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="OuterCircle"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                         To="1" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="OuterCircle"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                         To="1" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="PART_ExpanderGrid"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                         To="1" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="PART_ExpanderGrid"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                         To="1" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </VisualState>
+
+                                <VisualState Name="Closed">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Container"
+										                 Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+										                 To="-45" Duration="0:0:0.3">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="Container"
+										                 Storyboard.TargetProperty="Opacity"
+										                 To="0" BeginTime="0:0:0.0" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="OuterCircle"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                         To="0.5" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="OuterCircle"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                         To="0.5" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="PART_ExpanderGrid"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                         To="0.5" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="PART_ExpanderGrid"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                         To="0.5" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup Name="Expansion">
+                                <VisualState Name="Expanded">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="InnerCircle"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                         To="0.8" Duration="0:0:0.2" AutoReverse="True">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="InnerCircle"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                         To="0.8" Duration="0:0:0.2" AutoReverse="True">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="PART_ItemsGrid"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0" BeginTime="0:0:0" Duration="0:0:0">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="PART_ItemsGrid"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1" BeginTime="0:0:0.2" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="PART_ExpanderGrid"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                         To="0.7" BeginTime="0:0:0" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="PART_ExpanderGrid"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                         To="0.7" BeginTime="0:0:0" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_CenterButton"
+                                                                       Storyboard.TargetProperty="ImageSource"
+                                                                       Duration="0:0:0">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <BitmapImage UriSource="Images/Back.png"/>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState Name="Collapsed">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="InnerCircle"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                         To="0.8" Duration="0:0:0.2" AutoReverse="True">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="InnerCircle"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                         To="0.8" Duration="0:0:0.2" AutoReverse="True">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="PART_ItemsGrid"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0" BeginTime="0:0:0" Duration="0:0:0">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="PART_ItemsGrid"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1" BeginTime="0:0:0.2" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="PART_ExpanderGrid"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                         To="1" BeginTime="0:0:0.17" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="PART_ExpanderGrid"
+                                                         Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                         To="1" BeginTime="0:0:0.17" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

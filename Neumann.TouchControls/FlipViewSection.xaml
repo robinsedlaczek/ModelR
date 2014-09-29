@@ -1,0 +1,77 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Neumann.TouchControls">
+    
+    <Style TargetType="local:FlipViewSection">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:FlipViewSection">
+                    <ControlTemplate.Resources>
+                        <BooleanToVisibilityConverter x:Key="visibilityConverter"/>
+                    </ControlTemplate.Resources>
+                    
+                    <DockPanel LastChildFill="True">
+                            
+                        <!--Header-->
+                        <ContentPresenter DockPanel.Dock="Top" VerticalAlignment="Center"
+                                          Content="{TemplateBinding Header}"
+                                          ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                          Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ShowHeader, Converter={StaticResource visibilityConverter}}"/>
+                        <!--<Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ShowHeader, Converter={StaticResource visibilityConverter}}"
+                                DockPanel.Dock="Top">
+                            <StackPanel Orientation="Horizontal" Margin="12,10,10,8">
+                                <local:NavigationButton x:Name="PART_NavigationButton" Margin="0,0,10,0" Width="30" Height="30"
+                                                        Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ShowNavigationButtonCore, Converter={StaticResource visibilityConverter}}"/>
+                                <ContentPresenter Content="{TemplateBinding Header}" DockPanel.Dock="Top" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                  ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                                  VerticalAlignment="Center" TextElement.FontSize="20"/>
+                            </StackPanel>
+                        </Border>-->
+                            
+                        <!--Content-->
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    </DockPanel>
+                    
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="HeaderTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <DataTemplate.Resources>
+                        <BooleanToVisibilityConverter x:Key="visibilityConverter"/>
+                    </DataTemplate.Resources>
+                    <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:FlipViewSection}, Path=Background}"
+                            BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:FlipViewSection}, Path=BorderBrush}"
+                            BorderThickness="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:FlipViewSection}, Path=BorderThickness}">
+                        <StackPanel Orientation="Horizontal" Margin="12,10,10,8">
+                            <local:NavigationButton x:Name="PART_NavigationButton" Margin="0,0,10,0" Width="30" Height="30"
+                                                    Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:FlipViewSection}, Path=Foreground}"
+                                                    Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:FlipViewSection}, Path=Background}"
+                                                    Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:FlipViewSection}, Path=ShowNavigationButtonCore, Converter={StaticResource visibilityConverter}}"/>
+                            <TextBlock FontSize="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:FlipViewSection}, Path=FontSize}"
+                                       FontFamily="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:FlipViewSection}, Path=FontFamily}"
+                                       FontWeight="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:FlipViewSection}, Path=FontWeight}"
+                                       Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:FlipViewSection}, Path=Foreground}"
+                                              Text="{Binding}"
+                                              SnapsToDevicePixels="True"
+                                              VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

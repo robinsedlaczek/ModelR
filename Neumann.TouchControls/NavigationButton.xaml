@@ -1,0 +1,72 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Neumann.TouchControls">
+
+    <Style TargetType="local:NavigationButton">
+        <Style.Resources>
+            <Geometry x:Key="NavigationButtonUpGeometry">M25.270723,10.24L27.07807,12.042095 36.255405,21.221664C36.961121,21.927461 36.961121,23.073257 36.258102,23.773755 35.549587,24.479553 34.406456,24.479553 33.703339,23.773755L27.07807,17.151378 27.07807,38.502906C27.07807,39.497703 26.27075,40.305 25.270723,40.305 24.275799,40.305 23.465977,39.497703 23.465977,38.502906L23.465977,17.151378 16.843409,23.773755C16.140291,24.479553 14.991861,24.479553 14.288743,23.773755 13.937035,23.422256 13.76003,22.958658 13.76003,22.50036 13.76003,22.036861 13.937035,21.575862 14.288743,21.221664L23.465977,12.042095z M25.27301,3.9999999C13.542999,3.9999999 4,13.541991 3.9999998,25.270994 4,37.001979 13.542999,46.544002 25.27301,46.544002 37.003998,46.544002 46.546997,37.001979 46.546997,25.270994 46.546997,13.541991 37.003998,3.9999999 25.27301,3.9999999z M25.27301,0C39.209015,3.6248275E-07 50.546997,11.335998 50.546997,25.270994 50.546997,39.206996 39.209015,50.544002 25.27301,50.544002 11.338013,50.544002 0,39.206996 0,25.270994 0,11.335998 11.338013,3.6248275E-07 25.27301,0z</Geometry>
+            <Geometry x:Key="NavigationButtonDownGeometry">M25.609099,10.570999C26.605066,10.570999,27.414083,11.382006,27.414083,12.376967L27.414083,33.728225 34.037039,27.103452C34.740038,26.400474 35.888042,26.400474 36.591042,27.103452 36.942053,27.454453 37.120031,27.917451 37.120031,28.379409 37.120031,28.843383 36.942053,29.30339 36.591042,29.65738L27.414083,38.835044 25.609099,40.638999 23.802101,38.835044 14.625142,29.65738C13.920128,28.952388 13.920128,27.805455 14.622151,27.103452 15.330156,26.400474 16.474133,26.400474 17.177132,27.103452L23.802101,33.728225 23.802101,12.376967C23.802101,11.382006,24.609104,10.570999,25.609099,10.570999z M25.606505,4.0009995C13.691735,4.0009995 4.0019226,13.691997 4.0019226,25.605994 4.0019226,37.517991 13.691735,47.209991 25.606505,47.209991 37.519276,47.209991 47.210089,37.517991 47.210089,25.605994 47.210089,13.691997 37.519276,4.0009995 25.606505,4.0009995z M25.606505,0C39.746231,0 51.213011,11.463997 51.213011,25.605994 51.213011,39.74899 39.746231,51.212989 25.606505,51.212989 11.466778,51.212989 0,39.74899 0,25.605994 0,11.463997 11.466778,0 25.606505,0z</Geometry>
+            <Geometry x:Key="NavigationButtonLeftGeometry">M22.50126,13.762006C22.963479,13.761681 23.425373,13.937478 23.776918,14.289071 24.481308,14.997356 24.481308,16.140533 23.776918,16.843717L17.153306,23.468581 38.503224,23.468581C39.499408,23.468581 40.307998,24.275865 40.307998,25.275845 40.307998,26.267923 39.499408,27.080407 38.503224,27.080407L17.153306,27.080407 23.776918,33.702669C24.481308,34.405855 24.481308,35.554232 23.776918,36.257318 23.425523,36.608912 22.961928,36.786005 22.502235,36.786005 22.037342,36.786005 21.576447,36.608912 21.223652,36.257318L12.045374,27.080407 10.241998,25.275845 12.045374,23.468581 21.223652,14.291671C21.576497,13.938778,22.039041,13.762331,22.50126,13.762006z M25.273002,4C13.543001,4 4.0000005,13.541999 4,25.270997 4.0000005,37.001995 13.543001,46.543995 25.273002,46.543995 37.004003,46.543995 46.547002,37.001995 46.547002,25.270997 46.547002,13.541999 37.004003,4 25.273002,4z M25.273002,0C39.209002,0 50.547002,11.335999 50.547002,25.270997 50.547002,39.206995 39.209002,50.543995 25.273002,50.543995 11.338001,50.543995 0,39.206995 0,25.270997 0,11.335999 11.338001,0 25.273002,0z</Geometry>
+            <Geometry x:Key="NavigationButtonRightGeometry">M28.045794,13.758001C28.509289,13.758001,28.970182,13.935097,29.324377,14.286591L38.501354,23.466131 40.30603,25.268199 38.501354,27.075469 29.324377,36.25241C28.618687,36.958095 27.472902,36.958095 26.769812,36.255008 26.06662,35.546623 26.06662,34.403442 26.769812,33.700355L33.394722,27.075469 12.043307,27.075469C11.04852,27.075469 10.240031,26.268182 10.240031,25.268199 10.240031,24.276018 11.04852,23.466131 12.043307,23.466131L33.394722,23.466131 26.769812,16.841247C26.06662,16.138158 26.06662,14.992379 26.769812,14.286591 27.123907,13.935097 27.584801,13.758001 28.045794,13.758001z M25.27301,3.9999999C13.542999,3.9999999 4,13.541991 3.9999998,25.270994 4,37.001979 13.542999,46.544002 25.27301,46.544002 37.003998,46.544002 46.546997,37.001979 46.546997,25.270994 46.546997,13.541991 37.003998,3.9999999 25.27301,3.9999999z M25.27301,0C39.209015,3.6248275E-07 50.546997,11.335998 50.546997,25.270994 50.546997,39.206996 39.209015,50.544002 25.27301,50.544002 11.338013,50.544002 0,39.206996 0,25.270994 0,11.335998 11.338013,3.6248275E-07 25.27301,0z</Geometry>
+        </Style.Resources>
+        <Setter Property="Direction" Value="Left"/>
+        <Setter Property="Background" Value="WhiteSmoke"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:NavigationButton">
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="180" >
+                            <Path x:Name="path" SnapsToDevicePixels="True"
+                                  Fill="{TemplateBinding Foreground}"
+                                  Stretch="Uniform"
+                                  Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Grid}}, Path=RenderSize.Width}"
+                                  Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Grid}}, Path=RenderSize.Height}">
+                            </Path>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseCaptured" Value="true">
+                            <Setter Property="RenderTransform">
+                                <Setter.Value>
+                                    <TranslateTransform X="1" Y="1"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" Value="White"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Direction" Value="Up" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Data" TargetName="path" Value="{StaticResource NavigationButtonUpGeometry}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Direction" Value="Down" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Data" TargetName="path" Value="{StaticResource NavigationButtonDownGeometry}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Direction" Value="Left" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Data" TargetName="path" Value="{StaticResource NavigationButtonLeftGeometry}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Direction" Value="Right" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Data" TargetName="path" Value="{StaticResource NavigationButtonRightGeometry}"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

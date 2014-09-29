@@ -1,0 +1,65 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
+                    xmlns:local="clr-namespace:Neumann.TouchControls">
+
+    <Color x:Key="RadialImageButton_BackgroundColor">White</Color>
+    <Color x:Key="RadialImageButton_MouseOverBackgroundColor">WhiteSmoke</Color>
+    <SolidColorBrush x:Key="RadialImageButton_BorderBrush" Color="#FF80397B"/>
+    <SolidColorBrush x:Key="RadialImageButton_BackgroundBrush" Color="White"/>
+
+    <Style TargetType="local:RadialImageButton">
+        <Setter Property="Background" Value="{StaticResource RadialImageButton_BackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource RadialImageButton_BorderBrush}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:RadialImageButton">
+                    <Border x:Name="border" CornerRadius="100"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        
+                        <Image x:Name="image" Stretch="None" Margin="0,0,-2,-3"
+                               Source="{TemplateBinding ImageSource}"/>
+                        
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="Common">
+                                <VisualState Name="Normal"/>
+                                <VisualState Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="border"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0" Duration="0:0:0"/>
+                                        <BooleanAnimationUsingKeyFrames Storyboard.TargetName="border"
+                                                                        Storyboard.TargetProperty="IsHitTestVisible"
+                                                                        Duration="0:0:0">
+                                            <DiscreteBooleanKeyFrame Value="False" KeyTime="0:0:0"/>
+                                        </BooleanAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup Name="Mouse">
+                                <VisualState Name="MouseEnter">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="border"
+                                                        Storyboard.TargetProperty="Background.Color"
+                                                        To="{StaticResource RadialImageButton_MouseOverBackgroundColor}" Duration="0:0:0.1"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState Name="MouseLeave">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="border"
+                                                        Storyboard.TargetProperty="Background.Color"
+                                                        To="{StaticResource RadialImageButton_BackgroundColor}" Duration="0:0:0.1"/>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

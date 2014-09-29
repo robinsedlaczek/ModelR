@@ -1,0 +1,31 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Neumann.TouchControls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/BreadcrumbBullet.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/BreadcrumbBulletBar.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/NavigationButton.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/FlipViewSection.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/FlipView.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/ColumnView.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/ColumnViewSection.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/RadialImageButton.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/RadialMenuExtensionButton.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/RadialMenuItem.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/RadialMenu.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/RadialPicker.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/RangeSlider.xaml" />
+        <ResourceDictionary Source="/Neumann.TouchControls;component/ToggleSwitch.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/FlyoutContainer.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/FlyoutPanel.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/FlyoutMessageBar.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/PopupHost.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/MessageDialog.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/SearchBox.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/ScrollableTabControl.xaml"/>
+        <ResourceDictionary Source="/Neumann.TouchControls;component/TransitionContentControl.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+</ResourceDictionary>

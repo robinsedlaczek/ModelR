@@ -1,0 +1,164 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Neumann.TouchControls">
+    
+    <Style TargetType="local:MessageDialog">
+        <Style.Resources>
+            <BooleanToVisibilityConverter x:Key="visibleConverter"/>
+        </Style.Resources>
+        <Setter Property="HeaderBackground" Value="#FF0071B2"/>
+        <Setter Property="HeaderBorderThickness" Value="0"/>
+        <Setter Property="HeaderForeground" Value="White"/>
+        <Setter Property="HeaderFontSize" Value="20"/>
+        <Setter Property="HeaderFontWeight" Value="Bold"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="#FF204E7E"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontFamily" Value="Segoe UI Light"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:MessageDialog">
+                    <Grid x:Name="grid" Visibility="Collapsed">
+                        
+                        <!--window background-->
+                        <Border x:Name="border" Background="Black" Opacity="0.0"/>
+                        
+                        <!--dialog-->
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!--header-->
+                            <Border Grid.Row="1" Grid.ColumnSpan="3"
+                                    Background="{TemplateBinding HeaderBackground}"
+                                    BorderBrush="{TemplateBinding HeaderBorderBrush}"
+                                    BorderThickness="{TemplateBinding HeaderBorderThickness}">
+                            </Border>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Padding="0,-10,0,-10" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                       Foreground="{TemplateBinding HeaderForeground}"
+                                       FontFamily="{TemplateBinding HeaderFontFamily}"
+                                       FontSize="{TemplateBinding HeaderFontSize}"
+                                       FontWeight="{TemplateBinding HeaderFontWeight}"
+                                       Text="{TemplateBinding Header}"/>
+
+                            <!--content area-->
+                            <Grid Grid.Row="2" Grid.ColumnSpan="3" Background="{TemplateBinding Background}">
+                                <Grid Margin="{TemplateBinding Padding}" HorizontalAlignment="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="24" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <!--content-->
+                                    <ContentPresenter />
+
+                                    <!--commands-->
+                                    <ItemsControl Grid.Row="2" HorizontalAlignment="Right"
+                                                  ItemsSource="{TemplateBinding Commands}" Focusable="False">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="Common">
+                                <VisualState x:Name="Close">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="border"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0" Duration="0:0:0.2"/>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="grid"
+                                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+                                            <ObjectAnimationUsingKeyFrames.KeyFrames>
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.2">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Collapsed</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames.KeyFrames>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Open">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="border"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0.5" Duration="0:0:0.2"/>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="grid"
+                                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+                                            <ObjectAnimationUsingKeyFrames.KeyFrames>
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames.KeyFrames>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--default button style-->
+    <Style x:Key="DefaultButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="#FFD0CCC7"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Margin" Value="8,0,0,0"/>
+        <Setter Property="Width" Value="80"/>
+        <Setter Property="Height" Value="26"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontFamily" Value="Segoe UI Semibold"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Chrome" BorderBrush="Black" BorderThickness="0" Background="{TemplateBinding Background}">
+                        <ContentPresenter x:Name="presenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Opacity" TargetName="Chrome" Value="0.8"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="RenderTransform" TargetName="Chrome">
+                                <Setter.Value>
+                                    <TranslateTransform X="2" Y="2"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="#FFADADAD"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

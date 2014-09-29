@@ -1,0 +1,22 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Neumann.TouchControls">
+
+    <Style TargetType="local:BreadcrumbBullet">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:BreadcrumbBullet">
+                    <Rectangle x:Name="rect" Fill="#FF838383" Stroke="Black" StrokeThickness="0" Width="10" Height="10" Margin="0,0,10,0"/>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsActive" Value="true">
+                            <Setter Property="Fill" Value="#FF8E499C" TargetName="rect"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

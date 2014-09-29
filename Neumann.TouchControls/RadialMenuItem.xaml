@@ -1,0 +1,120 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
+                    xmlns:local="clr-namespace:Neumann.TouchControls">
+
+    <SolidColorBrush x:Key="RadialMenuItem_FocusMarkerStrokeBrush" Color="#FF80397B"/>
+    <SolidColorBrush x:Key="RadialMenuItem_BackgroundBrush" Color="White"/>
+    
+    <Style TargetType="local:RadialMenuItem">
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:RadialMenuItem">
+                    <Grid x:Name="grid">
+
+                        <ed:Arc x:Name="PART_FocusMarker" ArcThickness="0" ArcThicknessUnit="Percent" Height="214" Width="214" HorizontalAlignment="Center" VerticalAlignment="Center"
+				                Stretch="None" Opacity="0"
+                                StartAngle="{TemplateBinding StartAngle}"
+                                EndAngle="{TemplateBinding EndAngle}"
+                                Stroke="{StaticResource RadialMenuItem_FocusMarkerStrokeBrush}"
+                                StrokeThickness="2" SnapsToDevicePixels="True"
+                                RenderTransformOrigin="0.5,0.5">
+                            <ed:Arc.RenderTransform>
+                                <ScaleTransform ScaleX="0.98" ScaleY="0.98"/>
+                            </ed:Arc.RenderTransform>
+                        </ed:Arc>
+                        
+                        <StackPanel x:Name="PART_CommandPanel" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"
+                                    Background="Transparent">
+                            <StackPanel.RenderTransform>
+                                <TranslateTransform X="0" Y="0" />
+                            </StackPanel.RenderTransform>
+                                
+                            <Image x:Name="image" Stretch="None" HorizontalAlignment="Center" Margin="0,20,0,0"
+                                   Source="{TemplateBinding ImageSource}"/>
+
+                            <TextBlock x:Name="text" HorizontalAlignment="Center" Margin="0,3,0,0" Opacity="0"
+                                       TextWrapping="Wrap" MaxWidth="70"
+                                       Text="{TemplateBinding Header}"/>
+                        </StackPanel>
+                        
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="Common">
+                                <VisualState Name="Normal"/>
+                                <VisualState Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="grid"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0.5" Duration="0:0:0"/>
+                                        <BooleanAnimationUsingKeyFrames Storyboard.TargetName="grid"
+                                                                        Storyboard.TargetProperty="IsHitTestVisible"
+                                                                        Duration="0:0:0">
+                                            <DiscreteBooleanKeyFrame Value="False" KeyTime="0:0:0"/>
+                                        </BooleanAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup Name="Expand">
+                                <VisualState Name="Expanded">
+                                    <Storyboard>
+                                        <ThicknessAnimation Storyboard.TargetName="image"
+										                    Storyboard.TargetProperty="Margin"
+										                    To="0" BeginTime="0:0:0.3" Duration="0:0:0.2">
+                                            <ThicknessAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseOut"/>
+                                            </ThicknessAnimation.EasingFunction>
+                                        </ThicknessAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="text"
+										                 Storyboard.TargetProperty="Opacity"
+										                 To="1" BeginTime="0:0:0.5" Duration="0:0:0.0">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState Name="Collapsed">
+                                    <Storyboard>
+                                        <ThicknessAnimation Storyboard.TargetName="image"
+										                    Storyboard.TargetProperty="Margin"
+										                    To="0,20,0,0" BeginTime="0:0:0.2" Duration="0:0:0.4">
+                                            <ThicknessAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </ThicknessAnimation.EasingFunction>
+                                        </ThicknessAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="text"
+										                 Storyboard.TargetProperty="Opacity"
+										                 To="0" BeginTime="0:0:0.3" Duration="0:0:0.4">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup Name="Mouse">
+                                <VisualState Name="MouseEnter">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="PART_FocusMarker"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1" Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState Name="MouseLeave">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="PART_FocusMarker"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0" Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
