@@ -47,16 +47,16 @@
         <ntc:RadialMenuPopup x:Name="MenuPopup" Placement="Relative" PlacementTarget="{Binding ElementName=root}" IsOpen="True" AllowsTransparency="True" StaysOpen="False" Closed="OnMenuPopupClosed">
             <ntc:RadialMenu x:Name="RadialMenu" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ntc:RadialMenuItem Header="Transform">
-                    <ntc:RadialMenuItem Header="Move" ImageSource="Images/Teapot.png" Click="OnCreateTeapotClick" />
-                    <ntc:RadialMenuItem Header="Rotate" ImageSource="Images/Cube.png" Click="OnCreateCubeClick" />
-                    <ntc:RadialMenuItem Header="Scale" ImageSource="Images/Sphere.png" Click="OnCreateSphereClick" />
+                    <ntc:RadialMenuItem Header="Move" ImageSource="Images/Teapot.png" />
+                    <ntc:RadialMenuItem Header="Rotate" ImageSource="Images/Cube.png" />
+                    <ntc:RadialMenuItem Header="Scale" ImageSource="Images/Sphere.png" />
                 </ntc:RadialMenuItem>
                 <ntc:RadialMenuItem Header="Add">
-                    <ntc:RadialMenuItem Header="Teapot" ImageSource="Images/Teapot.png" Click="OnCreateTeapotClick" />
-                    <ntc:RadialMenuItem Header="Cube" ImageSource="Images/Cube.png" Click="OnCreateCubeClick" />
-                    <ntc:RadialMenuItem Header="Sphere" ImageSource="Images/Sphere.png" Click="OnCreateSphereClick" />
-                    <ntc:RadialMenuItem Header="Cylinder" ImageSource="Images/Cylinder.png" Click="OnCreatCylinderClick" />
-                    <ntc:RadialMenuItem Header="Disc" ImageSource="Images/Disk.png" Click="OnCreateDiskClick" />
+                    <ntc:RadialMenuItem Header="Teapot" ImageSource="Images/Teapot.png" Command="{Binding CreateTeapotCommand}"  />
+                    <ntc:RadialMenuItem Header="Cube" ImageSource="Images/Cube.png" Command="{Binding CreateCubeCommand}"  />
+                    <ntc:RadialMenuItem Header="Sphere" ImageSource="Images/Sphere.png" Command="{Binding CreateSphereCommand}"  />
+                    <ntc:RadialMenuItem Header="Cylinder" ImageSource="Images/Cylinder.png" Command="{Binding CreateCylinderCommand}"  />
+                    <ntc:RadialMenuItem Header="Disc" ImageSource="Images/Disk.png" Command="{Binding CreateDiskCommand}"  />
                 </ntc:RadialMenuItem>
             </ntc:RadialMenu>
         </ntc:RadialMenuPopup>

@@ -114,31 +114,6 @@ namespace WaveDev.ModelR
             MenuPopup.IsOpen = false;
         }
 
-        private void OnCreateTeapotClick(object sender, EventArgs e)
-        {
-            _model.CreateTeapotCommand.Execute(null);
-        }
-
-        private void OnCreateCubeClick(object sender, EventArgs e)
-        {
-            _model.CreateCubeCommand.Execute(null);
-        }
-
-        private void OnCreateSphereClick(object sender, EventArgs e)
-        {
-            _model.CreateSphereCommand.Execute(null);
-        }
-
-        private void OnCreatCylinderClick(object sender, EventArgs e)
-        {
-            _model.CreateCylinderCommand.Execute(null);
-        }
-
-        private void OnCreateDiskClick(object sender, EventArgs e)
-        {
-            _model.CreateDiscCommand.Execute(null);
-        }
-
         private void OnOpenGLControlMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             _leftButtonDown = true;
