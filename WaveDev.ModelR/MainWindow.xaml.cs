@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using SharpGL;
 using SharpGL.SceneGraph;
 using SharpGL.SceneGraph.Core;
 using SharpGL.SceneGraph.Primitives;
+using SharpGL.SceneGraph.Quadrics;
 using SharpGL.SceneGraph.Transformations;
 using WaveDev.ModelR.ViewModels;
 
@@ -51,27 +53,23 @@ namespace WaveDev.ModelR
             foreach (var model in _model.SceneObjectModels)
             {
                 var renderable = model.SceneElement as IRenderable;
+                var transformable = model.SceneElement as Polygon;
 
-                if (renderable != null)
-                    renderable.Render(gl, RenderMode.Design);
-
-
-                var polygon = model.SceneElement as Polygon;
-
-                if (polygon != null && _leftButtonDown)
+                if (transformable != null && _leftButtonDown)
                 {
-                    //polygon.PushObjectSpace(gl);
-
                     var transformation = new LinearTransformation();
 
                     transformation.TranslateX = (float)_positionDelta.X / 10.0f;
                     transformation.TranslateY = (float)_positionDelta.Y / 10.0f;
 
-                    transformation.Transform(gl);
+                    transformable.Transformation = transformation;
+                    transformable.PushObjectSpace(gl);
 
-                    //polygon.PopObjectSpace(gl);
+                    if (renderable != null)
+                        renderable.Render(gl, RenderMode.Design);
+
+                    transformable.PopObjectSpace(gl);
                 }
-
             }
         }
 
@@ -136,6 +134,8 @@ namespace WaveDev.ModelR
             var position = e.GetPosition(OpenGLControl);
 
             _positionDelta = new Point(position.X - _lastPosition.X, position.Y - _lastPosition.Y);
+
+            Debug.WriteLine("Position-Delta: {0}, {1}", _positionDelta.X, _positionDelta.Y);
 
             _lastPosition = position;
         }

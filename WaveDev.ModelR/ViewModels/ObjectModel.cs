@@ -3,11 +3,14 @@ using System.Windows.Media.Imaging;
 using SharpGL.SceneGraph.Core;
 using SharpGL.SceneGraph.Primitives;
 using SharpGL.SceneGraph.Quadrics;
+using SharpGL.SceneGraph.Transformations;
 
 namespace WaveDev.ModelR.ViewModels
 {
     public class ObjectModel
     {
+        private LinearTransformation _transformation;
+
         public ObjectModel(SceneElement sceneElement)
         {
             if (sceneElement == null)
@@ -20,6 +23,29 @@ namespace WaveDev.ModelR.ViewModels
         {
             get;
             set;
+        }
+
+        public LinearTransformation Transformation
+        {
+            get
+            {
+                return _transformation;
+            }
+
+            set
+            {
+                _transformation = value;
+
+                var polygon = SceneElement as Polygon;
+                if (polygon != null)
+                    polygon.Transformation = _transformation;
+                else
+                {
+                    var quadric = SceneElement as Quadric;
+                    quadric.Transformation = _transformation;
+                }
+
+            }
         }
 
         public string Name
