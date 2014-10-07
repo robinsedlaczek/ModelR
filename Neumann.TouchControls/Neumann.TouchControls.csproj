@@ -217,11 +217,15 @@
     <Resource Include="Images\Menu.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Close.png" />
     <Resource Include="Images\CloseActive.png" />
     <Resource Include="Images\Error.png" />
     <Resource Include="Images\Info.png" />
     <Resource Include="Images\Warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Close.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Images\Warning2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
