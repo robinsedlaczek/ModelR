@@ -74,16 +74,14 @@ namespace WaveDev.ModelR
                     transformation.TranslateY += (float) _positionDelta.Y/10.0f;
 
                     transformable.PushObjectSpace(gl);
-
-                    if (renderable != null)
-                        renderable.Render(gl, RenderMode.Design);
-
-                    transformable.PopObjectSpace(gl);
                 }
-                else
+
+                if (renderable != null)
+                    renderable.Render(gl, RenderMode.Design);
+
+                if (_leftButtonDown && transformable != null)
                 {
-                    if (renderable != null)
-                        renderable.Render(gl, RenderMode.Design);
+                    transformable.PopObjectSpace(gl);
                 }
             }
         }
