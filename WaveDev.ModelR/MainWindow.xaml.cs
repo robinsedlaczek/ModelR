@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using SharpGL;
 using SharpGL.SceneGraph;
 using SharpGL.SceneGraph.Core;
@@ -53,21 +54,33 @@ namespace WaveDev.ModelR
             foreach (var model in _model.SceneObjectModels)
             {
                 var renderable = model.SceneElement as IRenderable;
-                var transformable = model.SceneElement as Polygon;
+                var transformable = model.SceneElement as IHasObjectSpace;
 
-                if (transformable != null && _leftButtonDown)
+                if (_leftButtonDown && transformable != null)
                 {
-                    var transformation = new LinearTransformation();
+                    LinearTransformation transformation;
 
-                    transformation.TranslateX = (float)_positionDelta.X / 10.0f;
-                    transformation.TranslateY = (float)_positionDelta.Y / 10.0f;
+                    if (model.Transformation == null)
+                    {
+                        transformation = new LinearTransformation();
+                        model.Transformation = transformation;
+                    }
+                    else
+                    {
+                        transformation = model.Transformation;
+                    }
 
-                    transformable.Transformation = transformation;
+                    transformation.TranslateX += (float) _positionDelta.X/10.0f;
+                    transformation.TranslateY += (float) _positionDelta.Y/10.0f;
+
                     transformable.PushObjectSpace(gl);
+                }
 
-                    if (renderable != null)
-                        renderable.Render(gl, RenderMode.Design);
+                if (renderable != null)
+                    renderable.Render(gl, RenderMode.Design);
 
+                if (_leftButtonDown && transformable != null)
+                {
                     transformable.PopObjectSpace(gl);
                 }
             }
@@ -99,13 +112,6 @@ namespace WaveDev.ModelR
 
         private void OnOpenGlControlMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            //var position = e.GetPosition(this);
-
-            //MenuPopup.HorizontalOffset = position.X - (MenuPopup.RenderSize.Width / 2);
-            //MenuPopup.VerticalOffset = position.Y - (MenuPopup.RenderSize.Height / 2);
-            //MenuPopup.IsOpen = true;
-            //MenuPopup.InvalidateVisual();
-
             var position = PointToScreen(e.GetPosition(this));
 
             MenuPopup.HorizontalOffset = position.X - (RadialMenu.RenderSize.Width / 2);

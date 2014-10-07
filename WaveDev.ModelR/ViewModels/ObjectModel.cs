@@ -44,7 +44,6 @@ namespace WaveDev.ModelR.ViewModels
                     var quadric = SceneElement as Quadric;
                     //quadric.Transformation = _transformation;
                 }
-
             }
         }
 
