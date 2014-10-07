@@ -47,9 +47,9 @@
         <ntc:RadialMenuPopup x:Name="MenuPopup" Placement="Absolute" PlacementTarget="{Binding ElementName=root}" IsOpen="True" AllowsTransparency="True" StaysOpen="False" Closed="OnMenuPopupClosed">
             <ntc:RadialMenu x:Name="RadialMenu" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ntc:RadialMenuItem Header="Transform">
-                    <ntc:RadialMenuItem Header="Move" ImageSource="Images/Teapot.png" />
-                    <ntc:RadialMenuItem Header="Rotate" ImageSource="Images/Cube.png" />
-                    <ntc:RadialMenuItem Header="Scale" ImageSource="Images/Sphere.png" />
+                    <ntc:RadialMenuItem Header="Move" ImageSource="Images/Move.png" />
+                    <ntc:RadialMenuItem Header="Rotate" ImageSource="Images/Rotate.png" />
+                    <ntc:RadialMenuItem Header="Scale" ImageSource="Images/Scale.png" />
                 </ntc:RadialMenuItem>
                 <ntc:RadialMenuItem Header="Add">
                     <ntc:RadialMenuItem Header="Teapot" ImageSource="Images/Teapot.png" Command="{Binding CreateTeapotCommand}"  />
