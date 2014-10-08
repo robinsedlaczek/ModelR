@@ -36,13 +36,11 @@ namespace WaveDev.ModelR.ViewModels
             {
                 _transformation = value;
 
-                var polygon = SceneElement as Polygon;
-                if (polygon != null)
-                    polygon.Transformation = _transformation;
-                else
+                var objectSpace = SceneElement as IHasObjectSpace;
+
+                if (objectSpace != null)
                 {
-                    var quadric = SceneElement as Quadric;
-                    quadric.Transformation = _transformation;
+                    objectSpace.Transformation = _transformation;
                 }
             }
         }
