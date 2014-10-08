@@ -56,33 +56,14 @@ namespace WaveDev.ModelR
                 var renderable = model.SceneElement as IRenderable;
                 var transformable = model.SceneElement as IHasObjectSpace;
 
-                if (_leftButtonDown && transformable != null)
-                {
-                    LinearTransformation transformation;
-
-                    if (model.Transformation == null)
-                    {
-                        transformation = new LinearTransformation();
-                        model.Transformation = transformation;
-                    }
-                    else
-                    {
-                        transformation = model.Transformation;
-                    }
-
-                    transformation.TranslateX += (float) _positionDelta.X/10.0f;
-                    transformation.TranslateY += (float) _positionDelta.Y/10.0f;
-
+                if (transformable != null)
                     transformable.PushObjectSpace(gl);
-                }
 
                 if (renderable != null)
                     renderable.Render(gl, RenderMode.Design);
 
-                if (_leftButtonDown && transformable != null)
-                {
+                if (transformable != null)
                     transformable.PopObjectSpace(gl);
-                }
             }
         }
 
@@ -128,22 +109,49 @@ namespace WaveDev.ModelR
         private void OnOpenGLControlMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             _leftButtonDown = true;
+
+            _lastPosition = e.GetPosition(OpenGLControl);
         }
 
         private void OnOpenGLControlMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             _leftButtonDown = false;
+
+            _positionDelta = new Point(0, 0);
         }
 
         private void OnOpenGLControlMouseMove(object sender, MouseEventArgs e)
         {
-            var position = e.GetPosition(OpenGLControl);
+            if (_leftButtonDown)
+            {
+                var position = e.GetPosition(OpenGLControl);
 
-            _positionDelta = new Point(position.X - _lastPosition.X, position.Y - _lastPosition.Y);
+                _positionDelta = new Point(position.X - _lastPosition.X, position.Y - _lastPosition.Y);
 
-            Debug.WriteLine("Position-Delta: {0}, {1}", _positionDelta.X, _positionDelta.Y);
+                Debug.WriteLine("Position-Delta: {0}, {1}", _positionDelta.X, _positionDelta.Y);
 
-            _lastPosition = position;
+                var model = _model.SelectedObject;
+
+                if (model == null)
+                    return;
+
+                LinearTransformation transformation;
+
+                if (model.Transformation == null)
+                {
+                    transformation = new LinearTransformation();
+                    model.Transformation = transformation;
+                }
+                else
+                {
+                    transformation = model.Transformation;
+                }
+
+                transformation.TranslateX += (float)_positionDelta.X / 100.0f;
+                transformation.TranslateY += (float)-_positionDelta.Y / 100.0f;
+
+                _lastPosition = position;
+            }
         }
     }
 }

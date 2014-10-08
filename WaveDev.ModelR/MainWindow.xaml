@@ -16,7 +16,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <ListView x:Name="ObjectsListView" Grid.Column="0" ItemsSource="{Binding SceneObjectModels}" ItemTemplate="{DynamicResource ObjectListViewItemTemplate}" Background="DarkGray" Width="175">
+        <ListView x:Name="ObjectsListView" Grid.Column="0" ItemsSource="{Binding SceneObjectModels}" SelectedItem="{Binding SelectedObject}" ItemTemplate="{DynamicResource ObjectListViewItemTemplate}" Background="SlateGray" Width="175">
         	<ListView.Resources>
         		<DataTemplate x:Key="ObjectListViewItemTemplate">
                     <Grid>

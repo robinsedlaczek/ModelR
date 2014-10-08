@@ -30,6 +30,12 @@ namespace WaveDev.ModelR.ViewModels
             }
         }
 
+        public ObjectModel SelectedObject
+        {
+            get;
+            set;
+        }
+
         public ICommand CreateTeapotCommand
         {
             get

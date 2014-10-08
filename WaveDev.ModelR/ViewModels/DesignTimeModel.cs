@@ -50,5 +50,11 @@ namespace WaveDev.ModelR.ViewModels
             }
         }
 
+        public SceneElement SelectedObject
+        {
+            get;
+            set;
+        }
+
     }
 }
