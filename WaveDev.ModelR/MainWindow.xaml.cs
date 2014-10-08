@@ -130,25 +130,26 @@ namespace WaveDev.ModelR
 
                 Debug.WriteLine("Position-Delta: {0}, {1}", _positionDelta.X, _positionDelta.Y);
 
-                var model = _model.SelectedObject;
+                _model.TransformCurrentObject((float)_positionDelta.X / 100.0f, (float)_positionDelta.Y / 100.0f, 0.0f);
+                //var model = _model.SelectedObject;
 
-                if (model == null)
-                    return;
+                //if (model == null)
+                //    return;
 
-                LinearTransformation transformation;
+                //LinearTransformation transformation;
 
-                if (model.Transformation == null)
-                {
-                    transformation = new LinearTransformation();
-                    model.Transformation = transformation;
-                }
-                else
-                {
-                    transformation = model.Transformation;
-                }
+                //if (model.Transformation == null)
+                //{
+                //    transformation = new LinearTransformation();
+                //    model.Transformation = transformation;
+                //}
+                //else
+                //{
+                //    transformation = model.Transformation;
+                //}
 
-                transformation.TranslateX += (float)_positionDelta.X / 100.0f;
-                transformation.TranslateY += (float)-_positionDelta.Y / 100.0f;
+                //transformation.TranslateX += (float)_positionDelta.X / 100.0f;
+                //transformation.TranslateY += (float)-_positionDelta.Y / 100.0f;
 
                 _lastPosition = position;
             }
