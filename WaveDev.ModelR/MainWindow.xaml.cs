@@ -10,6 +10,7 @@ using SharpGL.SceneGraph.Primitives;
 using SharpGL.SceneGraph.Quadrics;
 using SharpGL.SceneGraph.Transformations;
 using WaveDev.ModelR.ViewModels;
+using SharpGL.WPF;
 
 namespace WaveDev.ModelR
 {
@@ -21,9 +22,10 @@ namespace WaveDev.ModelR
         #region Private Fields
 
         private SceneModel _model;
-        private Point _lastPosition;
         private bool _leftButtonDown;
-        private Point _positionDelta;
+        private double[] _lastPosition;
+        private float[] _positionDelta;
+        private bool _leftAltKeyPressed;
 
         #endregion
 
@@ -33,6 +35,8 @@ namespace WaveDev.ModelR
         {
             InitializeComponent();
 
+            _lastPosition = new[] { 0.0, 0.0, 0.0 };
+            _positionDelta = new[] { 0f, 0f, 0f };
             _model = new SceneModel();
 
             DataContext = _model;
@@ -60,6 +64,8 @@ namespace WaveDev.ModelR
             gl.Rotate(20.0f, 1.0f, 0.0f, 0.0f);
             gl.Rotate(-30.0f, 0.0f, 1.0f, 0.0f);
             gl.Translate(-5.0f, -5.0f, -10.0f);
+
+            _model.WorldAxies.Render(gl, RenderMode.Design);
 
             foreach (var model in _model.SceneObjectModels)
             {
@@ -127,8 +133,7 @@ namespace WaveDev.ModelR
             var capture = Mouse.Capture(OpenGLControl);
 
             _leftButtonDown = true;
-
-            _lastPosition = e.GetPosition(OpenGLControl);
+            _lastPosition = ConvertMousePositionToSceneCoordinates((OpenGLControl)sender, e.GetPosition(OpenGLControl).X, e.GetPosition(OpenGLControl).Y, 0.0f);
         }
 
         private void OnOpenGLControlMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -137,23 +142,22 @@ namespace WaveDev.ModelR
             Mouse.Capture(null);
 
             _leftButtonDown = false;
-
-            _positionDelta = new Point(0, 0);
+            _positionDelta = new[] { 0f, 0f, 0f };
         }
 
         private void OnOpenGLControlMouseMove(object sender, MouseEventArgs e)
         {
             if (_leftButtonDown)
             {
-                var position = e.GetPosition(OpenGLControl);
+                var coordinates = ConvertMousePositionToSceneCoordinates((OpenGLControl)sender, e.GetPosition(OpenGLControl).X, e.GetPosition(OpenGLControl).Y, 0f);
 
-                _positionDelta = new Point(position.X - _lastPosition.X, position.Y - _lastPosition.Y);
+                if (_leftAltKeyPressed)
+                    _positionDelta = new[] { (float)(coordinates[0] - _lastPosition[0]), (float)(coordinates[1] - _lastPosition[1]), 0.0f };
+                else
+                    _positionDelta = new[] { (float)(coordinates[0] - _lastPosition[0]), 0.0f, (float)(coordinates[1] - _lastPosition[1]) };
 
-                Debug.WriteLine("Position-Delta: {0}, {1}", _positionDelta.X, _positionDelta.Y);
-
-                _model.TransformCurrentObject((float)_positionDelta.X / 100.0f, (float)_positionDelta.Y / 100.0f, 0.0f);
-
-                _lastPosition = position;
+                _model.TransformCurrentObject(100 * _positionDelta[0], 100 * _positionDelta[1], 100 * _positionDelta[2]);
+                _lastPosition = coordinates;
             }
         }
 
@@ -161,6 +165,34 @@ namespace WaveDev.ModelR
         {
             MenuPopup.IsOpen = false;
             MenuPopup.InvalidateVisual();
+        }
+
+        private void OnOpenGLControlKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.SystemKey == Key.LeftAlt)
+                _leftAltKeyPressed = true;
+        }
+
+        private void OnOpenGLControlKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.SystemKey == Key.LeftAlt)
+                _leftAltKeyPressed = false;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private double[] ConvertMousePositionToSceneCoordinates(OpenGLControl control, double x, double y, double z)
+        {
+            if (control == null)
+                return new[] { 0d, 0d, 0d };
+
+            var gl = control.OpenGL;
+            var position = new[] { x, y, z };
+            var coordinates = gl.UnProject(position[0], position[1], position[2]);
+
+            return coordinates;
         }
 
         #endregion

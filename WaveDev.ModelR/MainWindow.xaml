@@ -16,7 +16,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <ListView x:Name="ObjectsListView" Grid.Column="0" ItemsSource="{Binding SceneObjectModels}" SelectedItem="{Binding SelectedObject}" ItemTemplate="{DynamicResource ObjectListViewItemTemplate}" Background="SlateGray" Width="200">
+        <ListView x:Name="ObjectsListView" Grid.Column="0" ItemsSource="{Binding SceneObjectModels}" SelectedItem="{Binding SelectedObject}" ItemTemplate="{DynamicResource ObjectListViewItemTemplate}" Background="SlateGray" Width="200" KeyDown="OnOpenGLControlKeyDown" KeyUp="OnOpenGLControlKeyUp"
+ >
         	<ListView.Resources>
         		<DataTemplate x:Key="ObjectListViewItemTemplate">
                     <Grid>
@@ -42,6 +43,9 @@
                            MouseLeftButtonDown="OnOpenGLControlMouseLeftButtonDown"
                            MouseLeftButtonUp="OnOpenGLControlMouseLeftButtonUp"
                            MouseMove="OnOpenGLControlMouseMove"
+                           KeyDown="OnOpenGLControlKeyDown"
+                           KeyUp="OnOpenGLControlKeyUp"
+                           Focusable="True"
                            />
 
         <ntc:RadialMenuPopup x:Name="MenuPopup" Placement="Absolute" PlacementTarget="{Binding ElementName=root}" IsOpen="True" AllowsTransparency="True" StaysOpen="False" Closed="OnMenuPopupClosed">

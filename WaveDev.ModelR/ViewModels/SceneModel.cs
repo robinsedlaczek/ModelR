@@ -30,7 +30,7 @@ namespace WaveDev.ModelR.ViewModels
         {
             _objects = new ObservableCollection<ObjectModel>();
 
-            CreateObjectModel<Axies>();
+            WorldAxies = new Axies();
 
             // Set translation as initial object transformation tool.
             SwitchToTranslationCommand.Execute(null);
@@ -39,6 +39,12 @@ namespace WaveDev.ModelR.ViewModels
         #endregion
 
         #region Public Members
+
+        public Axies WorldAxies
+        {
+            get;
+            private set;
+        }
 
         public ObservableCollection<ObjectModel> SceneObjectModels
         {
@@ -99,9 +105,9 @@ namespace WaveDev.ModelR.ViewModels
 
                                 var transformation = GetCurrentObjectsLinearTransformation();
 
-                                transformation.RotateX += x;
-                                transformation.RotateY += y;
-                                transformation.RotateZ += z;
+                                transformation.RotateX += 10 * x;
+                                transformation.RotateY += 10 * y;
+                                transformation.RotateZ += 10 * z;
                             },
                         () => true);
                 }
@@ -140,7 +146,7 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createTeapotCommand == null)
-                    _createTeapotCommand = new RelayCommand(CreateObjectModel<Teapot>, () => true);
+                    _createTeapotCommand = new RelayCommand(() => CreateObjectModel<Teapot>(), () => true);
 
                 return _createTeapotCommand;
             }
@@ -151,7 +157,7 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createCubeCommand == null)
-                    _createCubeCommand = new RelayCommand(CreateObjectModel<Cube>, () => true);
+                    _createCubeCommand = new RelayCommand(() => CreateObjectModel<Cube>(), () => true);
 
                 return _createCubeCommand;
             }
@@ -162,7 +168,7 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createSphereCommand == null)
-                    _createSphereCommand = new RelayCommand(CreateObjectModel<Sphere>, () => true);
+                    _createSphereCommand = new RelayCommand(() => CreateObjectModel<Sphere>(), () => true);
 
                 return _createSphereCommand;
             }
@@ -173,7 +179,18 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createCylinderCommand == null)
-                    _createCylinderCommand = new RelayCommand(CreateObjectModel<Cylinder>, () => true);
+                    _createCylinderCommand = new RelayCommand(()=>
+                    {
+                        var model = CreateObjectModel<Cylinder>();
+                        var cylinder = model.SceneElement as Cylinder;
+
+                        cylinder.TopRadius = 0.5d;
+                        cylinder.BaseRadius = 0.5d;
+                        cylinder.Height = 2d;
+                        cylinder.Slices = 20;
+                        cylinder.Stacks = 20;
+                    }, 
+                    () => true);
 
                 return _createCylinderCommand;
             }
@@ -184,7 +201,7 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createDiscCommand == null)
-                    _createDiscCommand = new RelayCommand(CreateObjectModel<Disk>, () => true);
+                    _createDiscCommand = new RelayCommand(() => CreateObjectModel<Disk>(), () => true);
 
                 return _createDiscCommand;
             }
@@ -194,11 +211,13 @@ namespace WaveDev.ModelR.ViewModels
 
         #region Private Fields
 
-        private void CreateObjectModel<T>() where T : SceneElement, new()
+        private ObjectModel CreateObjectModel<T>() where T : SceneElement, new()
         {
             var model = new ObjectModel(new T());
 
             _objects.Add(model);
+
+            return model;
         }
 
         private LinearTransformation GetCurrentObjectsLinearTransformation()
