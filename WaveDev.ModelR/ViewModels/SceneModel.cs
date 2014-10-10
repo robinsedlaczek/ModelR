@@ -179,7 +179,7 @@ namespace WaveDev.ModelR.ViewModels
             }
         }
 
-        public ICommand CreateDiscCommand
+        public ICommand CreateDiskCommand
         {
             get
             {

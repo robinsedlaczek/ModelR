@@ -18,10 +18,16 @@ namespace WaveDev.ModelR
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Private Fields
+
         private SceneModel _model;
         private Point _lastPosition;
         private bool _leftButtonDown;
         private Point _positionDelta;
+
+        #endregion
+
+        #region Constrcution
 
         public MainWindow()
         {
@@ -38,6 +44,10 @@ namespace WaveDev.ModelR
             };
         }
 
+        #endregion
+
+        #region Event Handler
+
         private void OnOpenGlControlDraw(object sender, OpenGLEventArgs args)
         {
             OpenGL gl = args.OpenGL;
@@ -53,6 +63,11 @@ namespace WaveDev.ModelR
 
             foreach (var model in _model.SceneObjectModels)
             {
+                var context = model.SceneElement as IHasOpenGLContext;
+
+                if (context != null && context.CurrentOpenGLContext == null)
+                    context.CreateInContext(gl);
+                
                 var renderable = model.SceneElement as IRenderable;
                 var transformable = model.SceneElement as IHasObjectSpace;
 
@@ -108,6 +123,9 @@ namespace WaveDev.ModelR
 
         private void OnOpenGLControlMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            Cursor = Cursors.None;
+            var capture = Mouse.Capture(OpenGLControl);
+
             _leftButtonDown = true;
 
             _lastPosition = e.GetPosition(OpenGLControl);
@@ -115,6 +133,9 @@ namespace WaveDev.ModelR
 
         private void OnOpenGLControlMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            Cursor = Cursors.Arrow; ;
+            Mouse.Capture(null);
+
             _leftButtonDown = false;
 
             _positionDelta = new Point(0, 0);
@@ -131,28 +152,17 @@ namespace WaveDev.ModelR
                 Debug.WriteLine("Position-Delta: {0}, {1}", _positionDelta.X, _positionDelta.Y);
 
                 _model.TransformCurrentObject((float)_positionDelta.X / 100.0f, (float)_positionDelta.Y / 100.0f, 0.0f);
-                //var model = _model.SelectedObject;
-
-                //if (model == null)
-                //    return;
-
-                //LinearTransformation transformation;
-
-                //if (model.Transformation == null)
-                //{
-                //    transformation = new LinearTransformation();
-                //    model.Transformation = transformation;
-                //}
-                //else
-                //{
-                //    transformation = model.Transformation;
-                //}
-
-                //transformation.TranslateX += (float)_positionDelta.X / 100.0f;
-                //transformation.TranslateY += (float)-_positionDelta.Y / 100.0f;
 
                 _lastPosition = position;
             }
         }
+
+        private void OnRadialMenuItemClick(object sender, EventArgs e)
+        {
+            MenuPopup.IsOpen = false;
+            MenuPopup.InvalidateVisual();
+        }
+
+        #endregion
     }
 }

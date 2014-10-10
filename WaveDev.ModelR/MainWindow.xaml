@@ -5,7 +5,7 @@
     xmlns:ntc="clr-namespace:Neumann.TouchControls;assembly=Neumann.TouchControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-    Title="MainWindow" Height="600" Width="1000" WindowStartupLocation="CenterScreen"
+    Title="MainWindow" Height="800" Width="1200" WindowStartupLocation="CenterScreen"
     xmlns:local="clr-namespace:WaveDev.ModelR.ViewModels"
     d:DataContext="{x:Static local:DesignTimeModel.DataContext}"
     >
@@ -16,7 +16,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <ListView x:Name="ObjectsListView" Grid.Column="0" ItemsSource="{Binding SceneObjectModels}" SelectedItem="{Binding SelectedObject}" ItemTemplate="{DynamicResource ObjectListViewItemTemplate}" Background="SlateGray" Width="175">
+        <ListView x:Name="ObjectsListView" Grid.Column="0" ItemsSource="{Binding SceneObjectModels}" SelectedItem="{Binding SelectedObject}" ItemTemplate="{DynamicResource ObjectListViewItemTemplate}" Background="SlateGray" Width="200">
         	<ListView.Resources>
         		<DataTemplate x:Key="ObjectListViewItemTemplate">
                     <Grid>
@@ -26,9 +26,9 @@
                         </Grid.ColumnDefinitions>
                         
                         <Border BorderThickness="1">
-                            <Image Grid.Column="0" Source="{Binding Image}" Width="20" Height="20" Margin="5"/>
+                            <Image Grid.Column="0" Source="{Binding Image}" Width="30" Height="30" Margin="5" VerticalAlignment="Stretch"/>
                         </Border>
-                        <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="White" Padding="10,5,10,5" />
+                        <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="White" Padding="10,5,10,5" VerticalAlignment="Center" />
                     </Grid>
         		</DataTemplate>
         	</ListView.Resources>
@@ -45,18 +45,18 @@
                            />
 
         <ntc:RadialMenuPopup x:Name="MenuPopup" Placement="Absolute" PlacementTarget="{Binding ElementName=root}" IsOpen="True" AllowsTransparency="True" StaysOpen="False" Closed="OnMenuPopupClosed">
-            <ntc:RadialMenu x:Name="RadialMenu" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <ntc:RadialMenuItem Header="Transform">
-                    <ntc:RadialMenuItem Header="Move" ImageSource="Images/Move.png" Command="{Binding SwitchToTranslationCommand}" />
-                    <ntc:RadialMenuItem Header="Rotate" ImageSource="Images/Rotate.png" Command="{Binding SwitchToRotationCommand}" />
-                    <ntc:RadialMenuItem Header="Scale" ImageSource="Images/Scale.png" Command="{Binding SwitchToScaleCommand}" />
+            <ntc:RadialMenu x:Name="RadialMenu" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                <ntc:RadialMenuItem Header="Transform" >
+                    <ntc:RadialMenuItem Header="Move" ImageSource="Images/Move.png" Command="{Binding SwitchToTranslationCommand}" Click="OnRadialMenuItemClick" />
+                    <ntc:RadialMenuItem Header="Rotate" ImageSource="Images/Rotate.png" Command="{Binding SwitchToRotationCommand}" Click="OnRadialMenuItemClick" />
+                    <ntc:RadialMenuItem Header="Scale" ImageSource="Images/Scale.png" Command="{Binding SwitchToScaleCommand}" Click="OnRadialMenuItemClick" />
                 </ntc:RadialMenuItem>
                 <ntc:RadialMenuItem Header="Add">
-                    <ntc:RadialMenuItem Header="Teapot" ImageSource="Images/Teapot.png" Command="{Binding CreateTeapotCommand}"  />
-                    <ntc:RadialMenuItem Header="Cube" ImageSource="Images/Cube.png" Command="{Binding CreateCubeCommand}"  />
-                    <ntc:RadialMenuItem Header="Sphere" ImageSource="Images/Sphere.png" Command="{Binding CreateSphereCommand}"  />
-                    <ntc:RadialMenuItem Header="Cylinder" ImageSource="Images/Cylinder.png" Command="{Binding CreateCylinderCommand}"  />
-                    <ntc:RadialMenuItem Header="Disc" ImageSource="Images/Disk.png" Command="{Binding CreateDiskCommand}"  />
+                    <ntc:RadialMenuItem Header="Teapot" ImageSource="Images/Teapot.png" Command="{Binding CreateTeapotCommand}" Click="OnRadialMenuItemClick" />
+                    <ntc:RadialMenuItem Header="Cube" ImageSource="Images/Cube.png" Command="{Binding CreateCubeCommand}" Click="OnRadialMenuItemClick" />
+                    <ntc:RadialMenuItem Header="Sphere" ImageSource="Images/Sphere.png" Command="{Binding CreateSphereCommand}" Click="OnRadialMenuItemClick" />
+                    <ntc:RadialMenuItem Header="Cylinder" ImageSource="Images/Cylinder.png" Command="{Binding CreateCylinderCommand}" Click="OnRadialMenuItemClick" />
+                    <ntc:RadialMenuItem Header="Disk" ImageSource="Images/Disk.png" Command="{Binding CreateDiskCommand}" Click="OnRadialMenuItemClick" />
                 </ntc:RadialMenuItem>
             </ntc:RadialMenu>
         </ntc:RadialMenuPopup>

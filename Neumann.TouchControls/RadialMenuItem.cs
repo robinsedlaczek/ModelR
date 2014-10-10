@@ -190,6 +190,7 @@ namespace Neumann.TouchControls
             {
                 this.Command.Execute(null);
             }
+
             if (Click != null)
                 Click(this, EventArgs.Empty);
         }
