@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using SharpGL;
 using SharpGL.SceneGraph;
 using SharpGL.SceneGraph.Core;
-using SharpGL.SceneGraph.Primitives;
-using SharpGL.SceneGraph.Quadrics;
-using SharpGL.SceneGraph.Transformations;
 using WaveDev.ModelR.ViewModels;
 using SharpGL.WPF;
+using GalaSoft.MvvmLight.Messaging;
+using WaveDev.ModelR.Messages;
 
 namespace WaveDev.ModelR
 {
@@ -46,6 +43,15 @@ namespace WaveDev.ModelR
                 MenuPopup.IsOpen = true;
                 MenuPopup.IsOpen = false;
             };
+
+            Messenger.Default.Register<LogonRequiredMessage>(this, message =>
+            {
+                var dialog = new LogonWindow();
+                dialog.ShowDialog();
+            });
+
+            // [RS] Request logon dialog to ask for credentials at application startup.
+            Messenger.Default.Send(new LogonRequiredMessage());
         }
 
         #endregion

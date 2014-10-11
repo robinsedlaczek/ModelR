@@ -10,10 +10,11 @@ using SharpGL.SceneGraph.Quadrics;
 using System;
 using SharpGL.SceneGraph.Transformations;
 using WaveDev.ModelR.Annotations;
+using GalaSoft.MvvmLight;
 
 namespace WaveDev.ModelR.ViewModels
 {
-    public class SceneModel : INotifyPropertyChanged
+    public class SceneModel : ViewModelBase
     {
         #region Private Fields
 
@@ -27,21 +28,6 @@ namespace WaveDev.ModelR.ViewModels
         private RelayCommand _switchToRotationCommand;
         private RelayCommand _switchToScaleCommand;
         private ObjectModel _selectedObject;
-
-        #endregion
-
-        #region INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         #endregion
 
@@ -94,11 +80,7 @@ namespace WaveDev.ModelR.ViewModels
 
             set
             {
-                if (_selectedObject != value)
-                {
-                    _selectedObject = value;
-                    OnPropertyChanged();
-                }
+                Set<ObjectModel>(ref _selectedObject, value);
             }
         }
 

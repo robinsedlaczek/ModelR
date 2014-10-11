@@ -1,0 +1,19 @@
+﻿<Window x:Class="WaveDev.ModelR.LogonWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="LogonWindow" Height="300" Width="500"
+        DataContext="{Binding Logon, Source={StaticResource Locator}}">
+    
+    <Grid Background="SlateGray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,5,0">
+            <Button x:Name="LoginButton" Content="Login" Width="120" Height="36" Command="{Binding LoginCommand}" Click="OnLoginButtonClick" HorizontalAlignment="Right" Margin="5"/>
+            <Button x:Name="CancelButton" Content="Cancel" Width="120" Height="36" Click="OnCancelButtonClick" HorizontalAlignment="Right" Margin="5"/>
+        </StackPanel>
+
+    </Grid>
+</Window>

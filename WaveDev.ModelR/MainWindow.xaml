@@ -9,7 +9,8 @@
     xmlns:adl="clr-namespace:Xceed.Wpf.AvalonDock.Layout;assembly=Xceed.Wpf.AvalonDock"
     Title="MainWindow" Height="800" Width="1300" WindowStartupLocation="CenterScreen"
     xmlns:local="clr-namespace:WaveDev.ModelR.ViewModels"
-    d:DataContext="{x:Static local:DesignTimeModel.DataContext}">
+    d:DataContext="{x:Static local:DesignTimeModel.DataContext}"
+    DataContext="{Binding Scene, Source={StaticResource Locator}}">
     
     <Grid>
         <ad:DockingManager x:Name="DockManager" Grid.Column="0">
