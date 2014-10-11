@@ -5,47 +5,54 @@
     xmlns:ntc="clr-namespace:Neumann.TouchControls;assembly=Neumann.TouchControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-    Title="MainWindow" Height="800" Width="1200" WindowStartupLocation="CenterScreen"
+    xmlns:ad="clr-namespace:Xceed.Wpf.AvalonDock;assembly=Xceed.Wpf.AvalonDock"
+    xmlns:adl="clr-namespace:Xceed.Wpf.AvalonDock.Layout;assembly=Xceed.Wpf.AvalonDock"
+    Title="MainWindow" Height="800" Width="1300" WindowStartupLocation="CenterScreen"
     xmlns:local="clr-namespace:WaveDev.ModelR.ViewModels"
-    d:DataContext="{x:Static local:DesignTimeModel.DataContext}"
-    >
+    d:DataContext="{x:Static local:DesignTimeModel.DataContext}">
     
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <ad:DockingManager x:Name="DockManager" Grid.Column="0">
+            <adl:LayoutRoot>
+                <adl:LayoutPanel Orientation="Horizontal">
+                    <adl:LayoutAnchorablePane DockWidth="250">
+                        <adl:LayoutAnchorable Title="Scene Graph">
+                            <ListView x:Name="ObjectsListView" ItemsSource="{Binding SceneObjectModels}" SelectedItem="{Binding SelectedObject, Mode=TwoWay}" ItemTemplate="{DynamicResource ObjectListViewItemTemplate}" Background="SlateGray" KeyDown="OnOpenGLControlKeyDown" KeyUp="OnOpenGLControlKeyUp" >
+                                <ListView.Resources>
+                                    <DataTemplate x:Key="ObjectListViewItemTemplate">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
 
-        <ListView x:Name="ObjectsListView" Grid.Column="0" ItemsSource="{Binding SceneObjectModels}" SelectedItem="{Binding SelectedObject, Mode=TwoWay}" ItemTemplate="{DynamicResource ObjectListViewItemTemplate}" Background="SlateGray" Width="200" KeyDown="OnOpenGLControlKeyDown" KeyUp="OnOpenGLControlKeyUp" >
-        	<ListView.Resources>
-        		<DataTemplate x:Key="ObjectListViewItemTemplate">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Border BorderThickness="1" Grid.Column="0">
-                            <Image Source="{Binding Image}" Width="30" Height="30" Margin="5" VerticalAlignment="Stretch"/>
-                        </Border>
-                        <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="White" Padding="10,5,10,5" VerticalAlignment="Center" />
-                    </Grid>
-        		</DataTemplate>
-        	</ListView.Resources>
-            
-        </ListView>
-        
-        <WPF:OpenGLControl x:Name="OpenGLControl" Grid.Column="1" 
-                           OpenGLDraw="OnOpenGlControlDraw" 
-                           OpenGLInitialized="OnOpenGlControlInitialized" 
-                           MouseRightButtonDown="OnOpenGlControlMouseRightButtonDown" 
-                           MouseLeftButtonDown="OnOpenGLControlMouseLeftButtonDown"
-                           MouseLeftButtonUp="OnOpenGLControlMouseLeftButtonUp"
-                           MouseMove="OnOpenGLControlMouseMove"
-                           KeyDown="OnOpenGLControlKeyDown"
-                           KeyUp="OnOpenGLControlKeyUp"
-                           Focusable="True"
-                           />
+                                            <Border BorderThickness="1" Grid.Column="0">
+                                                <Image Source="{Binding Image}" Width="30" Height="30" Margin="5" VerticalAlignment="Stretch"/>
+                                            </Border>
+                                            <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="White" Padding="10,5,10,5" VerticalAlignment="Center" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.Resources>
+                            </ListView>
+                        </adl:LayoutAnchorable>
+                    </adl:LayoutAnchorablePane>
+                    <adl:LayoutDocumentPane>
+                        <adl:LayoutAnchorable Title="Render View">
+                            <WPF:OpenGLControl x:Name="OpenGLControl" Grid.Column="2" 
+                                   OpenGLDraw="OnOpenGlControlDraw" 
+                                   OpenGLInitialized="OnOpenGlControlInitialized" 
+                                   MouseRightButtonDown="OnOpenGlControlMouseRightButtonDown" 
+                                   MouseLeftButtonDown="OnOpenGLControlMouseLeftButtonDown"
+                                   MouseLeftButtonUp="OnOpenGLControlMouseLeftButtonUp"
+                                   MouseMove="OnOpenGLControlMouseMove"
+                                   KeyDown="OnOpenGLControlKeyDown"
+                                   KeyUp="OnOpenGLControlKeyUp"
+                                   Focusable="True"/>
+                        </adl:LayoutAnchorable>
+                    </adl:LayoutDocumentPane>
+                </adl:LayoutPanel>
+            </adl:LayoutRoot>
+        </ad:DockingManager>
 
         <ntc:RadialMenuPopup x:Name="MenuPopup" Placement="Absolute" PlacementTarget="{Binding ElementName=root}" IsOpen="True" AllowsTransparency="True" StaysOpen="False" Closed="OnMenuPopupClosed">
             <ntc:RadialMenu x:Name="RadialMenu" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center" >
