@@ -16,8 +16,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <ListView x:Name="ObjectsListView" Grid.Column="0" ItemsSource="{Binding SceneObjectModels}" SelectedItem="{Binding SelectedObject}" ItemTemplate="{DynamicResource ObjectListViewItemTemplate}" Background="SlateGray" Width="200" KeyDown="OnOpenGLControlKeyDown" KeyUp="OnOpenGLControlKeyUp"
- >
+        <ListView x:Name="ObjectsListView" Grid.Column="0" ItemsSource="{Binding SceneObjectModels}" SelectedItem="{Binding SelectedObject, Mode=TwoWay}" ItemTemplate="{DynamicResource ObjectListViewItemTemplate}" Background="SlateGray" Width="200" KeyDown="OnOpenGLControlKeyDown" KeyUp="OnOpenGLControlKeyUp" >
         	<ListView.Resources>
         		<DataTemplate x:Key="ObjectListViewItemTemplate">
                     <Grid>
@@ -25,9 +24,9 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        
-                        <Border BorderThickness="1">
-                            <Image Grid.Column="0" Source="{Binding Image}" Width="30" Height="30" Margin="5" VerticalAlignment="Stretch"/>
+
+                        <Border BorderThickness="1" Grid.Column="0">
+                            <Image Source="{Binding Image}" Width="30" Height="30" Margin="5" VerticalAlignment="Stretch"/>
                         </Border>
                         <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="White" Padding="10,5,10,5" VerticalAlignment="Center" />
                     </Grid>

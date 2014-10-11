@@ -63,9 +63,14 @@ namespace WaveDev.ModelR
             gl.LoadIdentity();
             gl.Rotate(20.0f, 1.0f, 0.0f, 0.0f);
             gl.Rotate(-30.0f, 0.0f, 1.0f, 0.0f);
-            gl.Translate(-5.0f, -5.0f, -10.0f);
+            gl.Translate(-7.0f, -5.0f, -13.0f);
 
             _model.WorldAxies.Render(gl, RenderMode.Design);
+
+            gl.PushMatrix();
+            gl.Rotate(90d, 1d, 0d, 0d);
+            _model.OrientationGrid.Render(gl, RenderMode.Design);
+            gl.PopMatrix();
 
             foreach (var model in _model.SceneObjectModels)
             {

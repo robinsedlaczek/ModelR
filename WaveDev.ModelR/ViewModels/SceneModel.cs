@@ -1,14 +1,19 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using SharpGL;
+using SharpGL.SceneGraph;
 using SharpGL.SceneGraph.Core;
 using SharpGL.SceneGraph.Primitives;
 using SharpGL.SceneGraph.Quadrics;
 using System;
 using SharpGL.SceneGraph.Transformations;
+using WaveDev.ModelR.Annotations;
 
 namespace WaveDev.ModelR.ViewModels
 {
-    public class SceneModel
+    public class SceneModel : INotifyPropertyChanged
     {
         #region Private Fields
 
@@ -21,6 +26,22 @@ namespace WaveDev.ModelR.ViewModels
         private RelayCommand _switchToTranslationCommand;
         private RelayCommand _switchToRotationCommand;
         private RelayCommand _switchToScaleCommand;
+        private ObjectModel _selectedObject;
+
+        #endregion
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         #endregion
 
@@ -31,8 +52,12 @@ namespace WaveDev.ModelR.ViewModels
             _objects = new ObservableCollection<ObjectModel>();
 
             WorldAxies = new Axies();
+            OrientationGrid = new Grid()
+            {
+                IsEnabled = true,
+            };
 
-            // Set translation as initial object transformation tool.
+            // [RS] Set translation as initial object transformation tool.
             SwitchToTranslationCommand.Execute(null);
         }
 
@@ -41,6 +66,12 @@ namespace WaveDev.ModelR.ViewModels
         #region Public Members
 
         public Axies WorldAxies
+        {
+            get;
+            private set;
+        }
+
+        public Grid OrientationGrid
         {
             get;
             private set;
@@ -56,8 +87,19 @@ namespace WaveDev.ModelR.ViewModels
 
         public ObjectModel SelectedObject
         {
-            get;
-            set;
+            get
+            {
+                return _selectedObject;
+            }
+
+            set
+            {
+                if (_selectedObject != value)
+                {
+                    _selectedObject = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public Action<float,float,float> TransformCurrentObject
@@ -146,7 +188,14 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createTeapotCommand == null)
-                    _createTeapotCommand = new RelayCommand(() => CreateObjectModel<Teapot>(), () => true);
+                    _createTeapotCommand = new RelayCommand(() =>
+                    {
+                        var model = CreateObjectModel<Teapot>();
+                        var teapot = model.SceneElement as Teapot;
+
+                        teapot.Transformation = new LinearTransformation() { TranslateX = 0f, TranslateY = 0.55f, TranslateZ = 0f };
+                    }, 
+                    () => true);
 
                 return _createTeapotCommand;
             }
@@ -216,6 +265,9 @@ namespace WaveDev.ModelR.ViewModels
             var model = new ObjectModel(new T());
 
             _objects.Add(model);
+
+            if (_objects.Count == 1)
+                SelectedObject = model;
 
             return model;
         }
