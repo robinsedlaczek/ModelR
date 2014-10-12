@@ -81,9 +81,9 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WaveDev.ModelR.Models\WaveDev.ModelR.Models.csproj">
-      <Project>{40fc4d91-13e0-40bc-8adf-9ad2fe36df7a}</Project>
-      <Name>WaveDev.ModelR.Models</Name>
+    <ProjectReference Include="..\WaveDev.ModelR.Shared\WaveDev.ModelR.Shared.csproj">
+      <Project>{4dc50a3d-15e0-4520-a249-26a548b5a562}</Project>
+      <Name>WaveDev.ModelR.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

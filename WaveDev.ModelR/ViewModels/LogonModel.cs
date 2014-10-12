@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Windows.Controls;
 using System.Windows.Input;
-using WaveDev.ModelR.Models;
+using WaveDev.ModelR.Shared.Models;
 
 namespace WaveDev.ModelR.ViewModels
 {
