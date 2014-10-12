@@ -24,8 +24,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGL.Serialization", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGL.WPF", "..\..\SharpGL\source\SharpGL\Core\SharpGL.WPF\SharpGL.WPF.csproj", "{53E67055-13D2-4467-BB57-79589AFAC2CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaveDev.ModelR.Server", "..\WaveDev.ModelR.Server\WaveDev.ModelR.Server.csproj", "{D78EF07C-3482-4BF0-A46C-16C1D37683CA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaveDev.ModelR.Models", "..\WaveDev.ModelR.Models\WaveDev.ModelR.Models.csproj", "{40FC4D91-13E0-40BC-8ADF-9AD2FE36DF7A}"
 EndProject
 Global
@@ -58,10 +56,6 @@ Global
 		{53E67055-13D2-4467-BB57-79589AFAC2CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53E67055-13D2-4467-BB57-79589AFAC2CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53E67055-13D2-4467-BB57-79589AFAC2CD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D78EF07C-3482-4BF0-A46C-16C1D37683CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D78EF07C-3482-4BF0-A46C-16C1D37683CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D78EF07C-3482-4BF0-A46C-16C1D37683CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D78EF07C-3482-4BF0-A46C-16C1D37683CA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{40FC4D91-13E0-40BC-8ADF-9AD2FE36DF7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{40FC4D91-13E0-40BC-8ADF-9AD2FE36DF7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40FC4D91-13E0-40BC-8ADF-9AD2FE36DF7A}.Release|Any CPU.ActiveCfg = Release|Any CPU

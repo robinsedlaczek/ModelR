@@ -3,6 +3,8 @@ using GalaSoft.MvvmLight.Messaging;
 using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Windows.Controls;
 using System.Windows.Input;
 using WaveDev.ModelR.Models;
 
@@ -15,6 +17,7 @@ namespace WaveDev.ModelR.ViewModels
         private RelayCommand _loginCommand;
         private HubConnection _connection;
         private IHubProxy _proxy;
+        private IEnumerable<SceneInfoModel> _scenes;
 
         #endregion
 
@@ -48,12 +51,6 @@ namespace WaveDev.ModelR.ViewModels
             set;
         }
 
-        public string Password
-        {
-            get;
-            set;
-        }
-
         public ICommand LoginCommand
         {
             get
@@ -61,15 +58,36 @@ namespace WaveDev.ModelR.ViewModels
                 if (_loginCommand == null)
                 {
                     // [RS] Log on takes place at startup only. So caching the login command is not needed. For the this time we cache it.
-                    _loginCommand = new RelayCommand(() =>
+                    _loginCommand = new RelayCommand(parameter =>
                     {
-                        // [RS] Login here!
+                        // [RS] Break the MVVM pattern here, because the Password-property in the WPF PasswordBox cannot be data bound
+                        //      due to security reasons. So we pass the control to the model for query the password from the control directly.
 
+                        var passwordBox = parameter as PasswordBox;
+                        var password = string.Empty;
+
+                        if (passwordBox != null)
+                            password = passwordBox.Password;
+
+                        _connection.Credentials = new NetworkCredential(UserName, password);
 
                     }, () => true);
                 }
 
                 return _loginCommand;
+            }
+        }
+
+        public IEnumerable<SceneInfoModel> Scenes
+        {
+            get
+            {
+                return _scenes;
+            }
+
+            private set
+            {
+                Set("Scenes", ref _scenes, value);
             }
         }
 
@@ -84,7 +102,7 @@ namespace WaveDev.ModelR.ViewModels
             _connection.TraceWriter = Console.Out;
 
             _proxy = _connection.CreateHubProxy("ModelRHub");
-
+            
             //await _connection.Start();
             _connection.Start().Wait();
         }
@@ -92,7 +110,7 @@ namespace WaveDev.ModelR.ViewModels
         private async void LoadSceneInformation()
         {
             //var scenes = await _proxy.Invoke<IEnumerable<SceneInfoModel>>("GetAvailableScenes");
-            var scenes = _proxy.Invoke<IEnumerable<SceneInfoModel>>("GetAvailableScenes").Result;
+            Scenes = _proxy.Invoke<IEnumerable<SceneInfoModel>>("GetAvailableScenes").Result;
         }
 
         #endregion

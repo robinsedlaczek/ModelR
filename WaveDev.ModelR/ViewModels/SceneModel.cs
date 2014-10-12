@@ -96,8 +96,8 @@ namespace WaveDev.ModelR.ViewModels
             {
                 if (_switchToTranslationCommand == null)
                 {
-                    _switchToTranslationCommand = new RelayCommand(
-                        () => TransformCurrentObject = (x, y, z) =>
+                    _switchToTranslationCommand = new RelayCommand(parameter => TransformCurrentObject =
+                        (x, y, z) =>
                             {
                                 if (SelectedObject == null)
                                     return;
@@ -121,8 +121,8 @@ namespace WaveDev.ModelR.ViewModels
             {
                 if (_switchToRotationCommand == null)
                 {
-                    _switchToRotationCommand = new RelayCommand(
-                        () => TransformCurrentObject = (x, y, z) =>
+                    _switchToRotationCommand = new RelayCommand(parameter => TransformCurrentObject = 
+                        (x, y, z) =>
                             {
                                 if (SelectedObject == null)
                                     return;
@@ -146,8 +146,8 @@ namespace WaveDev.ModelR.ViewModels
             {
                 if (_switchToScaleCommand == null)
                 {
-                    _switchToScaleCommand = new RelayCommand(
-                        () => TransformCurrentObject = (x, y, z) =>
+                    _switchToScaleCommand = new RelayCommand(parameter => TransformCurrentObject = 
+                        (x, y, z) =>
                             {
                                 if (SelectedObject == null)
                                     return;
@@ -170,7 +170,7 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createTeapotCommand == null)
-                    _createTeapotCommand = new RelayCommand(() =>
+                    _createTeapotCommand = new RelayCommand(parameter =>
                     {
                         var model = CreateObjectModel<Teapot>();
                         var teapot = model.SceneElement as Teapot;
@@ -188,7 +188,7 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createCubeCommand == null)
-                    _createCubeCommand = new RelayCommand(() => CreateObjectModel<Cube>(), () => true);
+                    _createCubeCommand = new RelayCommand(parameter => CreateObjectModel<Cube>(), () => true);
 
                 return _createCubeCommand;
             }
@@ -199,7 +199,7 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createSphereCommand == null)
-                    _createSphereCommand = new RelayCommand(() => CreateObjectModel<Sphere>(), () => true);
+                    _createSphereCommand = new RelayCommand(parameter => CreateObjectModel<Sphere>(), () => true);
 
                 return _createSphereCommand;
             }
@@ -210,7 +210,8 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createCylinderCommand == null)
-                    _createCylinderCommand = new RelayCommand(()=>
+                {
+                    _createCylinderCommand = new RelayCommand(parameter =>
                     {
                         var model = CreateObjectModel<Cylinder>();
                         var cylinder = model.SceneElement as Cylinder;
@@ -220,8 +221,8 @@ namespace WaveDev.ModelR.ViewModels
                         cylinder.Height = 2d;
                         cylinder.Slices = 20;
                         cylinder.Stacks = 20;
-                    }, 
-                    () => true);
+                    }, () => true);
+                }
 
                 return _createCylinderCommand;
             }
@@ -232,7 +233,7 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createDiscCommand == null)
-                    _createDiscCommand = new RelayCommand(() => CreateObjectModel<Disk>(), () => true);
+                    _createDiscCommand = new RelayCommand(parameter => CreateObjectModel<Disk>(), () => true);
 
                 return _createDiscCommand;
             }
