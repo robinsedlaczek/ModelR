@@ -21,10 +21,9 @@ namespace WaveDev.ModelR.Server
         {
             _scenes = new List<SceneInfoModel>
             {
-                new SceneInfoModel { Name = "Scene 1", Description = "The first default scene at the server." },
-                new SceneInfoModel { Name = "Scene 2", Description = "Just another scene." }
+                new SceneInfoModel { Id = Guid.NewGuid(), Name = "Scene 1", Description = "The first default scene at the server." },
+                new SceneInfoModel { Id = Guid.NewGuid(), Name = "Scene 2", Description = "Just another scene." }
             };
-
         }
 
         #endregion
@@ -49,11 +48,18 @@ namespace WaveDev.ModelR.Server
 
         #region Public Hub Methods
 
-        //[Authorize(Users = "Robin")]
         public IEnumerable<SceneInfoModel> GetAvailableScenes()
         {
             return _scenes;
         }
+
+        [Authorize]
+        public void JoinSceneGroup(Guid sceneId)
+        {
+
+        }
+
+
 
         #endregion
 
