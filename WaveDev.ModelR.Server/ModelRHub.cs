@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using System.Collections.Generic;
-using WaveDev.ModelR.Models;
 using System;
 using System.Globalization;
+using WaveDev.ModelR.Shared.Models;
 
 namespace WaveDev.ModelR.Server
 {
@@ -59,6 +59,11 @@ namespace WaveDev.ModelR.Server
 
         }
 
+        [Authorize]
+        public void CreateSceneObject()
+        {
+
+        }
 
 
         #endregion
