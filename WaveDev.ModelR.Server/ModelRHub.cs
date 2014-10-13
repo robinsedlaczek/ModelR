@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using System.Collections.Generic;
 using System;
@@ -11,7 +12,7 @@ namespace WaveDev.ModelR.Server
     {
         #region Private Fields
 
-        private IList<SceneInfoModel> _scenes;
+        private IDictionary<Guid, SceneInfoModel> _scenes;
 
         #endregion
 
@@ -19,11 +20,13 @@ namespace WaveDev.ModelR.Server
 
         public ModelRHub()
         {
-            _scenes = new List<SceneInfoModel>
-            {
-                new SceneInfoModel { Id = Guid.NewGuid(), Name = "Scene 1", Description = "The first default scene at the server." },
-                new SceneInfoModel { Id = Guid.NewGuid(), Name = "Scene 2", Description = "Just another scene." }
-            };
+            _scenes = new Dictionary<Guid, SceneInfoModel>();
+
+            var scene = new SceneInfoModel(Guid.NewGuid()) { Name = "Scene 1", Description = "The first default scene at the server." };
+            _scenes.Add(scene.Id, scene);
+
+            scene = new SceneInfoModel(Guid.NewGuid()) { Name = "Scene 2", Description = "Just another scene." };
+            _scenes.Add(scene.Id, scene);
         }
 
         #endregion
@@ -50,24 +53,30 @@ namespace WaveDev.ModelR.Server
 
         public IEnumerable<SceneInfoModel> GetAvailableScenes()
         {
-            return _scenes;
+            return _scenes.Values.ToList();
         }
 
         [Authorize]
         public void JoinSceneEditorGroup(Guid sceneId)
         {
-            var connectionId = Context.ConnectionId;
-
-            Groups.Add(connectionId, sceneId.ToString());
+            Groups.Add(Context.ConnectionId, sceneId.ToString());
         }
 
         [Authorize]
-        public void CreateSceneObject()
+        public void CreateSceneObject(SceneObjectInfoModel sceneObject)
         {
-            
+            if (sceneObject == null)
+                throw new ArgumentException("No object model passed to the server. Parameter 'sceneObject' must not be 'null'.");
+
+            if (!_scenes.ContainsKey(sceneObject.SceneId))
+                throw new InvalidOperationException(string.Format("Scene with id '{0}' does not exist.", sceneObject.SceneId));
+
+            var scene = _scenes[sceneObject.SceneId];
+            scene.SceneObjectInfoModels.Add(sceneObject);
+
+            Clients.OthersInGroup(scene.Id.ToString()).SceneObjectCreated(sceneObject);
         }
-
-
+        
         #endregion
 
     }

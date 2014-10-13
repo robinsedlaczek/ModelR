@@ -1,15 +1,10 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using SharpGL;
-using SharpGL.SceneGraph;
 using SharpGL.SceneGraph.Core;
 using SharpGL.SceneGraph.Primitives;
 using SharpGL.SceneGraph.Quadrics;
 using System;
 using SharpGL.SceneGraph.Transformations;
-using WaveDev.ModelR.Annotations;
 using GalaSoft.MvvmLight;
 
 namespace WaveDev.ModelR.ViewModels

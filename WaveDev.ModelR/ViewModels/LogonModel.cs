@@ -1,5 +1,4 @@
 ﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Messaging;
 using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Collections.Generic;

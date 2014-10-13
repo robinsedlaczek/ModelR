@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Media.Imaging;
+using GalaSoft.MvvmLight;
 using SharpGL.SceneGraph.Core;
 using SharpGL.SceneGraph.Primitives;
 using SharpGL.SceneGraph.Quadrics;
@@ -7,7 +8,7 @@ using SharpGL.SceneGraph.Transformations;
 
 namespace WaveDev.ModelR.ViewModels
 {
-    public class ObjectModel
+    public class ObjectModel : ViewModelBase
     {
         private LinearTransformation _transformation;
 
@@ -34,14 +35,12 @@ namespace WaveDev.ModelR.ViewModels
 
             set
             {
-                _transformation = value;
-
                 var objectSpace = SceneElement as IHasObjectSpace;
 
                 if (objectSpace != null)
-                {
-                    objectSpace.Transformation = _transformation;
-                }
+                    objectSpace.Transformation = value;
+
+                Set(ref _transformation, value);
             }
         }
 
@@ -55,6 +54,8 @@ namespace WaveDev.ModelR.ViewModels
             set
             {
                 SceneElement.Name = value;
+
+                RaisePropertyChanged();
             }
         }
 

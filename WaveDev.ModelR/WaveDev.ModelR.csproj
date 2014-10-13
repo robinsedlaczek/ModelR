@@ -103,6 +103,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Communication\ModelRHubClientProxy.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Messages\LogonRequiredMessage.cs" />
     <Page Include="LogonWindow.xaml">

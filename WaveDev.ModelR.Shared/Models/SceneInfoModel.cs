@@ -1,9 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace WaveDev.ModelR.Shared.Models
 {
     public class SceneInfoModel
     {
+        public SceneInfoModel(Guid id)
+        {
+            Id = id;
+
+            SceneObjectInfoModels= new List<SceneObjectInfoModel>();
+        }
+
         public Guid Id
         {
             get;
@@ -20,6 +28,12 @@ namespace WaveDev.ModelR.Shared.Models
         {
             get;
             set;
+        }
+
+        public IList<SceneObjectInfoModel> SceneObjectInfoModels
+        {
+            get;
+            private set;
         }
 
     }
