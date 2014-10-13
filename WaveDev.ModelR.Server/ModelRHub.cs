@@ -54,15 +54,17 @@ namespace WaveDev.ModelR.Server
         }
 
         [Authorize]
-        public void JoinSceneGroup(Guid sceneId)
+        public void JoinSceneEditorGroup(Guid sceneId)
         {
+            var connectionId = Context.ConnectionId;
 
+            Groups.Add(connectionId, sceneId.ToString());
         }
 
         [Authorize]
         public void CreateSceneObject()
         {
-
+            
         }
 
 
