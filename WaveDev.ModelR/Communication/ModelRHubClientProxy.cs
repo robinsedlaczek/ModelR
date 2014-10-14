@@ -40,7 +40,7 @@ namespace WaveDev.ModelR.Communication
         {
             ServerUrl = url;
 
-            ConnectToServer().Wait();
+            ConnectToServer();
         }
 
         #endregion
@@ -78,7 +78,7 @@ namespace WaveDev.ModelR.Communication
 
         #region Private Methods
 
-        private async Task ConnectToServer()
+        private void ConnectToServer()
         {
             try
             {
@@ -90,7 +90,8 @@ namespace WaveDev.ModelR.Communication
 
                 _proxy = _connection.CreateHubProxy(Constants.ModelRHubName);
 
-                await _connection.Start();
+                //await _connection.Start();
+                _connection.Start().Wait();
             }
             catch (AggregateException exception)
             {
