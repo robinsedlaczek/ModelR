@@ -30,6 +30,8 @@ namespace WaveDev.ModelR
 
         private void OnCancelButtonClick(object sender, RoutedEventArgs e)
         {
+            Application.Current.Shutdown();
+
             Close();
         }
 

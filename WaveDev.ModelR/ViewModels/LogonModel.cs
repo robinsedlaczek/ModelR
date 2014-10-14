@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Windows;
+using GalaSoft.MvvmLight;
 using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Collections.Generic;
@@ -58,6 +59,14 @@ namespace WaveDev.ModelR.ViewModels
         {
             get;
             set;
+        }
+
+        public ICommand CancelLoginCommand
+        {
+            get
+            {
+                return new RelayCommand(parameter => Application.Current.Shutdown(), () => true);
+            }
         }
 
         public ICommand LoginCommand

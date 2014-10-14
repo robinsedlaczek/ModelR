@@ -4,6 +4,7 @@ using Microsoft.AspNet.SignalR;
 using System.Collections.Generic;
 using System;
 using System.Globalization;
+using WaveDev.ModelR.Server.Security;
 using WaveDev.ModelR.Shared.Models;
 
 namespace WaveDev.ModelR.Server
@@ -56,13 +57,13 @@ namespace WaveDev.ModelR.Server
             return _scenes.Values.ToList();
         }
 
-        [Authorize]
+        [ModelRAuthorize]
         public void JoinSceneEditorGroup(Guid sceneId)
         {
             Groups.Add(Context.ConnectionId, sceneId.ToString());
         }
 
-        [Authorize]
+        [ModelRAuthorize]
         public void CreateSceneObject(SceneObjectInfoModel sceneObject)
         {
             if (sceneObject == null)

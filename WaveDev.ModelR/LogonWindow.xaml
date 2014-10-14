@@ -59,7 +59,7 @@
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,10,15">
             <Button x:Name="LoginButton" Content="Login" Width="120" Height="36" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=PasswordBox}" Click="OnLoginButtonClick" HorizontalAlignment="Right" Margin="5"/>
-            <Button x:Name="CancelButton" Content="Cancel" Width="120" Height="36" Click="OnCancelButtonClick" HorizontalAlignment="Right" Margin="5"/>
+            <Button x:Name="CancelButton" Content="Cancel" Width="120" Height="36" Command="{Binding CancelLoginCommand}" HorizontalAlignment="Right" Margin="5"/>
         </StackPanel>
 
     </Grid>

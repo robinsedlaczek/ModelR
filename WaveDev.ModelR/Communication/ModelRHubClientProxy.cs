@@ -55,7 +55,9 @@ namespace WaveDev.ModelR.Communication
         
         public void Login(string user, string password)
         {
-            _connection.Credentials = new NetworkCredential(user, password);
+            var authenticationToken = string.Format("User={0} Password={1}", user, password);
+
+            _connection.Headers.Add("myauthtoken", authenticationToken);
         }
 
         public IEnumerable<SceneInfoModel> Scenes
@@ -71,7 +73,7 @@ namespace WaveDev.ModelR.Communication
 
         public void JoinSceneEditorGroup(Guid sceneId)
         {
-            
+            _proxy.Invoke("JoinSceneEditorGroup", sceneId).Wait();
         }
 
         #endregion
@@ -90,7 +92,6 @@ namespace WaveDev.ModelR.Communication
 
                 _proxy = _connection.CreateHubProxy(Constants.ModelRHubName);
 
-                //await _connection.Start();
                 _connection.Start().Wait();
             }
             catch (AggregateException exception)
