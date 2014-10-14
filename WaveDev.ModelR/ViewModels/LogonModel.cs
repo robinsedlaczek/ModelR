@@ -5,7 +5,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Windows.Controls;
 using System.Windows.Input;
+using WaveDev.ModelR.Communication;
 using WaveDev.ModelR.Shared.Models;
+using System.Linq.Expressions;
+using WaveDev.ModelR.Shared;
 
 namespace WaveDev.ModelR.ViewModels
 {
@@ -14,9 +17,8 @@ namespace WaveDev.ModelR.ViewModels
         #region Private Fields
 
         private RelayCommand _loginCommand;
-        private HubConnection _connection;
-        private IHubProxy _proxy;
-        private IEnumerable<SceneInfoModel> _scenes;
+        private ModelRHubClientProxy _proxy;
+        private string _serverUrl;
 
         #endregion
 
@@ -24,24 +26,32 @@ namespace WaveDev.ModelR.ViewModels
 
         public LogonModel()
         {
-            InitConnection();
-            LoadSceneInformation();
+            _serverUrl = Constants.ModelRServerUrl;
+            _proxy = ModelRHubClientProxy.GetInstance(_serverUrl);
         }
 
         #endregion
 
         #region Public Members
 
-        public string ServerUri
+        public string ServerUrl
         {
-            get;
-            set;
-        }
+            get
+            {
+                return _serverUrl;
+            }
 
-        public int ServerPort
-        {
-            get;
-            set;
+            set
+            {
+                if (_serverUrl != value)
+                {
+                    Set(ref _serverUrl, value);
+
+                    // [RS] Get new proxy instance pointing to new server url.
+                    _proxy = ModelRHubClientProxy.GetInstance(_serverUrl);
+
+                }
+            }
         }
 
         public string UserName
@@ -68,7 +78,8 @@ namespace WaveDev.ModelR.ViewModels
                         if (passwordBox != null)
                             password = passwordBox.Password;
 
-                        _connection.Credentials = new NetworkCredential(UserName, password);
+                        _proxy.Login(UserName, password);
+                        _proxy.JoinSceneEditorGroup(SelectedScene.Id);
 
                     }, () => true);
                 }
@@ -81,36 +92,20 @@ namespace WaveDev.ModelR.ViewModels
         {
             get
             {
-                return _scenes;
+                return _proxy.Scenes;
             }
+        }
 
-            private set
-            {
-                Set("Scenes", ref _scenes, value);
-            }
+        public SceneInfoModel SelectedScene
+        {
+            get;
+            set;
         }
 
         #endregion
 
         #region Private Members
 
-        private async void InitConnection()
-        {
-            _connection = new HubConnection("http://localhost:8082/");
-            _connection.TraceLevel = TraceLevels.All;
-            _connection.TraceWriter = Console.Out;
-
-            _proxy = _connection.CreateHubProxy("ModelRHub");
-            
-            //await _connection.Start();
-            _connection.Start().Wait();
-        }
-
-        private async void LoadSceneInformation()
-        {
-            //var scenes = await _proxy.Invoke<IEnumerable<SceneInfoModel>>("GetAvailableScenes");
-            Scenes = _proxy.Invoke<IEnumerable<SceneInfoModel>>("GetAvailableScenes").Result;
-        }
 
         #endregion
 

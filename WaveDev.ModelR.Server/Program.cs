@@ -1,5 +1,6 @@
 ﻿using Microsoft.Owin.Hosting;
 using System;
+using WaveDev.ModelR.Shared;
 
 namespace WaveDev.ModelR.Server
 {
@@ -7,7 +8,7 @@ namespace WaveDev.ModelR.Server
     {
         static void Main(string[] args)
         {
-            var url = "http://localhost:8082";
+            var url = Constants.ModelRServerUrl;
 
             using (WebApp.Start(url))
             {
