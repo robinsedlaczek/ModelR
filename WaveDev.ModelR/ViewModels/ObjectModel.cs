@@ -10,7 +10,14 @@ namespace WaveDev.ModelR.ViewModels
 {
     public class ObjectModel : ViewModelBase
     {
+        #region Private Fields
+
         private LinearTransformation _transformation;
+        private Guid _id;
+
+        #endregion
+
+        #region Construction
 
         public ObjectModel(SceneElement sceneElement)
         {
@@ -19,6 +26,10 @@ namespace WaveDev.ModelR.ViewModels
 
             SceneElement = sceneElement;
         }
+
+        #endregion
+
+        #region Public Members
 
         public SceneElement SceneElement
         {
@@ -59,6 +70,22 @@ namespace WaveDev.ModelR.ViewModels
             }
         }
 
+        public Guid Id
+        {
+            get
+            {
+                return _id;
+                
+            }
+
+            set
+            {
+                Set(ref _id, value);
+                
+            } 
+            
+        }
+
         public BitmapImage Image
         {
             get
@@ -95,5 +122,6 @@ namespace WaveDev.ModelR.ViewModels
             }
         }
 
+        #endregion
     }
 }

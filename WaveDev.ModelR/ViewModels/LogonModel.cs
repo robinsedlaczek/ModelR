@@ -87,6 +87,7 @@ namespace WaveDev.ModelR.ViewModels
                         if (passwordBox != null)
                             password = passwordBox.Password;
 
+                        // TODO: [RS] Cannot await Login-method. How to make properties async?
                         _proxy.Login(UserName, password);
                         _proxy.JoinSceneEditorGroup(SelectedScene.Id);
 

@@ -6,6 +6,8 @@ using SharpGL.SceneGraph.Quadrics;
 using System;
 using SharpGL.SceneGraph.Transformations;
 using GalaSoft.MvvmLight;
+using WaveDev.ModelR.Communication;
+using WaveDev.ModelR.Shared;
 
 namespace WaveDev.ModelR.ViewModels
 {
@@ -246,6 +248,9 @@ namespace WaveDev.ModelR.ViewModels
 
             if (_objects.Count == 1)
                 SelectedObject = model;
+
+            var proxy = ModelRHubClientProxy.GetInstance(Constants.ModelRServerUrl);
+            proxy.CreateSceneObject(model);
 
             return model;
         }

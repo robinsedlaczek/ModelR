@@ -13,7 +13,7 @@ namespace WaveDev.ModelR.Server
     {
         #region Private Fields
 
-        private IDictionary<Guid, SceneInfoModel> _scenes;
+        private static IDictionary<Guid, SceneInfoModel> s_scenes;
 
         #endregion
 
@@ -21,13 +21,16 @@ namespace WaveDev.ModelR.Server
 
         public ModelRHub()
         {
-            _scenes = new Dictionary<Guid, SceneInfoModel>();
+            if (s_scenes == null)
+            {
+                s_scenes = new Dictionary<Guid, SceneInfoModel>();
 
-            var scene = new SceneInfoModel(Guid.NewGuid()) { Name = "Scene 1", Description = "The first default scene at the server." };
-            _scenes.Add(scene.Id, scene);
+                var scene = new SceneInfoModel(Guid.NewGuid()) { Name = "Scene 1", Description = "The first default scene at the server." };
+                s_scenes.Add(scene.Id, scene);
 
-            scene = new SceneInfoModel(Guid.NewGuid()) { Name = "Scene 2", Description = "Just another scene." };
-            _scenes.Add(scene.Id, scene);
+                scene = new SceneInfoModel(Guid.NewGuid()) {Name = "Scene 2", Description = "Just another scene."};
+                s_scenes.Add(scene.Id, scene);
+            }
         }
 
         #endregion
@@ -54,7 +57,7 @@ namespace WaveDev.ModelR.Server
 
         public IEnumerable<SceneInfoModel> GetAvailableScenes()
         {
-            return _scenes.Values.ToList();
+            return s_scenes.Values.ToList();
         }
 
         [ModelRAuthorize]
@@ -69,10 +72,10 @@ namespace WaveDev.ModelR.Server
             if (sceneObject == null)
                 throw new ArgumentException("No object model passed to the server. Parameter 'sceneObject' must not be 'null'.");
 
-            if (!_scenes.ContainsKey(sceneObject.SceneId))
+            if (!s_scenes.ContainsKey(sceneObject.SceneId))
                 throw new InvalidOperationException(string.Format("Scene with id '{0}' does not exist.", sceneObject.SceneId));
 
-            var scene = _scenes[sceneObject.SceneId];
+            var scene = s_scenes[sceneObject.SceneId];
             scene.SceneObjectInfoModels.Add(sceneObject);
 
             Clients.OthersInGroup(scene.Id.ToString()).SceneObjectCreated(sceneObject);

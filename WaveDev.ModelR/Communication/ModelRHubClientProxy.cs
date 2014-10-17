@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows.Media.Media3D;
 using Microsoft.AspNet.SignalR.Client;
 using System.Collections.Generic;
+using SharpGL.SceneGraph;
+using SharpGL.SceneGraph.Primitives;
+using SharpGL.SceneGraph.Quadrics;
 using WaveDev.ModelR.Shared.Models;
 using System.Net;
 using System.Globalization;
+using WaveDev.ModelR.ViewModels;
 using Xceed.Wpf.Toolkit;
 using WaveDev.ModelR.Shared;
 
@@ -19,6 +24,7 @@ namespace WaveDev.ModelR.Communication
         private HubConnection _connection;
         private IHubProxy _proxy;
         private IEnumerable<SceneInfoModel> _cachedScenes;
+        private Guid _sceneId;
 
         #endregion
 
@@ -55,9 +61,12 @@ namespace WaveDev.ModelR.Communication
         
         public void Login(string user, string password)
         {
-            var authenticationToken = string.Format("User={0} Password={1}", user, password);
+            _connection.Stop();
 
-            _connection.Headers.Add("myauthtoken", authenticationToken);
+            var authenticationToken = string.Format("User={0} Password={1}", "Robin", "Sedlaczek");
+            _connection.Headers.Add("ModelRAuthToken", authenticationToken);
+
+            _connection.Start().Wait();
         }
 
         public IEnumerable<SceneInfoModel> Scenes
@@ -71,9 +80,31 @@ namespace WaveDev.ModelR.Communication
             }
         }
 
-        public void JoinSceneEditorGroup(Guid sceneId)
+        public async void JoinSceneEditorGroup(Guid sceneId)
         {
-            _proxy.Invoke("JoinSceneEditorGroup", sceneId).Wait();
+            await _proxy.Invoke("JoinSceneEditorGroup", sceneId);
+
+            _sceneId = sceneId;
+        }
+
+        public async void CreateSceneObject(ObjectModel sceneObject)
+        {
+            var type = SceneObjectType.Light;
+
+            if (sceneObject.SceneElement is Teapot)
+                type = SceneObjectType.Teapot;
+            else if (sceneObject.SceneElement is Cube)
+                type = SceneObjectType.Cube;
+            else if (sceneObject.SceneElement is Cylinder)
+                type = SceneObjectType.Cylinder;
+            else if (sceneObject.SceneElement is Disk)
+                type = SceneObjectType.Disk;
+            else if (sceneObject.SceneElement is Sphere)
+                type = SceneObjectType.Sphere;
+
+            var infoModel = new SceneObjectInfoModel(sceneObject.Id, _sceneId, type);
+
+            await _proxy.Invoke("CreateSceneObject", infoModel);
         }
 
         #endregion
@@ -92,6 +123,7 @@ namespace WaveDev.ModelR.Communication
 
                 _proxy = _connection.CreateHubProxy(Constants.ModelRHubName);
 
+                // TODO: [RS] Method cannot be async here, because it is called from the construtor.
                 _connection.Start().Wait();
             }
             catch (AggregateException exception)
