@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Windows.Media.Media3D;
 using Microsoft.AspNet.SignalR.Client;
 using System.Collections.Generic;
-using SharpGL.SceneGraph;
 using SharpGL.SceneGraph.Primitives;
 using SharpGL.SceneGraph.Quadrics;
 using WaveDev.ModelR.Shared.Models;
-using System.Net;
 using System.Globalization;
 using WaveDev.ModelR.ViewModels;
 using Xceed.Wpf.Toolkit;
@@ -28,11 +24,23 @@ namespace WaveDev.ModelR.Communication
 
         #endregion
 
+        #region Delegates
+
+        public delegate void SceneObjectCreatedEventHandler(SceneObjectInfoModel infoModel);
+
+        #endregion
+
+        #region Events
+
+        public event SceneObjectCreatedEventHandler SceneObjectCreated;
+
+        #endregion
+
         #region Static Members
 
-        public static ModelRHubClientProxy GetInstance(string url)
+        public static ModelRHubClientProxy GetInstance(string url = Constants.ModelRServerUrl)
         {
-            if (s_instance == null || s_instance.ServerUrl.CompareTo(url) != 0)
+            if (s_instance == null || String.Compare(s_instance.ServerUrl, url, StringComparison.Ordinal) != 0)
                 s_instance = new ModelRHubClientProxy(url);
 
             return s_instance;
@@ -122,6 +130,8 @@ namespace WaveDev.ModelR.Communication
                 };
 
                 _proxy = _connection.CreateHubProxy(Constants.ModelRHubName);
+
+                _proxy.On("SceneObjectCreated", infoModel => SceneObjectCreated(infoModel));
 
                 // TODO: [RS] Method cannot be async here, because it is called from the construtor.
                 _connection.Start().Wait();

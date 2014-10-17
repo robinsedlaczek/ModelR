@@ -8,6 +8,7 @@ using SharpGL.SceneGraph.Transformations;
 using GalaSoft.MvvmLight;
 using WaveDev.ModelR.Communication;
 using WaveDev.ModelR.Shared;
+using WaveDev.ModelR.Shared.Models;
 
 namespace WaveDev.ModelR.ViewModels
 {
@@ -25,6 +26,7 @@ namespace WaveDev.ModelR.ViewModels
         private RelayCommand _switchToRotationCommand;
         private RelayCommand _switchToScaleCommand;
         private ObjectModel _selectedObject;
+        private ModelRHubClientProxy _proxy;
 
         #endregion
 
@@ -33,6 +35,11 @@ namespace WaveDev.ModelR.ViewModels
         public SceneModel()
         {
             _objects = new ObservableCollection<ObjectModel>();
+
+            _proxy = ModelRHubClientProxy.GetInstance();
+
+            // TODO: [RS] Don't forget to unregister event handler somewehre.
+            _proxy.SceneObjectCreated += model => OnSceneObjectCreated(model);
 
             WorldAxies = new Axies();
             OrientationGrid = new Grid()
@@ -238,7 +245,39 @@ namespace WaveDev.ModelR.ViewModels
 
         #endregion
 
-        #region Private Fields
+        #region Event Handlers
+
+        private void OnSceneObjectCreated(SceneObjectInfoModel infoModel)
+        {
+            ObjectModel model = null;
+
+            switch (infoModel.SceneObjectType)
+            {
+                case SceneObjectType.Teapot:
+                    model = new ObjectModel(new Teapot());
+                    break;
+                case SceneObjectType.Cube:
+                    model = new ObjectModel(new Cube());
+                    break;
+                case SceneObjectType.Cylinder:
+                    model = new ObjectModel(new Cylinder());
+                    break;
+                case SceneObjectType.Disk:
+                    model = new ObjectModel(new Disk());
+                    break;
+                case SceneObjectType.Sphere:
+                    model = new ObjectModel(new Sphere());
+                    break;
+                default:
+                    break;
+            }
+
+            _objects.Add(model);
+        }
+
+        #endregion
+
+        #region Private Members
 
         private ObjectModel CreateObjectModel<T>() where T : SceneElement, new()
         {
@@ -249,8 +288,7 @@ namespace WaveDev.ModelR.ViewModels
             if (_objects.Count == 1)
                 SelectedObject = model;
 
-            var proxy = ModelRHubClientProxy.GetInstance(Constants.ModelRServerUrl);
-            proxy.CreateSceneObject(model);
+            _proxy.CreateSceneObject(model);
 
             return model;
         }
