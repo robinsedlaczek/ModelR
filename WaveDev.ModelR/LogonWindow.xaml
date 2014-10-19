@@ -34,7 +34,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Text="Username:" Grid.Column="0" Grid.Row="1" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="25,0,0,0"/>
-            <TextBox Text="{Binding UserName}" Grid.Column="1" Grid.Row="1" Width="250" Height="36" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="UserNameTextBox"  Text="{Binding UserName}" Grid.Column="1" Grid.Row="1" Width="250" Height="36" VerticalContentAlignment="Center" />
 
             <TextBlock Text="Password:" Grid.Column="0" Grid.Row="2" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="25,0,0,0"/>
             <PasswordBox x:Name="PasswordBox" PasswordChar="*" Grid.Column="1" Grid.Row="2" Width="250" Height="36" VerticalContentAlignment="Center"/>

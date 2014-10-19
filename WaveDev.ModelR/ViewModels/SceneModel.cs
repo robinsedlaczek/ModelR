@@ -9,6 +9,8 @@ using GalaSoft.MvvmLight;
 using WaveDev.ModelR.Communication;
 using WaveDev.ModelR.Shared;
 using WaveDev.ModelR.Shared.Models;
+using System.Windows.Threading;
+using System.Linq;
 
 namespace WaveDev.ModelR.ViewModels
 {
@@ -27,6 +29,7 @@ namespace WaveDev.ModelR.ViewModels
         private RelayCommand _switchToScaleCommand;
         private ObjectModel _selectedObject;
         private ModelRHubClientProxy _proxy;
+        private Dispatcher _dispatcher;
 
         #endregion
 
@@ -35,11 +38,13 @@ namespace WaveDev.ModelR.ViewModels
         public SceneModel()
         {
             _objects = new ObservableCollection<ObjectModel>();
+            _dispatcher = Dispatcher.CurrentDispatcher;
 
             _proxy = ModelRHubClientProxy.GetInstance();
 
             // TODO: [RS] Don't forget to unregister event handler somewehre.
             _proxy.SceneObjectCreated += model => OnSceneObjectCreated(model);
+            _proxy.SceneObjectTransformed += model => OnSceneObjectTransformed(model);
 
             WorldAxies = new Axies();
             OrientationGrid = new Grid()
@@ -106,11 +111,13 @@ namespace WaveDev.ModelR.ViewModels
                                 if (SelectedObject == null)
                                     return;
 
-                                var transformation = GetCurrentObjectsLinearTransformation();
+                                var transformation = GetObjectsLinearTransformation(SelectedObject);
 
                                 transformation.TranslateX += x;
                                 transformation.TranslateY += y;
                                 transformation.TranslateZ += z;
+
+                                _proxy.TransformSceneObject(SelectedObject);
                             },
                         () => true);
                 }
@@ -131,11 +138,13 @@ namespace WaveDev.ModelR.ViewModels
                                 if (SelectedObject == null)
                                     return;
 
-                                var transformation = GetCurrentObjectsLinearTransformation();
+                                var transformation = GetObjectsLinearTransformation(SelectedObject);
 
                                 transformation.RotateX += 10 * x;
                                 transformation.RotateY += 10 * y;
                                 transformation.RotateZ += 10 * z;
+
+                                _proxy.TransformSceneObject(SelectedObject);
                             },
                         () => true);
                 }
@@ -156,11 +165,13 @@ namespace WaveDev.ModelR.ViewModels
                                 if (SelectedObject == null)
                                     return;
 
-                                var transformation = GetCurrentObjectsLinearTransformation();
+                                var transformation = GetObjectsLinearTransformation(SelectedObject);
 
                                 transformation.ScaleX += x;
                                 transformation.ScaleY += y;
                                 transformation.ScaleZ += z;
+
+                                _proxy.TransformSceneObject(SelectedObject);
                             },
                         () => true);
                 }
@@ -272,7 +283,28 @@ namespace WaveDev.ModelR.ViewModels
                     break;
             }
 
-            _objects.Add(model);
+            _dispatcher.Invoke(() => _objects.Add(model));
+        }
+
+        private void OnSceneObjectTransformed(SceneObjectInfoModel model)
+        {
+            var objectToTransform = (from objectFound in _objects
+                                     where objectFound.Id == model.Id
+                                     select objectFound).FirstOrDefault();
+
+            var transformation = GetObjectsLinearTransformation(objectToTransform);
+
+            transformation.TranslateX = model.Transformation.TranslateX;
+            transformation.TranslateY = model.Transformation.TranslateY;
+            transformation.TranslateZ = model.Transformation.TranslateZ;
+
+            transformation.RotateX = model.Transformation.RotateX;
+            transformation.RotateY = model.Transformation.RotateY;
+            transformation.RotateZ = model.Transformation.RotateZ;
+
+            transformation.ScaleX = model.Transformation.ScaleX;
+            transformation.ScaleY = model.Transformation.ScaleY;
+            transformation.ScaleZ = model.Transformation.ScaleZ;
         }
 
         #endregion
@@ -293,18 +325,21 @@ namespace WaveDev.ModelR.ViewModels
             return model;
         }
 
-        private LinearTransformation GetCurrentObjectsLinearTransformation()
+        private LinearTransformation GetObjectsLinearTransformation(ObjectModel model)
         {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
             LinearTransformation transformation;
 
-            if (SelectedObject.Transformation == null)
+            if (model.Transformation == null)
             {
                 transformation = new LinearTransformation();
-                SelectedObject.Transformation = transformation;
+                model.Transformation = transformation;
             }
             else
             {
-                transformation = SelectedObject.Transformation;
+                transformation = model.Transformation;
             }
 
             return transformation;

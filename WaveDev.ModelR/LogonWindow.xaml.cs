@@ -17,6 +17,8 @@ namespace WaveDev.ModelR
         public LogonWindow()
         {
             InitializeComponent();
+
+            UserNameTextBox.Focus();
         }
 
         #endregion

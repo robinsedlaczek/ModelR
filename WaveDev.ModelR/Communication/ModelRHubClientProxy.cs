@@ -27,12 +27,14 @@ namespace WaveDev.ModelR.Communication
         #region Delegates
 
         public delegate void SceneObjectCreatedEventHandler(SceneObjectInfoModel infoModel);
+        public delegate void SceneObjectTransformedEventHandler(SceneObjectInfoModel infoModel);
 
         #endregion
 
         #region Events
 
         public event SceneObjectCreatedEventHandler SceneObjectCreated;
+        public event SceneObjectTransformedEventHandler SceneObjectTransformed;
 
         #endregion
 
@@ -110,9 +112,29 @@ namespace WaveDev.ModelR.Communication
             else if (sceneObject.SceneElement is Sphere)
                 type = SceneObjectType.Sphere;
 
-            var infoModel = new SceneObjectInfoModel(sceneObject.Id, _sceneId, type);
+            var infoModel = new SceneObjectInfoModel(sceneObject.Id, _sceneId) { SceneObjectType = type };
 
             await _proxy.Invoke("CreateSceneObject", infoModel);
+        }
+
+        public async void TransformSceneObject(ObjectModel sceneObject)
+        {
+            var infoModel = new SceneObjectInfoModel(sceneObject.Id, _sceneId);
+
+            infoModel.Transformation = new TransformationInfoModel()
+            {
+                TranslateX = sceneObject.Transformation.TranslateX,
+                TranslateY = sceneObject.Transformation.TranslateY,
+                TranslateZ = sceneObject.Transformation.TranslateZ,
+                RotateX = sceneObject.Transformation.RotateX,
+                RotateY = sceneObject.Transformation.RotateY,
+                RotateZ = sceneObject.Transformation.RotateZ,
+                ScaleX = sceneObject.Transformation.ScaleX,
+                ScaleY = sceneObject.Transformation.ScaleY,
+                ScaleZ = sceneObject.Transformation.ScaleZ
+            };
+
+            await _proxy.Invoke("TransformSceneObject", infoModel);
         }
 
         #endregion
@@ -131,7 +153,8 @@ namespace WaveDev.ModelR.Communication
 
                 _proxy = _connection.CreateHubProxy(Constants.ModelRHubName);
 
-                _proxy.On("SceneObjectCreated", infoModel => SceneObjectCreated(infoModel));
+                _proxy.On<SceneObjectInfoModel>("SceneObjectCreated", infoModel => SceneObjectCreated(infoModel));
+                _proxy.On<SceneObjectInfoModel>("SceneObjectTransformed", infoModel => SceneObjectTransformed(infoModel));
 
                 // TODO: [RS] Method cannot be async here, because it is called from the construtor.
                 _connection.Start().Wait();

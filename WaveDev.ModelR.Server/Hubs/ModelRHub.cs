@@ -81,6 +81,23 @@ namespace WaveDev.ModelR.Server
             Clients.OthersInGroup(scene.Id.ToString()).SceneObjectCreated(sceneObject);
         }
         
+        [ModelRAuthorize]
+        public void TransformSceneObject(SceneObjectInfoModel sceneObject)
+        {
+            if (sceneObject == null)
+                throw new ArgumentException("No object model passed to the server. Parameter 'sceneObject' must not be 'null'.");
+
+            var scene = s_scenes[sceneObject.SceneId];
+
+            var sceneObjectFound = (from model in scene.SceneObjectInfoModels
+                                    where model.Id == sceneObject.Id
+                                    select model).FirstOrDefault();
+
+            sceneObjectFound.Transformation = sceneObject.Transformation;
+
+            Clients.OthersInGroup(scene.Id.ToString()).SceneObjectTransformed(sceneObjectFound);
+        }
+
         #endregion
 
     }

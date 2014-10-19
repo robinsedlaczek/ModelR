@@ -40,6 +40,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Models\SceneObjectInfoModel.cs" />
     <Compile Include="Models\SceneInfoModel.cs" />
+    <Compile Include="Models\TransformationInfoModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SceneObjectType.cs" />
   </ItemGroup>

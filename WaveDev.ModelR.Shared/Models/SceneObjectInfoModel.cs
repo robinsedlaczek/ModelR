@@ -4,11 +4,10 @@ namespace WaveDev.ModelR.Shared.Models
 {
     public class SceneObjectInfoModel
     {
-        public SceneObjectInfoModel(Guid id, Guid sceneId, SceneObjectType sceneObjectType)
+        public SceneObjectInfoModel(Guid id, Guid sceneId)
         {
             Id = id;
             SceneId = sceneId;
-            SceneObjectType = sceneObjectType;
         }
 
         public Guid Id { get; set; }
@@ -18,6 +17,8 @@ namespace WaveDev.ModelR.Shared.Models
         public SceneObjectType SceneObjectType { get; set; }
 
         public string Name { get; set; }
+
+        public TransformationInfoModel Transformation { get; set; }
 
     }
 }
