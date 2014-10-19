@@ -11,6 +11,7 @@ using WaveDev.ModelR.Shared;
 using WaveDev.ModelR.Shared.Models;
 using System.Windows.Threading;
 using System.Linq;
+using GalaSoft.MvvmLight.Threading;
 
 namespace WaveDev.ModelR.ViewModels
 {
@@ -29,7 +30,6 @@ namespace WaveDev.ModelR.ViewModels
         private RelayCommand _switchToScaleCommand;
         private ObjectModel _selectedObject;
         private ModelRHubClientProxy _proxy;
-        private Dispatcher _dispatcher;
 
         #endregion
 
@@ -38,8 +38,6 @@ namespace WaveDev.ModelR.ViewModels
         public SceneModel()
         {
             _objects = new ObservableCollection<ObjectModel>();
-            _dispatcher = Dispatcher.CurrentDispatcher;
-
             _proxy = ModelRHubClientProxy.GetInstance();
 
             // TODO: [RS] Don't forget to unregister event handler somewehre.
@@ -265,25 +263,25 @@ namespace WaveDev.ModelR.ViewModels
             switch (infoModel.SceneObjectType)
             {
                 case SceneObjectType.Teapot:
-                    model = new ObjectModel(new Teapot());
+                    model = new ObjectModel(new Teapot(), infoModel.Id);
                     break;
                 case SceneObjectType.Cube:
-                    model = new ObjectModel(new Cube());
+                    model = new ObjectModel(new Cube(), infoModel.Id);
                     break;
                 case SceneObjectType.Cylinder:
-                    model = new ObjectModel(new Cylinder());
+                    model = new ObjectModel(new Cylinder(), infoModel.Id);
                     break;
                 case SceneObjectType.Disk:
-                    model = new ObjectModel(new Disk());
+                    model = new ObjectModel(new Disk(), infoModel.Id);
                     break;
                 case SceneObjectType.Sphere:
-                    model = new ObjectModel(new Sphere());
+                    model = new ObjectModel(new Sphere(), infoModel.Id);
                     break;
                 default:
                     break;
             }
 
-            _dispatcher.Invoke(() => _objects.Add(model));
+            DispatcherHelper.RunAsync(() => _objects.Add(model));
         }
 
         private void OnSceneObjectTransformed(SceneObjectInfoModel model)
@@ -291,6 +289,9 @@ namespace WaveDev.ModelR.ViewModels
             var objectToTransform = (from objectFound in _objects
                                      where objectFound.Id == model.Id
                                      select objectFound).FirstOrDefault();
+
+            if (objectToTransform == null)
+                throw new InvalidOperationException(string.Format("Changed scene object ('{0}') cannot be found in the local scene.", model.Id));
 
             var transformation = GetObjectsLinearTransformation(objectToTransform);
 

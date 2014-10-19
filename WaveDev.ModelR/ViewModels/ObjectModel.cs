@@ -19,10 +19,15 @@ namespace WaveDev.ModelR.ViewModels
 
         #region Construction
 
-        public ObjectModel(SceneElement sceneElement)
+        public ObjectModel(SceneElement sceneElement, Guid? id = null)
         {
             if (sceneElement == null)
                 throw new ArgumentNullException("sceneElement");
+
+            if (id == null)
+                Id = Guid.NewGuid();
+            else
+                Id = id.Value;
 
             SceneElement = sceneElement;
         }
