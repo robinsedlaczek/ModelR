@@ -14,7 +14,8 @@ namespace WaveDev.ModelR.Server.Security
                 where token.Key == "ModelRAuthToken"
                 select token).FirstOrDefault();
 
-            return authToken.Value.Contains("Robin") && authToken.Value.Contains("Sedlaczek");
+            return (authToken.Value.Contains("Robin") && authToken.Value.Contains("Sedlaczek"))
+                || (string.IsNullOrEmpty(authToken.Value) && string.IsNullOrEmpty(authToken.Value));
         }
     }
 }

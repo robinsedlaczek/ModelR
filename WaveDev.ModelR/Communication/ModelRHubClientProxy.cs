@@ -69,14 +69,29 @@ namespace WaveDev.ModelR.Communication
             set;
         }
         
-        public void Login(string user, string password)
+        public void Login(string user, string password, Guid sceneId)
         {
-            _connection.Stop();
+            try
+            {
+                _connection.Stop();
 
-            var authenticationToken = string.Format("User={0} Password={1}", "Robin", "Sedlaczek");
-            _connection.Headers.Add("ModelRAuthToken", authenticationToken);
+                var authenticationToken = string.Format("User={0} Password={1}", user, password);
+                _connection.Headers.Add("ModelRAuthToken", authenticationToken);
 
-            _connection.Start().Wait();
+                _connection.Start().Wait();
+
+                // [RS] Don't do it async, because we have to wait if user is authorized to join the scene. If not,
+                //      the UserNotAuthorizedException will be thrown. The client code has to shutdown the application.
+                _proxy.Invoke("JoinSceneEditorGroup", sceneId);
+
+                _sceneId = sceneId;
+            }
+            catch (Exception exception)
+            {
+                throw new UserNotAuthorizedException();
+
+                throw;
+            }
         }
 
         public IEnumerable<SceneInfoModel> Scenes
@@ -88,13 +103,6 @@ namespace WaveDev.ModelR.Communication
 
                 return _cachedScenes;
             }
-        }
-
-        public async void JoinSceneEditorGroup(Guid sceneId)
-        {
-            await _proxy.Invoke("JoinSceneEditorGroup", sceneId);
-
-            _sceneId = sceneId;
         }
 
         public async void CreateSceneObject(ObjectModel sceneObject)
@@ -161,13 +169,22 @@ namespace WaveDev.ModelR.Communication
             }
             catch (AggregateException exception)
             {
+                Exception nextException;
                 var error = exception.Message;
 
                 foreach (var innerException in exception.InnerExceptions)
-                    error = string.Format(CultureInfo.CurrentUICulture, "{0}{1}{2}", error, Environment.NewLine, innerException.Message);
+                {
+                    nextException = innerException;
 
-                // TODO: [RS] Use MVVM Light here!
-                MessageBox.Show(error, "ModelR - Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                    while (nextException != null)
+                    {
+                        error = string.Format(CultureInfo.CurrentUICulture, "{0}{1}{2}", error, Environment.NewLine, nextException.Message);
+                        nextException = nextException.InnerException;
+                    }
+
+                }
+
+                throw new InvalidOperationException(error, exception);
             }
         }
 

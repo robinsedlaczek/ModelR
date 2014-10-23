@@ -14,6 +14,9 @@
 
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
+using System;
+using System.Reflection;
+using Xceed.Wpf.Toolkit;
 
 namespace WaveDev.ModelR.ViewModels
 {

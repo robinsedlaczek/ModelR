@@ -1,11 +1,20 @@
-﻿<Window x:Class="WaveDev.ModelR.LogonWindow"
+﻿<Window x:Class="WaveDev.ModelR.Views.LogonWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+        xmlns:mvvm="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"   
         Title="ModelR - Logon" 
         MinHeight="370" MinWidth="390"
         Height="370" Width="390"
         WindowStartupLocation="CenterScreen"
+        Loaded="OnWindowLoaded"
         DataContext="{Binding Logon, Source={StaticResource Locator}}" >
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <mvvm:EventToCommand Command="{Binding InitializeCommunicationCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
     <Grid Background="SlateGray">
         <Grid.RowDefinitions>
@@ -58,8 +67,8 @@
         </Grid>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,10,15">
-            <Button x:Name="LoginButton" Content="Login" Width="120" Height="36" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=PasswordBox}" Click="OnLoginButtonClick" HorizontalAlignment="Right" Margin="5"/>
-            <Button x:Name="CancelButton" Content="Cancel" Width="120" Height="36" Command="{Binding CancelLoginCommand}" HorizontalAlignment="Right" Margin="5"/>
+            <Button x:Name="LoginButton" Content="Login" IsDefault="True" Width="120" Height="36" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=PasswordBox}" Click="OnLoginButtonClick" HorizontalAlignment="Right" Margin="5"/>
+            <Button x:Name="CancelButton" Content="Cancel" IsCancel="True" Width="120" Height="36" Command="{Binding CancelLoginCommand}" HorizontalAlignment="Right" Margin="5"/>
         </StackPanel>
 
     </Grid>

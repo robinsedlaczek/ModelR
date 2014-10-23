@@ -9,7 +9,7 @@ using SharpGL.WPF;
 using GalaSoft.MvvmLight.Messaging;
 using WaveDev.ModelR.Messages;
 
-namespace WaveDev.ModelR
+namespace WaveDev.ModelR.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -44,11 +44,8 @@ namespace WaveDev.ModelR
                 MenuPopup.IsOpen = false;
             };
 
-            Messenger.Default.Register<LogonRequiredMessage>(this, message =>
-            {
-                var dialog = new LogonWindow();
-                dialog.ShowDialog();
-            });
+            Messenger.Default.Register<LogonRequiredMessage>(this, message => OnDoLogin());
+            Messenger.Default.Register<ExceptionCausedApplicationShutdownMessage>(this, message => OnExceptionCausedApplicationShutdown(message));
 
             // [RS] Request logon dialog to ask for credentials at application startup.
             Messenger.Default.Send(new LogonRequiredMessage());
@@ -57,6 +54,19 @@ namespace WaveDev.ModelR
         #endregion
 
         #region Event Handler
+
+        private void OnExceptionCausedApplicationShutdown(ExceptionCausedApplicationShutdownMessage message)
+        {
+            // TODO: [RS] Use MVVM Light here! Open message box from window, not here in the model!
+            MessageBox.Show(message.Exception.Message, "ModelR - Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            Application.Current.Shutdown();
+        }
+
+        private static void OnDoLogin()
+        {
+            var dialog = new LogonWindow();
+            dialog.ShowDialog();
+        }
 
         private void OnOpenGlControlDraw(object sender, OpenGLEventArgs args)
         {
@@ -87,12 +97,17 @@ namespace WaveDev.ModelR
                 
                 var renderable = model.SceneElement as IRenderable;
                 var transformable = model.SceneElement as IHasObjectSpace;
+                var volumeBound = model.SceneElement as IVolumeBound;
+                var isSelectedModel = model == _model.SelectedObject;
 
                 if (transformable != null)
                     transformable.PushObjectSpace(gl);
 
                 if (renderable != null)
                     renderable.Render(gl, RenderMode.Design);
+
+                if (isSelectedModel && volumeBound != null)
+                    volumeBound.BoundingVolume.Render(gl, RenderMode.Design);
 
                 if (transformable != null)
                     transformable.PopObjectSpace(gl);
@@ -207,5 +222,5 @@ namespace WaveDev.ModelR
         }
 
         #endregion
-    }
+     }
 }

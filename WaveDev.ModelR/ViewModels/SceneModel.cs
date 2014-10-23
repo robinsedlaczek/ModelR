@@ -9,7 +9,6 @@ using GalaSoft.MvvmLight;
 using WaveDev.ModelR.Communication;
 using WaveDev.ModelR.Shared;
 using WaveDev.ModelR.Shared.Models;
-using System.Windows.Threading;
 using System.Linq;
 using GalaSoft.MvvmLight.Threading;
 
@@ -38,11 +37,6 @@ namespace WaveDev.ModelR.ViewModels
         public SceneModel()
         {
             _objects = new ObservableCollection<ObjectModel>();
-            _proxy = ModelRHubClientProxy.GetInstance();
-
-            // TODO: [RS] Don't forget to unregister event handler somewehre.
-            _proxy.SceneObjectCreated += model => OnSceneObjectCreated(model);
-            _proxy.SceneObjectTransformed += model => OnSceneObjectTransformed(model);
 
             WorldAxies = new Axies();
             OrientationGrid = new Grid()
@@ -95,6 +89,30 @@ namespace WaveDev.ModelR.ViewModels
         {
             get;
             set;
+        }
+
+        public ICommand InitializeCommunicationCommand
+        {
+            get
+            {
+                return new RelayCommand(parameter =>
+                {
+                    try
+                    {
+                        _proxy = ModelRHubClientProxy.GetInstance();
+
+                        // TODO: [RS] Don't forget to unregister event handler somewehre.
+                        _proxy.SceneObjectCreated += model => OnSceneObjectCreated(model);
+                        _proxy.SceneObjectTransformed += model => OnSceneObjectTransformed(model);
+                    }
+                    catch (InvalidOperationException exception)
+                    {
+                        // TODO: [RS] Use MVVM Light here! Open message box from window, not here in the model!
+                        //MessageBox.Show(exception.InnerException.InnerException.Message, "ModelR - Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                        System.Windows.Application.Current.Shutdown();
+                    }
+                }, () => true);
+            }
         }
 
         public ICommand SwitchToTranslationCommand

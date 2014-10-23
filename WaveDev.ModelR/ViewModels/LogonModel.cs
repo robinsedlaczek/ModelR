@@ -10,6 +10,7 @@ using WaveDev.ModelR.Communication;
 using WaveDev.ModelR.Shared.Models;
 using System.Linq.Expressions;
 using WaveDev.ModelR.Shared;
+using System.Linq;
 
 namespace WaveDev.ModelR.ViewModels
 {
@@ -28,7 +29,9 @@ namespace WaveDev.ModelR.ViewModels
         public LogonModel()
         {
             _serverUrl = Constants.ModelRServerUrl;
-            _proxy = ModelRHubClientProxy.GetInstance(_serverUrl);
+//            _proxy = ModelRHubClientProxy.GetInstance(_serverUrl);
+
+            //SelectedScene = _proxy.Scenes.FirstOrDefault();
         }
 
         #endregion
@@ -61,6 +64,28 @@ namespace WaveDev.ModelR.ViewModels
             set;
         }
 
+        public ICommand InitializeCommunicationCommand
+        {
+            get
+            {
+                return new RelayCommand(parameter =>
+                {
+                    try
+                    {
+                        _proxy = ModelRHubClientProxy.GetInstance();
+
+                        SelectedScene = _proxy.Scenes.FirstOrDefault();
+                    }
+                    catch (InvalidOperationException exception)
+                    {
+                        // TODO: [RS] Use MVVM Light here! Open message box from window, not here in the model!
+                        //MessageBox.Show(exception.InnerException.InnerException.Message, "ModelR - Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                        Application.Current.Shutdown();
+                    }
+                }, () => true);
+            }
+        }
+
         public ICommand CancelLoginCommand
         {
             get
@@ -87,9 +112,7 @@ namespace WaveDev.ModelR.ViewModels
                         if (passwordBox != null)
                             password = passwordBox.Password;
 
-                        // TODO: [RS] Cannot await Login-method. How to make properties async?
-                        _proxy.Login(UserName, password);
-                        _proxy.JoinSceneEditorGroup(SelectedScene.Id);
+                        _proxy.Login(UserName, password, SelectedScene.Id);
 
                     }, () => true);
                 }
