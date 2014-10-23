@@ -82,15 +82,13 @@ namespace WaveDev.ModelR.Communication
 
                 // [RS] Don't do it async, because we have to wait if user is authorized to join the scene. If not,
                 //      the UserNotAuthorizedException will be thrown. The client code has to shutdown the application.
-                _proxy.Invoke("JoinSceneEditorGroup", sceneId);
+                _proxy.Invoke("JoinSceneEditorGroup", sceneId).Wait();
 
                 _sceneId = sceneId;
             }
             catch (Exception exception)
             {
-                throw new UserNotAuthorizedException();
-
-                throw;
+                throw new UserNotAuthorizedException(string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized or known in the system.", user));
             }
         }
 

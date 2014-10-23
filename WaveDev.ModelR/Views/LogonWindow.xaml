@@ -2,19 +2,14 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
-        xmlns:mvvm="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"   
+        xmlns:mvvm="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+        xmlns:converter="clr-namespace:Xceed.Wpf.AvalonDock.Converters;assembly=Xceed.Wpf.AvalonDock"
         Title="ModelR - Logon" 
         MinHeight="370" MinWidth="390"
         Height="370" Width="390"
         WindowStartupLocation="CenterScreen"
         Loaded="OnWindowLoaded"
         DataContext="{Binding Logon, Source={StaticResource Locator}}" >
-
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <mvvm:EventToCommand Command="{Binding InitializeCommunicationCommand}"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
 
     <Grid Background="SlateGray">
         <Grid.RowDefinitions>

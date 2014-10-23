@@ -8,6 +8,11 @@ namespace WaveDev.ModelR.Communication
     /// </summary>
     public class UserNotAuthorizedException : Exception
     {
+        public UserNotAuthorizedException(string message)
+            : base(message)
+        {
+
+        }
 
     }
 }

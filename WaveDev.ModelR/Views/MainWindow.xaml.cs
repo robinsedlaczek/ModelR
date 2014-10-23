@@ -57,7 +57,6 @@ namespace WaveDev.ModelR.Views
 
         private void OnExceptionCausedApplicationShutdown(ExceptionCausedApplicationShutdownMessage message)
         {
-            // TODO: [RS] Use MVVM Light here! Open message box from window, not here in the model!
             Xceed.Wpf.Toolkit.MessageBox.Show(message.Exception.Message, "ModelR - Error", MessageBoxButton.OK, MessageBoxImage.Error);
             Application.Current.Shutdown();
         }

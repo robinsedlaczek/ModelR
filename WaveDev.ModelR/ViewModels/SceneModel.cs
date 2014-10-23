@@ -103,7 +103,7 @@ namespace WaveDev.ModelR.ViewModels
                     {
                         _proxy = ModelRHubClientProxy.GetInstance();
 
-                        // TODO: [RS] Don't forget to unregister event handler somewehre.
+                        // TODO: [RS] Handlers should be unregistered somewhere!?
                         _proxy.SceneObjectCreated += model => OnSceneObjectCreated(model);
                         _proxy.SceneObjectTransformed += model => OnSceneObjectTransformed(model);
                     }
@@ -115,10 +115,6 @@ namespace WaveDev.ModelR.ViewModels
                                 Exception = exception,
                                 ShowMessageToUser = true
                             });
-
-                        // TODO: [RS] Use MVVM Light here! Open message box from window, not here in the model!
-                        //MessageBox.Show(exception.InnerException.InnerException.Message, "ModelR - Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
-                        //System.Windows.Application.Current.Shutdown();
                     }
                 }, () => true);
             }

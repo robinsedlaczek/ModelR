@@ -1,7 +1,9 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Messaging;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
+using WaveDev.ModelR.Messages;
 using WaveDev.ModelR.ViewModels;
 
 namespace WaveDev.ModelR.Views
@@ -24,12 +26,20 @@ namespace WaveDev.ModelR.Views
         {
             InitializeComponent();
 
+            Messenger.Default.Register<ExceptionCausedApplicationShutdownMessage>(this, message => OnExceptionCausedApplicationShutdown(message));
+
             UserNameTextBox.Focus();
         }
 
         #endregion
 
         #region Event Handlers
+
+        private void OnExceptionCausedApplicationShutdown(ExceptionCausedApplicationShutdownMessage message)
+        {
+            Xceed.Wpf.Toolkit.MessageBox.Show(message.Exception.Message, "ModelR - Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            Application.Current.Shutdown();
+        }
 
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
