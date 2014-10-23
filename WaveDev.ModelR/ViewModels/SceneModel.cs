@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
+using GalaSoft.MvvmLight.Messaging;
 using SharpGL.SceneGraph.Core;
 using SharpGL.SceneGraph.Primitives;
 using SharpGL.SceneGraph.Quadrics;
@@ -7,6 +8,7 @@ using System;
 using SharpGL.SceneGraph.Transformations;
 using GalaSoft.MvvmLight;
 using WaveDev.ModelR.Communication;
+using WaveDev.ModelR.Messages;
 using WaveDev.ModelR.Shared;
 using WaveDev.ModelR.Shared.Models;
 using System.Linq;
@@ -107,9 +109,16 @@ namespace WaveDev.ModelR.ViewModels
                     }
                     catch (InvalidOperationException exception)
                     {
+                        Messenger.Default.Send<ExceptionCausedApplicationShutdownMessage>(
+                            new ExceptionCausedApplicationShutdownMessage()
+                            {
+                                Exception = exception,
+                                ShowMessageToUser = true
+                            });
+
                         // TODO: [RS] Use MVVM Light here! Open message box from window, not here in the model!
                         //MessageBox.Show(exception.InnerException.InnerException.Message, "ModelR - Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
-                        System.Windows.Application.Current.Shutdown();
+                        //System.Windows.Application.Current.Shutdown();
                     }
                 }, () => true);
             }
