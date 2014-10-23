@@ -129,6 +129,7 @@ namespace WaveDev.ModelR.ViewModels
                     _switchToTranslationCommand = new RelayCommand(parameter => TransformCurrentObject =
                         (x, y, z) =>
                             {
+                                // TODO: [RS] Exception Handling!
                                 if (SelectedObject == null)
                                     return;
 
@@ -156,6 +157,7 @@ namespace WaveDev.ModelR.ViewModels
                     _switchToRotationCommand = new RelayCommand(parameter => TransformCurrentObject = 
                         (x, y, z) =>
                             {
+                                // TODO: [RS] Exception Handling!
                                 if (SelectedObject == null)
                                     return;
 
@@ -183,6 +185,7 @@ namespace WaveDev.ModelR.ViewModels
                     _switchToScaleCommand = new RelayCommand(parameter => TransformCurrentObject = 
                         (x, y, z) =>
                             {
+                                // TODO: [RS] Exception Handling!
                                 if (SelectedObject == null)
                                     return;
 
@@ -281,6 +284,8 @@ namespace WaveDev.ModelR.ViewModels
 
         private void OnSceneObjectCreated(SceneObjectInfoModel infoModel)
         {
+            // TODO: [RS] Exception Handling!
+
             ObjectModel model = null;
 
             switch (infoModel.SceneObjectType)
@@ -309,6 +314,8 @@ namespace WaveDev.ModelR.ViewModels
 
         private void OnSceneObjectTransformed(SceneObjectInfoModel model)
         {
+            // TODO: [RS] Exception Handling!
+
             var objectToTransform = (from objectFound in _objects
                                      where objectFound.Id == model.Id
                                      select objectFound).FirstOrDefault();
@@ -337,6 +344,8 @@ namespace WaveDev.ModelR.ViewModels
 
         private ObjectModel CreateObjectModel<T>() where T : SceneElement, new()
         {
+            // TODO: [RS] Exception Handling!
+
             var model = new ObjectModel(new T());
 
             _objects.Add(model);
@@ -351,6 +360,8 @@ namespace WaveDev.ModelR.ViewModels
 
         private LinearTransformation GetObjectsLinearTransformation(ObjectModel model)
         {
+            // TODO: [RS] Exception Handling!
+
             if (model == null)
                 throw new ArgumentNullException("model");
 

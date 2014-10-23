@@ -10,12 +10,18 @@ namespace WaveDev.ModelR.Server.Security
     {
         public override bool AuthorizeHubMethodInvocation(IHubIncomingInvokerContext hubIncomingInvokerContext, bool appliesToMethod)
         {
-            var authToken = (from token in hubIncomingInvokerContext.Hub.Context.Headers
-                where token.Key == "ModelRAuthToken"
-                select token).FirstOrDefault();
+            var userName = (from token in hubIncomingInvokerContext.Hub.Context.Headers
+                            where token.Key == "ModelRAuthToken_UserName"
+                            select token).FirstOrDefault();
 
-            return (authToken.Value.Contains("Robin") && authToken.Value.Contains("Sedlaczek"))
-                || (string.IsNullOrEmpty(authToken.Value) && string.IsNullOrEmpty(authToken.Value));
+            var password = (from token in hubIncomingInvokerContext.Hub.Context.Headers
+                            where token.Key == "ModelRAuthToken_UserPassword"
+                            select token).FirstOrDefault();
+
+            if (string.IsNullOrEmpty(userName.Value) || string.IsNullOrEmpty(password.Value))
+                return false;
+
+            return (userName.Value.CompareTo("Robin") == 0 && password.Value.CompareTo("Sedlaczek") == 0);
         }
     }
 }

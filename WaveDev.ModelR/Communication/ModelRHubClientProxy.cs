@@ -75,8 +75,10 @@ namespace WaveDev.ModelR.Communication
             {
                 _connection.Stop();
 
-                var authenticationToken = string.Format("User={0} Password={1}", user, password);
-                _connection.Headers.Add("ModelRAuthToken", authenticationToken);
+                // [RS] The authentication token(s) should be encrypted. Sending the user name and the password in clear text here
+                //      is just for demonatration how authorization can be implemented.
+                _connection.Headers.Add("ModelRAuthToken_UserName", user);
+                _connection.Headers.Add("ModelRAuthToken_UserPassword", password);
 
                 _connection.Start().Wait();
 
