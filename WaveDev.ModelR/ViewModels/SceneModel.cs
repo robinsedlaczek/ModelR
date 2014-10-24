@@ -33,6 +33,8 @@ namespace WaveDev.ModelR.ViewModels
         private RelayCommand _switchToScaleCommand;
         private ObjectModel _selectedObject;
         private ModelRHubClientProxy _proxy;
+        private UserModel _selectedUser;
+        private ObservableCollection<UserModel> _users;
 
         #endregion
 
@@ -41,6 +43,7 @@ namespace WaveDev.ModelR.ViewModels
         public SceneModel()
         {
             _objects = new ObservableCollection<ObjectModel>();
+            _users = new ObservableCollection<UserModel>();
 
             WorldAxies = new Axies();
             OrientationGrid = new Grid()
@@ -66,6 +69,27 @@ namespace WaveDev.ModelR.ViewModels
         {
             get;
             private set;
+        }
+
+        public ObservableCollection<UserModel> UserModels
+        {
+            get
+            {
+                return _users;
+            }
+        }
+
+        public UserModel SelectedUser
+        {
+            get
+            {
+                return _selectedUser;
+            }
+
+            set
+            {
+                Set<UserModel>(ref _selectedUser, value);
+            }
         }
 
         public ObservableCollection<ObjectModel> SceneObjectModels

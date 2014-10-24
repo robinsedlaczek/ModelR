@@ -25,6 +25,7 @@
         <ad:DockingManager x:Name="DockManager" Grid.Column="0">
             <adl:LayoutRoot>
                 <adl:LayoutPanel Orientation="Horizontal">
+                    
                     <adl:LayoutAnchorablePane DockWidth="250">
                         <adl:LayoutAnchorable Title="Scene Graph">
                             <ListView x:Name="ObjectsListView" ItemsSource="{Binding SceneObjectModels}" SelectedItem="{Binding SelectedObject, Mode=TwoWay}" ItemTemplate="{DynamicResource ObjectListViewItemTemplate}" Background="SlateGray" KeyDown="OnOpenGLControlKeyDown" KeyUp="OnOpenGLControlKeyUp" >
@@ -49,6 +50,7 @@
                             </ListView>
                         </adl:LayoutAnchorable>
                     </adl:LayoutAnchorablePane>
+                    
                     <adl:LayoutDocumentPane>
                         <adl:LayoutAnchorable Title="Render View">
                             <WPF:OpenGLControl x:Name="OpenGLControl" Grid.Column="2" 
@@ -63,6 +65,32 @@
                                    Focusable="True"/>
                         </adl:LayoutAnchorable>
                     </adl:LayoutDocumentPane>
+                    
+                    <adl:LayoutAnchorablePane DockWidth="250" >
+                        <adl:LayoutAnchorable Title="Users" CanAutoHide="True" >
+                            <ListView x:Name="UsersListView" ItemsSource="{Binding UserModels}" SelectedItem="{Binding SelectedUser, Mode=TwoWay}" ItemTemplate="{DynamicResource UserListViewItemTemplate}" Background="Wheat" >
+                                <ListView.Resources>
+                                    <DataTemplate x:Key="UserListViewItemTemplate">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Border BorderThickness="1" Grid.Column="0">
+                                                <Image Source="{Binding Image}" Width="30" Height="30" Margin="5" VerticalAlignment="Stretch"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding UserName}" Foreground="White" Padding="10,5,10,5" FontSize="18" />
+                                                <TextBlock Text="{Binding Id}" Foreground="Silver"  Padding="10,5,10,5"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.Resources>
+                            </ListView>
+                        </adl:LayoutAnchorable>
+                    </adl:LayoutAnchorablePane>
+                    
                 </adl:LayoutPanel>
             </adl:LayoutRoot>
         </ad:DockingManager>

@@ -127,6 +127,7 @@
     <Compile Include="Communication\UserNotAuthorizedException.cs" />
     <Compile Include="Messages\ExceptionCausedApplicationShutdownMessage.cs" />
     <Compile Include="Messages\NotAuthorizedForOperationMessage.cs" />
+    <Compile Include="ViewModels\UserModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Messages\LogonRequiredMessage.cs" />
     <Page Include="Views\LogonWindow.xaml">
@@ -218,6 +219,9 @@
     <Resource Include="Images\Move.png" />
     <Resource Include="Images\Rotate.png" />
     <Resource Include="Images\Scale.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\User.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
