@@ -46,6 +46,7 @@ namespace WaveDev.ModelR.Views
 
             Messenger.Default.Register<LogonRequiredMessage>(this, message => OnDoLogin());
             Messenger.Default.Register<ExceptionCausedApplicationShutdownMessage>(this, message => OnExceptionCausedApplicationShutdown(message));
+            Messenger.Default.Register<NotAuthorizedForOperationMessage>(this, message => OnNotAuthorizedForOperation(message));
 
             // [RS] Request logon dialog to ask for credentials at application startup.
             Messenger.Default.Send(new LogonRequiredMessage());
@@ -54,6 +55,11 @@ namespace WaveDev.ModelR.Views
         #endregion
 
         #region Event Handler
+
+        private void OnNotAuthorizedForOperation(NotAuthorizedForOperationMessage message)
+        {
+            Xceed.Wpf.Toolkit.MessageBox.Show(message.Info, "ModelR - Error", MessageBoxButton.OK, MessageBoxImage.Hand);
+        }
 
         private void OnExceptionCausedApplicationShutdown(ExceptionCausedApplicationShutdownMessage message)
         {

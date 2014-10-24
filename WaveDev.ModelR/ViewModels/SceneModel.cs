@@ -13,6 +13,8 @@ using WaveDev.ModelR.Shared;
 using WaveDev.ModelR.Shared.Models;
 using System.Linq;
 using GalaSoft.MvvmLight.Threading;
+using System.Globalization;
+using System.Threading.Tasks;
 
 namespace WaveDev.ModelR.ViewModels
 {
@@ -109,6 +111,8 @@ namespace WaveDev.ModelR.ViewModels
                     }
                     catch (InvalidOperationException exception)
                     {
+                        // [RS] If there are errors during initialisation, the application should be shut down. That's why the
+                        //      ExceptionCausedApplicationShutdownMessage message will be send here.
                         Messenger.Default.Send<ExceptionCausedApplicationShutdownMessage>(
                             new ExceptionCausedApplicationShutdownMessage()
                             {
@@ -127,9 +131,8 @@ namespace WaveDev.ModelR.ViewModels
                 if (_switchToTranslationCommand == null)
                 {
                     _switchToTranslationCommand = new RelayCommand(parameter => TransformCurrentObject =
-                        (x, y, z) =>
+                        async (x, y, z) =>
                             {
-                                // TODO: [RS] Exception Handling!
                                 if (SelectedObject == null)
                                     return;
 
@@ -139,7 +142,21 @@ namespace WaveDev.ModelR.ViewModels
                                 transformation.TranslateY += y;
                                 transformation.TranslateZ += z;
 
-                                _proxy.TransformSceneObject(SelectedObject);
+                                try
+                                {
+                                    await _proxy.TransformSceneObject(SelectedObject);
+                                }
+                                catch (UserNotAuthorizedException exception)
+                                {
+                                    // [RS] If the user is not authorized to transform an object, it will be forbidden at the client, too.
+                                    //      So the transformation that has been done above will be undone. 
+                                    transformation.TranslateX -= x;
+                                    transformation.TranslateY -= y;
+                                    transformation.TranslateZ -= z;
+
+                                    var info = string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized to move scene objects.", exception.UserName);
+                                    Messenger.Default.Send<NotAuthorizedForOperationMessage>(new NotAuthorizedForOperationMessage(info));
+                                }
                             },
                         () => true);
                 }
@@ -155,9 +172,8 @@ namespace WaveDev.ModelR.ViewModels
                 if (_switchToRotationCommand == null)
                 {
                     _switchToRotationCommand = new RelayCommand(parameter => TransformCurrentObject = 
-                        (x, y, z) =>
+                        async (x, y, z) =>
                             {
-                                // TODO: [RS] Exception Handling!
                                 if (SelectedObject == null)
                                     return;
 
@@ -167,7 +183,21 @@ namespace WaveDev.ModelR.ViewModels
                                 transformation.RotateY += 10 * y;
                                 transformation.RotateZ += 10 * z;
 
-                                _proxy.TransformSceneObject(SelectedObject);
+                                try
+                                {
+                                    await _proxy.TransformSceneObject(SelectedObject);
+                                }
+                                catch (UserNotAuthorizedException exception)
+                                {
+                                    // [RS] If the user is not authorized to transform an object, it will be forbidden at the client, too.
+                                    //      So the transformation that has been done above will be undone. 
+                                    transformation.RotateX -= 10 * x;
+                                    transformation.RotateY -= 10 * y;
+                                    transformation.RotateZ -= 10 * z;
+
+                                    var info = string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized to rotate scene objects.", exception.UserName);
+                                    Messenger.Default.Send<NotAuthorizedForOperationMessage>(new NotAuthorizedForOperationMessage(info));
+                                }
                             },
                         () => true);
                 }
@@ -182,10 +212,9 @@ namespace WaveDev.ModelR.ViewModels
             {
                 if (_switchToScaleCommand == null)
                 {
-                    _switchToScaleCommand = new RelayCommand(parameter => TransformCurrentObject = 
-                        (x, y, z) =>
+                    _switchToScaleCommand = new RelayCommand(parameter => TransformCurrentObject =
+                        async (x, y, z) =>
                             {
-                                // TODO: [RS] Exception Handling!
                                 if (SelectedObject == null)
                                     return;
 
@@ -195,7 +224,21 @@ namespace WaveDev.ModelR.ViewModels
                                 transformation.ScaleY += y;
                                 transformation.ScaleZ += z;
 
-                                _proxy.TransformSceneObject(SelectedObject);
+                                try
+                                {
+                                    await _proxy.TransformSceneObject(SelectedObject);
+                                }
+                                catch (UserNotAuthorizedException exception)
+                                {
+                                    // [RS] If the user is not authorized to transform an object, it will be forbidden at the client, too.
+                                    //      So the transformation that has been done above will be undone. 
+                                    transformation.ScaleX -= x;
+                                    transformation.ScaleY -= y;
+                                    transformation.ScaleZ -= z;
+
+                                    var info = string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized to scale scene objects.", exception.UserName);
+                                    Messenger.Default.Send<NotAuthorizedForOperationMessage>(new NotAuthorizedForOperationMessage(info));
+                                }
                             },
                         () => true);
                 }
@@ -209,9 +252,9 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createTeapotCommand == null)
-                    _createTeapotCommand = new RelayCommand(parameter =>
+                    _createTeapotCommand = new RelayCommand(async parameter =>
                     {
-                        var model = CreateObjectModel<Teapot>();
+                        var model = await CreateObjectModel<Teapot>();
                         var teapot = model.SceneElement as Teapot;
 
                         teapot.Transformation = new LinearTransformation() { TranslateX = 0f, TranslateY = 0.55f, TranslateZ = 0f };
@@ -227,7 +270,7 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createCubeCommand == null)
-                    _createCubeCommand = new RelayCommand(parameter => CreateObjectModel<Cube>(), () => true);
+                    _createCubeCommand = new RelayCommand(async parameter => await CreateObjectModel<Cube>(), () => true);
 
                 return _createCubeCommand;
             }
@@ -238,7 +281,7 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createSphereCommand == null)
-                    _createSphereCommand = new RelayCommand(parameter => CreateObjectModel<Sphere>(), () => true);
+                    _createSphereCommand = new RelayCommand(async parameter => await CreateObjectModel<Sphere>(), () => true);
 
                 return _createSphereCommand;
             }
@@ -250,17 +293,7 @@ namespace WaveDev.ModelR.ViewModels
             {
                 if (_createCylinderCommand == null)
                 {
-                    _createCylinderCommand = new RelayCommand(parameter =>
-                    {
-                        var model = CreateObjectModel<Cylinder>();
-                        var cylinder = model.SceneElement as Cylinder;
-
-                        cylinder.TopRadius = 0.5d;
-                        cylinder.BaseRadius = 0.5d;
-                        cylinder.Height = 2d;
-                        cylinder.Slices = 20;
-                        cylinder.Stacks = 20;
-                    }, () => true);
+                    _createCylinderCommand = new RelayCommand(async parameter => await CreateObjectModel<Cylinder>(), () => true);
                 }
 
                 return _createCylinderCommand;
@@ -272,7 +305,7 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createDiscCommand == null)
-                    _createDiscCommand = new RelayCommand(parameter => CreateObjectModel<Disk>(), () => true);
+                    _createDiscCommand = new RelayCommand(async parameter => await CreateObjectModel<Disk>(), () => true);
 
                 return _createDiscCommand;
             }
@@ -342,20 +375,28 @@ namespace WaveDev.ModelR.ViewModels
 
         #region Private Members
 
-        private ObjectModel CreateObjectModel<T>() where T : SceneElement, new()
+        private async Task<ObjectModel> CreateObjectModel<T>() where T : SceneElement, new()
         {
-            // TODO: [RS] Exception Handling!
+            try
+            {
+                var model = new ObjectModel(new T());
 
-            var model = new ObjectModel(new T());
+                await _proxy.CreateSceneObject(model);
 
-            _objects.Add(model);
+                _objects.Add(model);
 
-            if (_objects.Count == 1)
-                SelectedObject = model;
+                if (_objects.Count == 1)
+                    SelectedObject = model;
 
-            _proxy.CreateSceneObject(model);
+                return model;
+            }
+            catch (UserNotAuthorizedException exception)
+            {
+                var info = string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized to create scene objects.", exception.UserName);
+                Messenger.Default.Send<NotAuthorizedForOperationMessage>(new NotAuthorizedForOperationMessage(info));
+            }
 
-            return model;
+            return null;
         }
 
         private LinearTransformation GetObjectsLinearTransformation(ObjectModel model)

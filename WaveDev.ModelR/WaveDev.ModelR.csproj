@@ -126,6 +126,7 @@
     <Compile Include="Communication\ModelRHubClientProxy.cs" />
     <Compile Include="Communication\UserNotAuthorizedException.cs" />
     <Compile Include="Messages\ExceptionCausedApplicationShutdownMessage.cs" />
+    <Compile Include="Messages\NotAuthorizedForOperationMessage.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Messages\LogonRequiredMessage.cs" />
     <Page Include="Views\LogonWindow.xaml">

@@ -8,6 +8,8 @@ using System.Globalization;
 using WaveDev.ModelR.ViewModels;
 using Xceed.Wpf.Toolkit;
 using WaveDev.ModelR.Shared;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace WaveDev.ModelR.Communication
 {
@@ -63,6 +65,12 @@ namespace WaveDev.ModelR.Communication
 
         #region Public Members
 
+        public string LoggedInUserName
+        {
+            get;
+            set;
+        }
+
         public string ServerUrl
         {
             get;
@@ -87,10 +95,12 @@ namespace WaveDev.ModelR.Communication
                 _proxy.Invoke("JoinSceneEditorGroup", sceneId).Wait();
 
                 _sceneId = sceneId;
+
+                LoggedInUserName = user;
             }
             catch (Exception exception)
             {
-                throw new UserNotAuthorizedException(string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized or known in the system.", user));
+                throw new UserNotAuthorizedException(string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized or known in the system.", user), user);
             }
         }
 
@@ -105,7 +115,7 @@ namespace WaveDev.ModelR.Communication
             }
         }
 
-        public async void CreateSceneObject(ObjectModel sceneObject)
+        public async Task CreateSceneObject(ObjectModel sceneObject)
         {
             var type = SceneObjectType.Light;
 
@@ -122,10 +132,17 @@ namespace WaveDev.ModelR.Communication
 
             var infoModel = new SceneObjectInfoModel(sceneObject.Id, _sceneId) { SceneObjectType = type };
 
-            await _proxy.Invoke("CreateSceneObject", infoModel);
+            try
+            {
+                await _proxy.Invoke("CreateSceneObject", infoModel);
+            }
+            catch (InvalidOperationException exception)
+            {
+                throw new UserNotAuthorizedException(string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized or known in the system.", LoggedInUserName), LoggedInUserName);
+            }
         }
 
-        public async void TransformSceneObject(ObjectModel sceneObject)
+        public async Task TransformSceneObject(ObjectModel sceneObject)
         {
             var infoModel = new SceneObjectInfoModel(sceneObject.Id, _sceneId);
 
@@ -142,7 +159,14 @@ namespace WaveDev.ModelR.Communication
                 ScaleZ = sceneObject.Transformation.ScaleZ
             };
 
-            await _proxy.Invoke("TransformSceneObject", infoModel);
+            try
+            {
+                await _proxy.Invoke("TransformSceneObject", infoModel);
+            }
+            catch (InvalidOperationException exception)
+            {
+                throw new UserNotAuthorizedException(string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized or known in the system.", LoggedInUserName), LoggedInUserName);
+            }
         }
 
         #endregion
@@ -153,10 +177,12 @@ namespace WaveDev.ModelR.Communication
         {
             try
             {
+                var logWriter = new StreamWriter(@"..\..\..\Logs\ModelR.Client." + Guid.NewGuid().ToString() + ".log") { AutoFlush = true };
+
                 _connection = new HubConnection(ServerUrl)
                 {
                     TraceLevel = TraceLevels.All,
-                    TraceWriter = Console.Out
+                    TraceWriter = logWriter
                 };
 
                 _proxy = _connection.CreateHubProxy(Constants.ModelRHubName);
