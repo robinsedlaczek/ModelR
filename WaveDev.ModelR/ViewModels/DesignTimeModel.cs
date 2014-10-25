@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
 using SharpGL.SceneGraph.Core;
 using SharpGL.SceneGraph.Primitives;
 using SharpGL.SceneGraph.Quadrics;
@@ -47,6 +46,19 @@ namespace WaveDev.ModelR.ViewModels
                 }
 
                 return _objects;
+            }
+        }
+
+        public ObservableCollection<UserModel> UserModels
+        {
+            get
+            {
+                return new ObservableCollection<UserModel>() {
+                    new UserModel("Robin", null),
+                    new UserModel("Steffen", null),
+                    new UserModel("Sarah", null),
+                    new UserModel("Matthes", null)
+                };
             }
         }
 

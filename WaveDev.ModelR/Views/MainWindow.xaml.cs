@@ -8,6 +8,7 @@ using WaveDev.ModelR.ViewModels;
 using SharpGL.WPF;
 using GalaSoft.MvvmLight.Messaging;
 using WaveDev.ModelR.Messages;
+using WaveDev.ModelR.Views;
 
 namespace WaveDev.ModelR.Views
 {
@@ -23,6 +24,7 @@ namespace WaveDev.ModelR.Views
         private double[] _lastPosition;
         private float[] _positionDelta;
         private bool _leftAltKeyPressed;
+        private IDisposable _userListControl;
 
         #endregion
 
@@ -55,6 +57,17 @@ namespace WaveDev.ModelR.Views
         #endregion
 
         #region Event Handler
+
+        private void OnWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            _userListControl = OverlayAdorner<UserListControl>.Overlay(LayoutRoot, new UserListControl() { DataContext = _model });
+        }
+
+        private void OnWindowUnloaded(object sender, RoutedEventArgs e)
+        {
+            if (_userListControl != null)
+                _userListControl.Dispose();
+        }
 
         private void OnNotAuthorizedForOperation(NotAuthorizedForOperationMessage message)
         {
@@ -227,5 +240,6 @@ namespace WaveDev.ModelR.Views
         }
 
         #endregion
-     }
+
+    }
 }

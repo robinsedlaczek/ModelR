@@ -9,7 +9,8 @@
         Height="370" Width="390"
         WindowStartupLocation="CenterScreen"
         Loaded="OnWindowLoaded"
-        DataContext="{Binding Logon, Source={StaticResource Locator}}" >
+        DataContext="{Binding Logon, Source={StaticResource Locator}}" 
+        Icon="/WaveDev.ModelR;component/Images/Application.ico" >
 
     <Grid Background="SlateGray">
         <Grid.RowDefinitions>

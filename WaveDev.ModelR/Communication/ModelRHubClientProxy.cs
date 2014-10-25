@@ -30,6 +30,7 @@ namespace WaveDev.ModelR.Communication
 
         public delegate void SceneObjectCreatedEventHandler(SceneObjectInfoModel infoModel);
         public delegate void SceneObjectTransformedEventHandler(SceneObjectInfoModel infoModel);
+        public delegate void UserJoinedEventHandler(UserInfoModel infoModel);
 
         #endregion
 
@@ -37,6 +38,7 @@ namespace WaveDev.ModelR.Communication
 
         public event SceneObjectCreatedEventHandler SceneObjectCreated;
         public event SceneObjectTransformedEventHandler SceneObjectTransformed;
+        public event UserJoinedEventHandler UserJoined;
 
         #endregion
 
@@ -187,8 +189,9 @@ namespace WaveDev.ModelR.Communication
 
                 _proxy = _connection.CreateHubProxy(Constants.ModelRHubName);
 
-                _proxy.On<SceneObjectInfoModel>("SceneObjectCreated", infoModel => SceneObjectCreated(infoModel));
-                _proxy.On<SceneObjectInfoModel>("SceneObjectTransformed", infoModel => SceneObjectTransformed(infoModel));
+                _proxy.On<SceneObjectInfoModel>("SceneObjectCreated", infoModel => OnSceneObjectCreated(infoModel));
+                _proxy.On<SceneObjectInfoModel>("SceneObjectTransformed", infoModel => OnSceneObjectTransformed(infoModel));
+                _proxy.On<UserInfoModel>("UserJoined", infoModel => OnUserJoined(infoModel));
 
                 // TODO: [RS] Method cannot be async here, because it is called from the construtor.
                 _connection.Start().Wait();
@@ -214,6 +217,29 @@ namespace WaveDev.ModelR.Communication
             }
         }
 
+        #region Event Raise Helper for SignalR Client Method Calls
+
+        private void OnUserJoined(UserInfoModel infoModel)
+        {
+            if (UserJoined != null)
+                UserJoined(infoModel);
+        }
+
+        private void OnSceneObjectTransformed(SceneObjectInfoModel infoModel)
+        {
+            if (SceneObjectTransformed != null)
+                SceneObjectTransformed(infoModel);
+        }
+
+        private void OnSceneObjectCreated(SceneObjectInfoModel infoModel)
+        {
+            if (SceneObjectCreated != null)
+                SceneObjectCreated(infoModel);
+        }
+
         #endregion
+
+        #endregion
+
     }
 }

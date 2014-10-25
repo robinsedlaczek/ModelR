@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight;
-using SharpGL.SceneGraph.Core;
-using SharpGL.SceneGraph.Primitives;
-using SharpGL.SceneGraph.Quadrics;
-using SharpGL.SceneGraph.Transformations;
 
 namespace WaveDev.ModelR.ViewModels
 {
@@ -19,14 +14,15 @@ namespace WaveDev.ModelR.ViewModels
 
         #region Construction
 
-        public UserModel(string userName, Guid? id = null)
+        public UserModel(string userName, byte[] image, Guid? id = null)
         {
             if (id == null)
                 Id = Guid.NewGuid();
             else
                 Id = id.Value;
 
-            UserName = UserName;
+            UserName = userName;
+            Image = image;
         }
 
         #endregion
@@ -62,17 +58,10 @@ namespace WaveDev.ModelR.ViewModels
             
         }
 
-        public BitmapImage Image
+        public byte[] Image
         {
-            get
-            {
-                BitmapImage image = null;
-
-                var uri = new Uri("/WaveDev.ModelR;component/Images/User.png", UriKind.Relative);
-                image = new BitmapImage(uri);
-
-                return image;
-            }
+            get;
+            private set;
         }
 
         #endregion

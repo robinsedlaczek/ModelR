@@ -132,6 +132,7 @@ namespace WaveDev.ModelR.ViewModels
                         // TODO: [RS] Handlers should be unregistered somewhere!?
                         _proxy.SceneObjectCreated += model => OnSceneObjectCreated(model);
                         _proxy.SceneObjectTransformed += model => OnSceneObjectTransformed(model);
+                        _proxy.UserJoined += model => OnUserJoined(model);
                     }
                     catch (InvalidOperationException exception)
                     {
@@ -339,6 +340,13 @@ namespace WaveDev.ModelR.ViewModels
 
         #region Event Handlers
 
+        private void OnUserJoined(UserInfoModel infoModel)
+        {
+            var userModel = new UserModel(infoModel.UserName,infoModel.Image);
+
+            DispatcherHelper.RunAsync(() => UserModels.Add(userModel));
+        }
+
         private void OnSceneObjectCreated(SceneObjectInfoModel infoModel)
         {
             // TODO: [RS] Exception Handling!
@@ -366,7 +374,7 @@ namespace WaveDev.ModelR.ViewModels
                     break;
             }
 
-            DispatcherHelper.RunAsync(() => _objects.Add(model));
+            DispatcherHelper.RunAsync(() => SceneObjectModels.Add(model));
         }
 
         private void OnSceneObjectTransformed(SceneObjectInfoModel model)

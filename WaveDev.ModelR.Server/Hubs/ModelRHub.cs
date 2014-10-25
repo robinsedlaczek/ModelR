@@ -64,6 +64,18 @@ namespace WaveDev.ModelR.Server
         public void JoinSceneEditorGroup(Guid sceneId)
         {
             Groups.Add(Context.ConnectionId, sceneId.ToString());
+
+            var userName = (from token in Context.Headers
+                            where token.Key == "ModelRAuthToken_UserName"
+                            select token).FirstOrDefault();
+
+            // TODO: [RS] Load image of user and give it into the model.
+            var userInfo = new UserInfoModel(userName.Value, null);
+
+            var group = Clients.Group(sceneId.ToString());
+
+            if (group != null)
+                group.UserJoined(userInfo);
         }
 
         [ModelRAuthorize]

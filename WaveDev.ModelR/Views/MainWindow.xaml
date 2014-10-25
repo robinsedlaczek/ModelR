@@ -10,8 +10,11 @@
     xmlns:adl="clr-namespace:Xceed.Wpf.AvalonDock.Layout;assembly=Xceed.Wpf.AvalonDock"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
     xmlns:mvvm="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"   
-    Title="MainWindow" Height="800" Width="1300" WindowStartupLocation="CenterScreen"
     xmlns:local="clr-namespace:WaveDev.ModelR.ViewModels"
+    Title="MainWindow" Height="800" Width="1300" WindowStartupLocation="CenterScreen"
+    Icon="/WaveDev.ModelR;component/Images/Application.ico"
+    Loaded="OnWindowLoaded"
+    Unloaded="OnWindowUnloaded"
     d:DataContext="{x:Static local:DesignTimeModel.DataContext}"
     DataContext="{Binding Scene, Source={StaticResource Locator}}">
 
@@ -21,7 +24,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     
-    <Grid>
+    <Grid x:Name="LayoutRoot">
         <ad:DockingManager x:Name="DockManager" Grid.Column="0">
             <adl:LayoutRoot>
                 <adl:LayoutPanel Orientation="Horizontal">
@@ -65,31 +68,6 @@
                                    Focusable="True"/>
                         </adl:LayoutAnchorable>
                     </adl:LayoutDocumentPane>
-                    
-                    <adl:LayoutAnchorablePane DockWidth="250" >
-                        <adl:LayoutAnchorable Title="Users" CanAutoHide="True" >
-                            <ListView x:Name="UsersListView" ItemsSource="{Binding UserModels}" SelectedItem="{Binding SelectedUser, Mode=TwoWay}" ItemTemplate="{DynamicResource UserListViewItemTemplate}" Background="Wheat" >
-                                <ListView.Resources>
-                                    <DataTemplate x:Key="UserListViewItemTemplate">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <Border BorderThickness="1" Grid.Column="0">
-                                                <Image Source="{Binding Image}" Width="30" Height="30" Margin="5" VerticalAlignment="Stretch"/>
-                                            </Border>
-                                            <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding UserName}" Foreground="White" Padding="10,5,10,5" FontSize="18" />
-                                                <TextBlock Text="{Binding Id}" Foreground="Silver"  Padding="10,5,10,5"/>
-                                            </StackPanel>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListView.Resources>
-                            </ListView>
-                        </adl:LayoutAnchorable>
-                    </adl:LayoutAnchorablePane>
                     
                 </adl:LayoutPanel>
             </adl:LayoutRoot>

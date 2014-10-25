@@ -10,6 +10,9 @@ namespace WaveDev.ModelR.Server.Security
     {
         public override bool AuthorizeHubMethodInvocation(IHubIncomingInvokerContext hubIncomingInvokerContext, bool appliesToMethod)
         {
+            // TODO: [RS] REMOVE THIS !!! Security is completelly deactivated For development time.
+            return true;
+
             var userName = (from token in hubIncomingInvokerContext.Hub.Context.Headers
                             where token.Key == "ModelRAuthToken_UserName"
                             select token).FirstOrDefault();
