@@ -15,7 +15,7 @@
     <StackPanel Orientation="Vertical">
         <TextBlock Text="Coworker" Foreground="White" FontSize="18" Background="#00000000"/>
         
-        <ListView x:Name="UserListView" ItemsSource="{Binding UserModels}" SelectedItem="{Binding SelectedUser, Mode=TwoWay}" ItemTemplate="{DynamicResource UserListViewItemTemplate}" Background="#AA000000" BorderBrush="#AA000000">
+        <ListView x:Name="UserListView" ItemsSource="{Binding UserModels.Result}" SelectedItem="{Binding SelectedUser, Mode=TwoWay}" ItemTemplate="{DynamicResource UserListViewItemTemplate}" Background="#AA000000" BorderBrush="#AA000000">
             <ListView.Resources>
                 <DataTemplate x:Key="UserListViewItemTemplate">
                     <Grid>

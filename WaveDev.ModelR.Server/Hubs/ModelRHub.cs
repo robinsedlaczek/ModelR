@@ -65,21 +65,6 @@ namespace WaveDev.ModelR.Server
             return s_scenes.Values.ToList();
         }
 
-        public static byte[] ImageToByte(Image image)
-        {
-            byte[] byteArray = new byte[0];
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                image.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-                stream.Close();
-
-                byteArray = stream.ToArray();
-            }
-
-            return byteArray;
-        }
-
         [Authorize]
         public void JoinSceneEditorGroup(Guid sceneId)
         {
@@ -134,7 +119,47 @@ namespace WaveDev.ModelR.Server
             Clients.OthersInGroup(scene.Id.ToString()).SceneObjectTransformed(sceneObjectFound);
         }
 
+        [Authorize]
+        public IEnumerable<UserInfoModel> GetUsers()
+        {
+            var users = (from scene in s_scenes.Values
+                         select from user in scene.UserInfoModels
+                                where user.UserName == Context.User.Identity.Name
+                                select scene.UserInfoModels).FirstOrDefault().FirstOrDefault();
+
+            return users;
+        }
+
+        [Authorize]
+        public IEnumerable<SceneObjectInfoModel> GetSceneObjects()
+        {
+            var users = (from scene in s_scenes.Values
+                         select from user in scene.UserInfoModels
+                                where user.UserName == Context.User.Identity.Name
+                                select scene.SceneObjectInfoModels).FirstOrDefault().FirstOrDefault();
+
+            return users;
+        }
+
         #endregion
 
+        #region Private Members
+
+        public static byte[] ImageToByte(Image image)
+        {
+            byte[] byteArray = new byte[0];
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                image.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                stream.Close();
+
+                byteArray = stream.ToArray();
+            }
+
+            return byteArray;
+        }
+
+        #endregion
     }
 }

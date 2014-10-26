@@ -174,6 +174,32 @@ namespace WaveDev.ModelR.Communication
             }
         }
 
+        public async Task<IEnumerable<UserInfoModel>> GetUsers()
+        {
+            try
+            {
+                var users = await _proxy.Invoke<IEnumerable<UserInfoModel>>("GetUsers");
+
+                return users;
+            }
+            catch (InvalidOperationException exception)
+            {
+                throw new UserNotAuthorizedException(string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized or known in the system.", LoggedInUserName), LoggedInUserName);
+            }
+        }
+
+        public async Task<IEnumerable<SceneObjectInfoModel>> GetSceneObjects()
+        {
+            try
+            {
+                return await _proxy.Invoke<IEnumerable<SceneObjectInfoModel>>("GetSceneObjects");
+            }
+            catch (InvalidOperationException exception)
+            {
+                throw new UserNotAuthorizedException(string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized or known in the system.", LoggedInUserName), LoggedInUserName);
+            }
+        }
+
         #endregion
 
         #region Private Methods

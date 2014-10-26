@@ -34,7 +34,6 @@ namespace WaveDev.ModelR.ViewModels
         private ObjectModel _selectedObject;
         private ModelRHubClientProxy _proxy;
         private UserModel _selectedUser;
-        private ObservableCollection<UserModel> _users;
 
         #endregion
 
@@ -43,7 +42,8 @@ namespace WaveDev.ModelR.ViewModels
         public SceneModel()
         {
             _objects = new ObservableCollection<ObjectModel>();
-            _users = new ObservableCollection<UserModel>();
+
+            UserModels = new NotifyTaskCompletion<ObservableCollection<UserModel>>(LoadUsersAsync());
 
             WorldAxies = new Axies();
             OrientationGrid = new Grid()
@@ -53,6 +53,18 @@ namespace WaveDev.ModelR.ViewModels
 
             // [RS] Set translation as initial object transformation tool.
             SwitchToTranslationCommand.Execute(null);
+        }
+
+        private async Task<ObservableCollection<UserModel>> LoadUsersAsync()
+        {
+            var users = await _proxy.GetUsers();
+
+            var userModels = from user in users
+                             select new UserModel(user.UserName, user.Image);
+
+            var collection = new ObservableCollection<UserModel>(userModels);
+
+            return collection;
         }
 
         #endregion
@@ -71,12 +83,10 @@ namespace WaveDev.ModelR.ViewModels
             private set;
         }
 
-        public ObservableCollection<UserModel> UserModels
+        public NotifyTaskCompletion<ObservableCollection<UserModel>> UserModels
         {
-            get
-            {
-                return _users;
-            }
+            get;
+            private set;
         }
 
         public UserModel SelectedUser
@@ -344,7 +354,7 @@ namespace WaveDev.ModelR.ViewModels
         {
             var userModel = new UserModel(infoModel.UserName,infoModel.Image);
 
-            DispatcherHelper.RunAsync(() => UserModels.Add(userModel));
+            //DispatcherHelper.RunAsync(() => UserModels.Result.Add(userModel));
         }
 
         private void OnSceneObjectCreated(SceneObjectInfoModel infoModel)
