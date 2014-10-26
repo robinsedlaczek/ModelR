@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Security.Cryptography;
-using System.Security.Principal;
-using Microsoft.AspNet.SignalR;
+﻿using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 
 namespace WaveDev.ModelR.Server.Security
@@ -10,21 +7,9 @@ namespace WaveDev.ModelR.Server.Security
     {
         public override bool AuthorizeHubMethodInvocation(IHubIncomingInvokerContext hubIncomingInvokerContext, bool appliesToMethod)
         {
-            // TODO: [RS] REMOVE THIS !!! Security is completelly deactivated For development time.
-            return true;
+            // return hubIncomingInvokerContext.Hub.Context.User.Identity.IsAuthenticated;
 
-            var userName = (from token in hubIncomingInvokerContext.Hub.Context.Headers
-                            where token.Key == "ModelRAuthToken_UserName"
-                            select token).FirstOrDefault();
-
-            var password = (from token in hubIncomingInvokerContext.Hub.Context.Headers
-                            where token.Key == "ModelRAuthToken_UserPassword"
-                            select token).FirstOrDefault();
-
-            if (string.IsNullOrEmpty(userName.Value) || string.IsNullOrEmpty(password.Value))
-                return false;
-
-            return (userName.Value.CompareTo("Robin") == 0 && password.Value.CompareTo("Sedlaczek") == 0);
+            return base.AuthorizeHubMethodInvocation(hubIncomingInvokerContext, appliesToMethod);
         }
     }
 }

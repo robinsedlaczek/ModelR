@@ -10,6 +10,7 @@ using Xceed.Wpf.Toolkit;
 using WaveDev.ModelR.Shared;
 using System.IO;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace WaveDev.ModelR.Communication
 {
@@ -84,6 +85,8 @@ namespace WaveDev.ModelR.Communication
             try
             {
                 _connection.Stop();
+
+                _connection.Credentials = new NetworkCredential(user, password);
 
                 // [RS] The authentication token(s) should be encrypted. Sending the user name and the password in clear text here
                 //      is just for demonatration how authorization can be implemented.

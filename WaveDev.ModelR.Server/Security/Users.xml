@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Users>
+  <User Name="Robin" Password="robin" Image="Robin.jpg"/>
+  <User Name="Sarah" Password="sarah" Image="Sarah.jpg"/>
+  <User Name="Jan" Password="Jan" Image="Jan.jpg"/>
+</Users>

@@ -6,6 +6,10 @@ using System;
 using System.Globalization;
 using WaveDev.ModelR.Server.Security;
 using WaveDev.ModelR.Shared.Models;
+using System.Xml.Linq;
+using System.Threading;
+using System.Security.Claims;
+using System.Drawing;
 
 namespace WaveDev.ModelR.Server
 {
@@ -60,17 +64,34 @@ namespace WaveDev.ModelR.Server
             return s_scenes.Values.ToList();
         }
 
-        [ModelRAuthorize]
+        //public static byte[] ImageToByte2(Image img)
+        //{
+        //    byte[] byteArray = new byte[0];
+        //    using (MemoryStream stream = new MemoryStream())
+        //    {
+        //        img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+        //        stream.Close();
+
+        //        byteArray = stream.ToArray();
+        //    }
+        //    return byteArray;
+        //}
+
+        [Authorize]
         public void JoinSceneEditorGroup(Guid sceneId)
         {
             Groups.Add(Context.ConnectionId, sceneId.ToString());
 
-            var userName = (from token in Context.Headers
-                            where token.Key == "ModelRAuthToken_UserName"
-                            select token).FirstOrDefault();
-
             // TODO: [RS] Load image of user and give it into the model.
-            var userInfo = new UserInfoModel(userName.Value, null);
+            var identity = (ClaimsIdentity)Context.User.Identity;
+
+            var imageUri = (from claim in identity.Claims
+                            where claim.Type.CompareTo("ProfileImageUri") == 0
+                            select claim).FirstOrDefault().Value;
+
+            var image = Image.FromFile(imageUri);
+
+            var userInfo = new UserInfoModel(identity.Name, null);
 
             var group = Clients.Group(sceneId.ToString());
 
@@ -78,7 +99,7 @@ namespace WaveDev.ModelR.Server
                 group.UserJoined(userInfo);
         }
 
-        [ModelRAuthorize]
+        [Authorize]
         public void CreateSceneObject(SceneObjectInfoModel sceneObject)
         {
             if (sceneObject == null)
@@ -93,7 +114,7 @@ namespace WaveDev.ModelR.Server
             Clients.OthersInGroup(scene.Id.ToString()).SceneObjectCreated(sceneObject);
         }
         
-        [ModelRAuthorize]
+        [Authorize]
         public void TransformSceneObject(SceneObjectInfoModel sceneObject)
         {
             if (sceneObject == null)
