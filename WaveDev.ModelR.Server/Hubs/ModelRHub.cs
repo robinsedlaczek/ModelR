@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using System.Threading;
 using System.Security.Claims;
 using System.Drawing;
+using System.IO;
 
 namespace WaveDev.ModelR.Server
 {
@@ -17,7 +18,7 @@ namespace WaveDev.ModelR.Server
     {
         #region Private Fields
 
-        private static IDictionary<Guid, SceneInfoModel> s_scenes;
+        private static IDictionary<Guid, SceneInfoModel> s_scenes; 
 
         #endregion
 
@@ -64,35 +65,37 @@ namespace WaveDev.ModelR.Server
             return s_scenes.Values.ToList();
         }
 
-        //public static byte[] ImageToByte2(Image img)
-        //{
-        //    byte[] byteArray = new byte[0];
-        //    using (MemoryStream stream = new MemoryStream())
-        //    {
-        //        img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-        //        stream.Close();
+        public static byte[] ImageToByte(Image image)
+        {
+            byte[] byteArray = new byte[0];
 
-        //        byteArray = stream.ToArray();
-        //    }
-        //    return byteArray;
-        //}
+            using (MemoryStream stream = new MemoryStream())
+            {
+                image.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                stream.Close();
+
+                byteArray = stream.ToArray();
+            }
+
+            return byteArray;
+        }
 
         [Authorize]
         public void JoinSceneEditorGroup(Guid sceneId)
         {
-            Groups.Add(Context.ConnectionId, sceneId.ToString());
-
-            // TODO: [RS] Load image of user and give it into the model.
             var identity = (ClaimsIdentity)Context.User.Identity;
 
             var imageUri = (from claim in identity.Claims
-                            where claim.Type.CompareTo("ProfileImageUri") == 0
+                            where claim.Type == "ProfileImageUri"
                             select claim).FirstOrDefault().Value;
 
-            var image = Image.FromFile(imageUri);
+            var image = ImageToByte(Image.FromFile(imageUri));
+            var userInfo = new UserInfoModel(identity.Name, image);
 
-            var userInfo = new UserInfoModel(identity.Name, null);
+            var scene = s_scenes[sceneId];
+            scene.UserInfoModels.Add(userInfo);
 
+            Groups.Add(Context.ConnectionId, sceneId.ToString());
             var group = Clients.Group(sceneId.ToString());
 
             if (group != null)

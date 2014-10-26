@@ -21,7 +21,7 @@ namespace WaveDev.ModelR.Server.Security
             var userStore = XDocument.Load(@"Security\Users.xml");
 
             var users = from userFound in userStore.Descendants("User")
-                        where userFound.Attribute("Name").Value.CompareTo(requiredUserName) == 0
+                        where string.Compare(userFound.Attribute("Name").Value, requiredUserName, System.StringComparison.Ordinal) == 0
                         select new
                         {
                             UserName = userFound.Attribute("Name").Value,
@@ -31,7 +31,7 @@ namespace WaveDev.ModelR.Server.Security
 
             var user = users.FirstOrDefault();
 
-            if (user != null && user.Password.CompareTo(requiredPassword) == 0)
+            if (user != null && string.Compare(user.Password, requiredPassword, System.StringComparison.Ordinal) == 0)
             {
                 var claims = new[]
                 {

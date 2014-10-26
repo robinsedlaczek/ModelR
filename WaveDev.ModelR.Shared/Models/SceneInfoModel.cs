@@ -10,6 +10,7 @@ namespace WaveDev.ModelR.Shared.Models
             Id = id;
 
             SceneObjectInfoModels= new List<SceneObjectInfoModel>();
+            UserInfoModels = new List<UserInfoModel>();
         }
 
         public Guid Id
@@ -36,5 +37,10 @@ namespace WaveDev.ModelR.Shared.Models
             private set;
         }
 
+        public IList<UserInfoModel> UserInfoModels
+        {
+            get;
+            private set;
+        }
     }
 }
