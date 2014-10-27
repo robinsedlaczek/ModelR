@@ -34,6 +34,7 @@ namespace WaveDev.ModelR.ViewModels
         private ObjectModel _selectedObject;
         private ModelRHubClientProxy _proxy;
         private UserModel _selectedUser;
+        private ObservableCollection<UserModel> _userModels;
 
         #endregion
 
@@ -53,16 +54,14 @@ namespace WaveDev.ModelR.ViewModels
             SwitchToTranslationCommand.Execute(null);
         }
 
-        private async Task<ObservableCollection<UserModel>> LoadUsersAsync()
+        private async Task LoadUsersAsync()
         {
             var users = await _proxy.GetUsers();
 
             var userModels = from user in users
                              select new UserModel(user.UserName, user.Image);
 
-            var collection = new ObservableCollection<UserModel>(userModels);
-
-            return collection;
+            UserModels = new ObservableCollection<UserModel>(userModels);
         }
 
         #endregion
@@ -81,10 +80,17 @@ namespace WaveDev.ModelR.ViewModels
             private set;
         }
 
-        public NotifyTaskCompletion<ObservableCollection<UserModel>> UserModels
+        public ObservableCollection<UserModel> UserModels
         {
-            get;
-            private set;
+            get
+            {
+                return _userModels;
+            }
+
+            private set
+            {
+                Set(ref _userModels, value); 
+            }
         }
 
         public UserModel SelectedUser
@@ -131,18 +137,18 @@ namespace WaveDev.ModelR.ViewModels
         {
             get
             {
-                return new RelayCommand(parameter =>
+                return new RelayCommand(async parameter =>
                 {
                     try
                     {
                         _proxy = ModelRHubClientProxy.GetInstance();
 
-                        // TODO: [RS] Handlers should be unregistered somewhere!?
+                        //// TODO: [RS] Handlers should be unregistered somewhere!?
                         _proxy.SceneObjectCreated += model => OnSceneObjectCreated(model);
                         _proxy.SceneObjectTransformed += model => OnSceneObjectTransformed(model);
                         _proxy.UserJoined += model => OnUserJoined(model);
 
-                        UserModels = new NotifyTaskCompletion<ObservableCollection<UserModel>>(LoadUsersAsync());
+                        await LoadUsersAsync();
                     }
                     catch (InvalidOperationException exception)
                     {
@@ -352,9 +358,9 @@ namespace WaveDev.ModelR.ViewModels
 
         private void OnUserJoined(UserInfoModel infoModel)
         {
-            var userModel = new UserModel(infoModel.UserName,infoModel.Image);
+            var userModel = new UserModel(infoModel.UserName, infoModel.Image);
 
-            //DispatcherHelper.RunAsync(() => UserModels.Result.Add(userModel));
+            DispatcherHelper.CheckBeginInvokeOnUI(() => UserModels.Add(userModel));
         }
 
         private void OnSceneObjectCreated(SceneObjectInfoModel infoModel)

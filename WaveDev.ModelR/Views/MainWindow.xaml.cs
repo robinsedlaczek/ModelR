@@ -66,7 +66,10 @@ namespace WaveDev.ModelR.Views
         private void OnWindowUnloaded(object sender, RoutedEventArgs e)
         {
             if (_userListControl != null)
+            {
                 _userListControl.Dispose();
+                _userListControl = null;
+            }
         }
 
         private void OnNotAuthorizedForOperation(NotAuthorizedForOperationMessage message)

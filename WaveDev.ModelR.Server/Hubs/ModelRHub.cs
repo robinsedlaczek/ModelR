@@ -122,12 +122,11 @@ namespace WaveDev.ModelR.Server
         [Authorize]
         public IEnumerable<UserInfoModel> GetUsers()
         {
-            var users = (from scene in s_scenes.Values
-                         select from user in scene.UserInfoModels
-                                where user.UserName == Context.User.Identity.Name
-                                select scene.UserInfoModels).FirstOrDefault().FirstOrDefault();
+            var users = from scene in s_scenes.Values
+                        where scene.UserInfoModels.Any(user => user.UserName==Context.User.Identity.Name)
+                        select scene.UserInfoModels;
 
-            return users;
+            return users.FirstOrDefault();
         }
 
         [Authorize]

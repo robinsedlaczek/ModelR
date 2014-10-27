@@ -91,7 +91,7 @@ namespace WaveDev.ModelR.Views
             if (_adorningElement != null)
             {
                 var adorningPoint = new Point(0, 0);
-                _adorningElement.Arrange(new Rect(adorningPoint, AdornedElement.DesiredSize));
+                _adorningElement.Arrange(new Rect(adorningPoint, this.AdornedElement.RenderSize));
             }
 
             return finalSize;
