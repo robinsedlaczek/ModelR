@@ -43,8 +43,6 @@ namespace WaveDev.ModelR.ViewModels
         {
             _objects = new ObservableCollection<ObjectModel>();
 
-            UserModels = new NotifyTaskCompletion<ObservableCollection<UserModel>>(LoadUsersAsync());
-
             WorldAxies = new Axies();
             OrientationGrid = new Grid()
             {
@@ -143,6 +141,8 @@ namespace WaveDev.ModelR.ViewModels
                         _proxy.SceneObjectCreated += model => OnSceneObjectCreated(model);
                         _proxy.SceneObjectTransformed += model => OnSceneObjectTransformed(model);
                         _proxy.UserJoined += model => OnUserJoined(model);
+
+                        UserModels = new NotifyTaskCompletion<ObservableCollection<UserModel>>(LoadUsersAsync());
                     }
                     catch (InvalidOperationException exception)
                     {
