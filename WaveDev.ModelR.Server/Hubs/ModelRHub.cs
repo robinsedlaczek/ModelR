@@ -122,9 +122,10 @@ namespace WaveDev.ModelR.Server
         [Authorize]
         public IEnumerable<UserInfoModel> GetUsers()
         {
-            var users = from scene in s_scenes.Values
-                        where scene.UserInfoModels.Any(user => user.UserName==Context.User.Identity.Name)
-                        select scene.UserInfoModels;
+            var users = 
+                from scene in s_scenes.Values
+                where scene.UserInfoModels.Any(user => user.UserName == Context.User.Identity.Name)
+                select scene.UserInfoModels;
 
             return users.FirstOrDefault();
         }
@@ -132,12 +133,12 @@ namespace WaveDev.ModelR.Server
         [Authorize]
         public IEnumerable<SceneObjectInfoModel> GetSceneObjects()
         {
-            var users = (from scene in s_scenes.Values
-                         select from user in scene.UserInfoModels
-                                where user.UserName == Context.User.Identity.Name
-                                select scene.SceneObjectInfoModels).FirstOrDefault().FirstOrDefault();
+            var objects = 
+                from scene in s_scenes.Values
+                where scene.UserInfoModels.Any(user => user.UserName == Context.User.Identity.Name)
+                select scene.SceneObjectInfoModels;
 
-            return users;
+            return objects.FirstOrDefault();
         }
 
         #endregion

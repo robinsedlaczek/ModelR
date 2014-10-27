@@ -34,7 +34,7 @@ namespace WaveDev.ModelR.ViewModels
         private ObjectModel _selectedObject;
         private ModelRHubClientProxy _proxy;
         private UserModel _selectedUser;
-        private ObservableCollection<UserModel> _userModels;
+        private ObservableCollection<UserModel> _users;
 
         #endregion
 
@@ -42,26 +42,16 @@ namespace WaveDev.ModelR.ViewModels
 
         public SceneModel()
         {
-            _objects = new ObservableCollection<ObjectModel>();
-
             WorldAxies = new Axies();
             OrientationGrid = new Grid()
             {
                 IsEnabled = true,
             };
 
+            SceneObjectModels = new ObservableCollection<ObjectModel>();
+
             // [RS] Set translation as initial object transformation tool.
             SwitchToTranslationCommand.Execute(null);
-        }
-
-        private async Task LoadUsersAsync()
-        {
-            var users = await _proxy.GetUsers();
-
-            var userModels = from user in users
-                             select new UserModel(user.UserName, user.Image);
-
-            UserModels = new ObservableCollection<UserModel>(userModels);
         }
 
         #endregion
@@ -84,12 +74,12 @@ namespace WaveDev.ModelR.ViewModels
         {
             get
             {
-                return _userModels;
+                return _users;
             }
 
             private set
             {
-                Set(ref _userModels, value); 
+                Set(ref _users, value); 
             }
         }
 
@@ -111,6 +101,11 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 return _objects;
+            }
+
+            private set
+            {
+                Set(ref _objects, value);
             }
         }
 
@@ -149,6 +144,7 @@ namespace WaveDev.ModelR.ViewModels
                         _proxy.UserJoined += model => OnUserJoined(model);
 
                         await LoadUsersAsync();
+                        await LoadSceneObjectsAsync();
                     }
                     catch (InvalidOperationException exception)
                     {
@@ -390,6 +386,20 @@ namespace WaveDev.ModelR.ViewModels
                     break;
             }
 
+            var transformation = GetObjectsLinearTransformation(model);
+
+            transformation.TranslateX = model.Transformation.TranslateX;
+            transformation.TranslateY = model.Transformation.TranslateY;
+            transformation.TranslateZ = model.Transformation.TranslateZ;
+
+            transformation.RotateX = model.Transformation.RotateX;
+            transformation.RotateY = model.Transformation.RotateY;
+            transformation.RotateZ = model.Transformation.RotateZ;
+
+            transformation.ScaleX = model.Transformation.ScaleX;
+            transformation.ScaleY = model.Transformation.ScaleY;
+            transformation.ScaleZ = model.Transformation.ScaleZ;
+
             DispatcherHelper.RunAsync(() => SceneObjectModels.Add(model));
         }
 
@@ -422,6 +432,24 @@ namespace WaveDev.ModelR.ViewModels
         #endregion
 
         #region Private Members
+
+        private async Task LoadUsersAsync()
+        {
+            var users = await _proxy.GetUsers();
+
+            var userModels = from user in users
+                             select new UserModel(user.UserName, user.Image);
+
+            UserModels = new ObservableCollection<UserModel>(userModels);
+        }
+
+        private async Task LoadSceneObjectsAsync()
+        {
+            var sceneObjects = await _proxy.GetSceneObjects();
+
+            foreach (var objectInfoModel in sceneObjects.AsParallel())
+                OnSceneObjectCreated(objectInfoModel);
+        }
 
         private async Task<ObjectModel> CreateObjectModel<T>() where T : SceneElement, new()
         {

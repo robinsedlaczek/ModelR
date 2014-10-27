@@ -182,9 +182,7 @@ namespace WaveDev.ModelR.Communication
         {
             try
             {
-                var users = await _proxy.Invoke<IEnumerable<UserInfoModel>>("GetUsers");
-
-                return users;
+                return await _proxy.Invoke<IEnumerable<UserInfoModel>>("GetUsers");
             }
             catch (InvalidOperationException exception)
             {
