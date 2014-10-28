@@ -94,6 +94,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Application.ico" />
+    <None Include="Images\Sebastian.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Images\Jan.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

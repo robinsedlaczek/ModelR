@@ -386,19 +386,22 @@ namespace WaveDev.ModelR.ViewModels
                     break;
             }
 
-            var transformation = GetObjectsLinearTransformation(model);
+            if (infoModel.Transformation != null)
+            {
+                var transformation = GetObjectsLinearTransformation(model);
 
-            transformation.TranslateX = model.Transformation.TranslateX;
-            transformation.TranslateY = model.Transformation.TranslateY;
-            transformation.TranslateZ = model.Transformation.TranslateZ;
+                transformation.TranslateX = infoModel.Transformation.TranslateX;
+                transformation.TranslateY = infoModel.Transformation.TranslateY;
+                transformation.TranslateZ = infoModel.Transformation.TranslateZ;
 
-            transformation.RotateX = model.Transformation.RotateX;
-            transformation.RotateY = model.Transformation.RotateY;
-            transformation.RotateZ = model.Transformation.RotateZ;
+                transformation.RotateX = infoModel.Transformation.RotateX;
+                transformation.RotateY = infoModel.Transformation.RotateY;
+                transformation.RotateZ = infoModel.Transformation.RotateZ;
 
-            transformation.ScaleX = model.Transformation.ScaleX;
-            transformation.ScaleY = model.Transformation.ScaleY;
-            transformation.ScaleZ = model.Transformation.ScaleZ;
+                transformation.ScaleX = infoModel.Transformation.ScaleX;
+                transformation.ScaleY = infoModel.Transformation.ScaleY;
+                transformation.ScaleZ = infoModel.Transformation.ScaleZ;
+            }
 
             DispatcherHelper.RunAsync(() => SceneObjectModels.Add(model));
         }
