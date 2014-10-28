@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0B007E
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaveDev.ModelR.Shared", "WaveDev.ModelR.Shared\WaveDev.ModelR.Shared.csproj", "{4DC50A3D-15E0-4520-A249-26A548B5A562}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaveDev.ModelR.Shared", "WaveDev.ModelR.Shared\WaveDev.ModelR.Shared.csproj", "{98FBF946-F336-46D9-92C6-476317A0A6E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,10 +24,10 @@ Global
 		{D78EF07C-3482-4BF0-A46C-16C1D37683CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D78EF07C-3482-4BF0-A46C-16C1D37683CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D78EF07C-3482-4BF0-A46C-16C1D37683CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4DC50A3D-15E0-4520-A249-26A548B5A562}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4DC50A3D-15E0-4520-A249-26A548B5A562}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4DC50A3D-15E0-4520-A249-26A548B5A562}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4DC50A3D-15E0-4520-A249-26A548B5A562}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98FBF946-F336-46D9-92C6-476317A0A6E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98FBF946-F336-46D9-92C6-476317A0A6E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98FBF946-F336-46D9-92C6-476317A0A6E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98FBF946-F336-46D9-92C6-476317A0A6E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

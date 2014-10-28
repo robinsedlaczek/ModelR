@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WaveDev.ModelR.Server</RootNamespace>
     <AssemblyName>WaveDev.ModelR.Server</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\WaveDev.ModelR\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -87,12 +88,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WaveDev.ModelR.Shared\WaveDev.ModelR.Shared.csproj">
-      <Project>{4dc50a3d-15e0-4520-a249-26a548b5a562}</Project>
-      <Name>WaveDev.ModelR.Shared</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Images\Application.ico" />
     <None Include="Images\Sebastian.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -109,6 +104,12 @@
     <None Include="Security\Users.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WaveDev.ModelR.Shared\WaveDev.ModelR.Shared.csproj">
+      <Project>{98fbf946-f336-46d9-92c6-476317a0a6e9}</Project>
+      <Name>WaveDev.ModelR.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

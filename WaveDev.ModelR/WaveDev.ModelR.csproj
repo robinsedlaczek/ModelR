@@ -213,6 +213,10 @@
       <Project>{e66a9455-7aa9-4271-8cd5-06c71d8dd5c8}</Project>
       <Name>Neumann.TouchControls</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WaveDev.ModelR.Shared\WaveDev.ModelR.Shared.csproj">
+      <Project>{98fbf946-f336-46d9-92c6-476317a0a6e9}</Project>
+      <Name>WaveDev.ModelR.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Cylinder.png" />
