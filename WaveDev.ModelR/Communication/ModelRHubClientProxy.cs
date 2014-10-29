@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Microsoft.AspNet.SignalR.Client;
 using System.Collections.Generic;
+using Microsoft.AspNet.SignalR.Client.Transports;
 using SharpGL.SceneGraph.Primitives;
 using SharpGL.SceneGraph.Quadrics;
 using WaveDev.ModelR.Shared.Models;
@@ -94,14 +95,11 @@ namespace WaveDev.ModelR.Communication
                 _connection.Headers.Add("ModelRAuthToken_UserName", user);
                 _connection.Headers.Add("ModelRAuthToken_UserPassword", password);
 
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
                 _connection.Start().Wait();
 
                 // [RS] Don't do it async, because we have to wait if user is authorized to join the scene. If not,
                 //      the UserNotAuthorizedException will be thrown. The client code has to shutdown the application.
                 _proxy.Invoke("JoinSceneEditorGroup", sceneId).Wait();
-                stopwatch.Stop();
 
                 _sceneId = sceneId;
 

@@ -45,7 +45,7 @@
                                             </Border>
                                             <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
                                                 <TextBlock Text="{Binding Name}" Foreground="White" Padding="10,5,10,5" FontSize="18" />
-                                                <TextBlock Text="{Binding Id}" Foreground="Silver"  Padding="10,5,10,5"/>
+                                                <!--<TextBlock Text="{Binding Id}" Foreground="Silver"  Padding="10,5,10,5"/>-->
                                             </StackPanel>
                                         </Grid>
                                     </DataTemplate>

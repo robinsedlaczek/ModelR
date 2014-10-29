@@ -66,6 +66,8 @@
             <Button x:Name="LoginButton" Content="Login" IsDefault="True" Width="120" Height="36" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=PasswordBox}" Click="OnLoginButtonClick" HorizontalAlignment="Right" Margin="5"/>
             <Button x:Name="CancelButton" Content="Cancel" IsCancel="True" Width="120" Height="36" Command="{Binding CancelLoginCommand}" HorizontalAlignment="Right" Margin="5"/>
         </StackPanel>
+        
+        <TextBlock Grid.Row="2" Text="{Binding ServerUrl}" Foreground="#FF111155" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10,0"/>
 
     </Grid>
 </Window>
