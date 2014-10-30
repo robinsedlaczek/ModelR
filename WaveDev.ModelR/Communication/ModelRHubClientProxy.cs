@@ -16,7 +16,7 @@ using System.Net;
 
 namespace WaveDev.ModelR.Communication
 {
-    internal class ModelRHubClientProxy
+    internal class ModelRHubClientProxy : IDisposable
     {
         #region Private Fields
 
@@ -47,9 +47,21 @@ namespace WaveDev.ModelR.Communication
 
         #region Static Members
 
-        public static ModelRHubClientProxy GetInstance(string url = Constants.ModelRServerUrl)
+        /// <summary>
+        /// This method returns an instance of this proxy class that can be used by clients to communicate with the server.
+        /// </summary>
+        /// <param name="url">The url of the SignalR server.</param>
+        /// <param name="createIfNotExist">
+        /// Per default: if no instance exists, a new instance is created, cached and returned. That can be omitted, if
+        /// parameter createIfNotExist is set to false. In that case, null is returned if not instance exists. Can be used 
+        /// to check for instance.
+        /// </param>
+        /// <returns>Returns an instance of this proxy class.</returns>
+        public static ModelRHubClientProxy GetInstance(string url = Constants.ModelRServerUrl, bool createIfNotExist = true)
         {
-            if (s_instance == null || String.Compare(s_instance.ServerUrl, url, StringComparison.Ordinal) != 0)
+            var urlChanged = s_instance!=null && String.Compare(s_instance.ServerUrl, url, StringComparison.Ordinal) != 0;
+
+            if ((s_instance == null || urlChanged) && createIfNotExist)
                 s_instance = new ModelRHubClientProxy(url);
 
             return s_instance;
@@ -64,6 +76,21 @@ namespace WaveDev.ModelR.Communication
             ServerUrl = url;
 
             ConnectToServer();
+        }
+
+        #endregion
+
+        #region IDisposable 
+
+        public void Dispose()
+        {
+            if (_connection != null)
+            {
+                _connection.Dispose();
+                _connection = null;
+            }
+
+            _proxy = null;
         }
 
         #endregion
@@ -109,6 +136,28 @@ namespace WaveDev.ModelR.Communication
             {
                 throw new UserNotAuthorizedException(string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized or known in the system.", user), user);
             }
+        }
+
+        public void Logoff()
+        {
+            if (_connection!=null)
+            {
+                _connection.Stop();
+
+                // [RS] Remove authentification information from connection in order it is reused. Requires ´new login.
+                
+                //      Windows Authentication
+                _connection.Credentials = null;
+                
+                //      Header Authentication
+                _connection.Headers.Remove("ModelRAuthToken_UserName");
+                _connection.Headers.Remove("ModelRAuthToken_UserPassword");
+
+                //      Cookie Authentication
+                _connection.CookieContainer = null;
+            }
+
+            LoggedInUserName = string.Empty;
         }
 
         public IEnumerable<SceneInfoModel> Scenes
