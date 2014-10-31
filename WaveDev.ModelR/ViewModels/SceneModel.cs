@@ -142,6 +142,7 @@ namespace WaveDev.ModelR.ViewModels
                         _proxy.SceneObjectCreated += model => OnSceneObjectCreated(model);
                         _proxy.SceneObjectTransformed += model => OnSceneObjectTransformed(model);
                         _proxy.UserJoined += model => OnUserJoined(model);
+                        _proxy.UserLoggedOff += model => OnUserLoggedOff(model);
 
                         await LoadUsersAsync();
                         await LoadSceneObjectsAsync();
@@ -357,6 +358,15 @@ namespace WaveDev.ModelR.ViewModels
             var userModel = new UserModel(infoModel.UserName, infoModel.Image);
 
             DispatcherHelper.CheckBeginInvokeOnUI(() => UserModels.Add(userModel));
+        }
+
+        private void OnUserLoggedOff(UserInfoModel model)
+        {
+            var userModel = (from user in UserModels
+                             where user.UserName == model.UserName
+                             select user).FirstOrDefault();
+
+            DispatcherHelper.CheckBeginInvokeOnUI(() => UserModels.Remove(userModel));
         }
 
         private void OnSceneObjectCreated(SceneObjectInfoModel infoModel)

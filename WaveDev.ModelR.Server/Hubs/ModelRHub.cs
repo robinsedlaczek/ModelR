@@ -63,7 +63,7 @@ namespace WaveDev.ModelR.Server
         }
 
         [Authorize]
-        public void JoinSceneEditorGroup(Guid sceneId)
+        public void Login(Guid sceneId)
         {
             var identity = (ClaimsIdentity)Context.User.Identity;
 
@@ -72,16 +72,35 @@ namespace WaveDev.ModelR.Server
                             select claim).FirstOrDefault().Value;
 
             var image = ImageToByte(Image.FromFile(imageUri));
-            var userInfo = new UserInfoModel(identity.Name, image);
+            var userInfo = new UserInfoModel(identity.Name, Context.ConnectionId, image);
 
             var scene = s_scenes[sceneId];
             scene.UserInfoModels.Add(userInfo);
 
             Groups.Add(Context.ConnectionId, sceneId.ToString());
+
             var group = Clients.Group(sceneId.ToString());
 
             if (group != null)
                 group.UserJoined(userInfo);
+        }
+
+        [Authorize]
+        public void Logoff()
+        {
+            var userSceneModel = (from scene in s_scenes.Values
+                             where scene.UserInfoModels.Any(model => model.UserName == Context.User.Identity.Name && model.ConnectionId == Context.ConnectionId)
+                             select scene).FirstOrDefault();
+
+            var userModel = (from model in userSceneModel.UserInfoModels
+                             where model.UserName == Context.User.Identity.Name && model.ConnectionId == Context.ConnectionId
+                             select model).FirstOrDefault();
+
+            userSceneModel.UserInfoModels.Remove(userModel);
+
+            Groups.Remove(Context.ConnectionId, userSceneModel.Id.ToString());
+            
+            Clients.OthersInGroup(userSceneModel.Id.ToString()).UserLoggedOf(userModel);
         }
 
         [Authorize]

@@ -1,11 +1,21 @@
-﻿namespace WaveDev.ModelR.Shared.Models
+﻿using Newtonsoft.Json;
+
+namespace WaveDev.ModelR.Shared.Models
 {
     public class UserInfoModel
     {
-        public UserInfoModel(string userName, byte[] image)
+        public UserInfoModel(string userName, string connectionId, byte[] image)
         {
             UserName = userName;
+            ConnectionId = connectionId;
             Image = image;
+        }
+
+        [JsonIgnore]
+        public string ConnectionId
+        {
+            get;
+            private set;
         }
 
         public string UserName

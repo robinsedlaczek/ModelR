@@ -34,6 +34,7 @@ namespace WaveDev.ModelR.Communication
         public delegate void SceneObjectCreatedEventHandler(SceneObjectInfoModel infoModel);
         public delegate void SceneObjectTransformedEventHandler(SceneObjectInfoModel infoModel);
         public delegate void UserJoinedEventHandler(UserInfoModel infoModel);
+        public delegate void UserLoggedOffEventHandler(UserInfoModel infoModel);
 
         #endregion
 
@@ -42,6 +43,7 @@ namespace WaveDev.ModelR.Communication
         public event SceneObjectCreatedEventHandler SceneObjectCreated;
         public event SceneObjectTransformedEventHandler SceneObjectTransformed;
         public event UserJoinedEventHandler UserJoined;
+        public event UserLoggedOffEventHandler UserLoggedOff;
 
         #endregion
 
@@ -126,7 +128,7 @@ namespace WaveDev.ModelR.Communication
 
                 // [RS] Don't do it async, because we have to wait if user is authorized to join the scene. If not,
                 //      the UserNotAuthorizedException will be thrown. The client code has to shutdown the application.
-                _proxy.Invoke("JoinSceneEditorGroup", sceneId).Wait();
+                _proxy.Invoke("Login", sceneId).Wait();
 
                 _sceneId = sceneId;
 
@@ -140,19 +142,20 @@ namespace WaveDev.ModelR.Communication
 
         public void Logoff()
         {
-            if (_connection!=null)
+            if (_connection != null)
             {
+                // Logoff at server.
+                if (_proxy != null)
+                    _proxy.Invoke("Logoff");
+
                 _connection.Stop();
 
                 // [RS] Remove authentification information from connection in order it is reused. Requires ´new login.
-                
                 //      Windows Authentication
                 _connection.Credentials = null;
-                
                 //      Header Authentication
                 _connection.Headers.Remove("ModelRAuthToken_UserName");
                 _connection.Headers.Remove("ModelRAuthToken_UserPassword");
-
                 //      Cookie Authentication
                 _connection.CookieContainer = null;
             }
@@ -270,7 +273,8 @@ namespace WaveDev.ModelR.Communication
                 _proxy.On<SceneObjectInfoModel>("SceneObjectCreated", infoModel => OnSceneObjectCreated(infoModel));
                 _proxy.On<SceneObjectInfoModel>("SceneObjectTransformed", infoModel => OnSceneObjectTransformed(infoModel));
                 _proxy.On<UserInfoModel>("UserJoined", infoModel => OnUserJoined(infoModel));
-
+                _proxy.On<UserInfoModel>("UserLoggedOf", infoModel => OnUserLoggedOff(infoModel));
+                
                 // TODO: [RS] Method cannot be async here, because it is called from the construtor.
                 _connection.Start().Wait();
             }
@@ -301,6 +305,12 @@ namespace WaveDev.ModelR.Communication
         {
             if (UserJoined != null)
                 UserJoined(infoModel);
+        }
+
+        private void OnUserLoggedOff(UserInfoModel infoModel)
+        {
+            if (UserLoggedOff != null)
+                UserLoggedOff(infoModel);
         }
 
         private void OnSceneObjectTransformed(SceneObjectInfoModel infoModel)
