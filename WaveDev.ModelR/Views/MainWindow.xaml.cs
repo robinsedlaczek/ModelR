@@ -128,7 +128,12 @@ namespace WaveDev.ModelR.Views
                     renderable.Render(gl, RenderMode.Design);
 
                 if (isSelectedModel && volumeBound != null)
+                {
+                    // TODO: [RS] For user colors, go on here.
+                    //var color = 
+                    //volumeBound.BoundingVolume.Color = 
                     volumeBound.BoundingVolume.Render(gl, RenderMode.Design);
+                }
 
                 if (transformable != null)
                     transformable.PopObjectSpace(gl);
