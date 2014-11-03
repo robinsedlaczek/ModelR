@@ -16,7 +16,7 @@ using System.Net;
 
 namespace WaveDev.ModelR.Communication
 {
-    internal class ModelRHubClientProxy
+    internal class ModelRHubClientProxy : IDisposable
     {
         #region Private Fields
 
@@ -34,6 +34,7 @@ namespace WaveDev.ModelR.Communication
         public delegate void SceneObjectCreatedEventHandler(SceneObjectInfoModel infoModel);
         public delegate void SceneObjectTransformedEventHandler(SceneObjectInfoModel infoModel);
         public delegate void UserJoinedEventHandler(UserInfoModel infoModel);
+        public delegate void UserLoggedOffEventHandler(UserInfoModel infoModel);
 
         #endregion
 
@@ -42,14 +43,27 @@ namespace WaveDev.ModelR.Communication
         public event SceneObjectCreatedEventHandler SceneObjectCreated;
         public event SceneObjectTransformedEventHandler SceneObjectTransformed;
         public event UserJoinedEventHandler UserJoined;
+        public event UserLoggedOffEventHandler UserLoggedOff;
 
         #endregion
 
         #region Static Members
 
-        public static ModelRHubClientProxy GetInstance(string url = Constants.ModelRServerUrl)
+        /// <summary>
+        /// This method returns an instance of this proxy class that can be used by clients to communicate with the server.
+        /// </summary>
+        /// <param name="url">The url of the SignalR server.</param>
+        /// <param name="createIfNotExist">
+        /// Per default: if no instance exists, a new instance is created, cached and returned. That can be omitted, if
+        /// parameter createIfNotExist is set to false. In that case, null is returned if not instance exists. Can be used 
+        /// to check for instance.
+        /// </param>
+        /// <returns>Returns an instance of this proxy class.</returns>
+        public static ModelRHubClientProxy GetInstance(string url = Constants.ModelRServerUrl, bool createIfNotExist = true)
         {
-            if (s_instance == null || String.Compare(s_instance.ServerUrl, url, StringComparison.Ordinal) != 0)
+            var urlChanged = s_instance!=null && String.Compare(s_instance.ServerUrl, url, StringComparison.Ordinal) != 0;
+
+            if ((s_instance == null || urlChanged) && createIfNotExist)
                 s_instance = new ModelRHubClientProxy(url);
 
             return s_instance;
@@ -64,6 +78,21 @@ namespace WaveDev.ModelR.Communication
             ServerUrl = url;
 
             ConnectToServer();
+        }
+
+        #endregion
+
+        #region IDisposable 
+
+        public void Dispose()
+        {
+            if (_connection != null)
+            {
+                _connection.Dispose();
+                _connection = null;
+            }
+
+            _proxy = null;
         }
 
         #endregion
@@ -99,16 +128,39 @@ namespace WaveDev.ModelR.Communication
 
                 // [RS] Don't do it async, because we have to wait if user is authorized to join the scene. If not,
                 //      the UserNotAuthorizedException will be thrown. The client code has to shutdown the application.
-                _proxy.Invoke("JoinSceneEditorGroup", sceneId).Wait();
+                var userModel = _proxy.Invoke<UserInfoModel>("Login", sceneId).Result;
 
                 _sceneId = sceneId;
 
                 LoggedInUserName = user;
             }
-            catch (Exception exception)
+            catch
             {
                 throw new UserNotAuthorizedException(string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized or known in the system.", user), user);
             }
+        }
+
+        public void Logoff()
+        {
+            if (_connection != null)
+            {
+                // Logoff at server.
+                if (_proxy != null)
+                    _proxy.Invoke("Logoff");
+
+                _connection.Stop();
+
+                // [RS] Remove authentification information from connection in order it is reused. Requires ´new login.
+                //      Windows Authentication
+                _connection.Credentials = null;
+                //      Header Authentication
+                _connection.Headers.Remove("ModelRAuthToken_UserName");
+                _connection.Headers.Remove("ModelRAuthToken_UserPassword");
+                //      Cookie Authentication
+                _connection.CookieContainer = null;
+            }
+
+            LoggedInUserName = string.Empty;
         }
 
         public IEnumerable<SceneInfoModel> Scenes
@@ -221,7 +273,8 @@ namespace WaveDev.ModelR.Communication
                 _proxy.On<SceneObjectInfoModel>("SceneObjectCreated", infoModel => OnSceneObjectCreated(infoModel));
                 _proxy.On<SceneObjectInfoModel>("SceneObjectTransformed", infoModel => OnSceneObjectTransformed(infoModel));
                 _proxy.On<UserInfoModel>("UserJoined", infoModel => OnUserJoined(infoModel));
-
+                _proxy.On<UserInfoModel>("UserLoggedOf", infoModel => OnUserLoggedOff(infoModel));
+                
                 // TODO: [RS] Method cannot be async here, because it is called from the construtor.
                 _connection.Start().Wait();
             }
@@ -252,6 +305,12 @@ namespace WaveDev.ModelR.Communication
         {
             if (UserJoined != null)
                 UserJoined(infoModel);
+        }
+
+        private void OnUserLoggedOff(UserInfoModel infoModel)
+        {
+            if (UserLoggedOff != null)
+                UserLoggedOff(infoModel);
         }
 
         private void OnSceneObjectTransformed(SceneObjectInfoModel infoModel)
