@@ -22,7 +22,7 @@ namespace WaveDev.ModelR.ViewModels
     {
         #region Private Fields
 
-        private ObservableCollection<ObjectModel> _objects;
+        private ObservableCollection<SceneObjectModel> _objects;
         private RelayCommand _createTeapotCommand;
         private RelayCommand _createCubeCommand;
         private RelayCommand _createSphereCommand;
@@ -31,10 +31,12 @@ namespace WaveDev.ModelR.ViewModels
         private RelayCommand _switchToTranslationCommand;
         private RelayCommand _switchToRotationCommand;
         private RelayCommand _switchToScaleCommand;
-        private ObjectModel _selectedObject;
+        private RelayCommand _executeScriptCommand;
+        private SceneObjectModel _selectedObject;
         private ModelRHubClientProxy _proxy;
         private UserModel _selectedUser;
         private ObservableCollection<UserModel> _users;
+        private string _script;
 
         #endregion
 
@@ -48,7 +50,7 @@ namespace WaveDev.ModelR.ViewModels
                 IsEnabled = true,
             };
 
-            SceneObjectModels = new ObservableCollection<ObjectModel>();
+            SceneObjectModels = new ObservableCollection<SceneObjectModel>();
 
             // [RS] Set translation as initial object transformation tool.
             SwitchToTranslationCommand.Execute(null);
@@ -96,7 +98,7 @@ namespace WaveDev.ModelR.ViewModels
             }
         }
 
-        public ObservableCollection<ObjectModel> SceneObjectModels
+        public ObservableCollection<SceneObjectModel> SceneObjectModels
         {
             get
             {
@@ -109,7 +111,7 @@ namespace WaveDev.ModelR.ViewModels
             }
         }
 
-        public ObjectModel SelectedObject
+        public SceneObjectModel SelectedObject
         {
             get
             {
@@ -118,7 +120,7 @@ namespace WaveDev.ModelR.ViewModels
 
             set
             {
-                Set<ObjectModel>(ref _selectedObject, value);
+                Set(ref _selectedObject, value);
             }
         }
 
@@ -127,6 +129,21 @@ namespace WaveDev.ModelR.ViewModels
             get;
             set;
         }
+
+        public string Script
+        {
+            get
+            {
+                return _script;
+            }
+
+            set
+            {
+                Set<string>(ref _script, value);
+            }
+        }
+
+        #region Commands 
 
         public ICommand InitializeCommunicationCommand
         {
@@ -343,11 +360,28 @@ namespace WaveDev.ModelR.ViewModels
             get
             {
                 if (_createDiscCommand == null)
+                {
                     _createDiscCommand = new RelayCommand(async parameter => await CreateObjectModel<Disk>(), () => true);
+                }
 
                 return _createDiscCommand;
             }
         }
+
+        public ICommand ExecuteScriptCommand
+        {
+            get
+            {
+                if (_executeScriptCommand == null)
+                {
+                    _executeScriptCommand = new RelayCommand(async parameter => await ExecuteScript(), () => true);
+                }
+
+                return _executeScriptCommand;
+            }
+        }
+
+        #endregion // Commands
 
         #endregion
 
@@ -373,24 +407,24 @@ namespace WaveDev.ModelR.ViewModels
         {
             // TODO: [RS] Exception Handling!
 
-            ObjectModel model = null;
+            SceneObjectModel model = null;
 
             switch (infoModel.SceneObjectType)
             {
                 case SceneObjectType.Teapot:
-                    model = new ObjectModel(new Teapot(), infoModel.Id);
+                    model = new SceneObjectModel(new Teapot(), infoModel.Id);
                     break;
                 case SceneObjectType.Cube:
-                    model = new ObjectModel(new Cube(), infoModel.Id);
+                    model = new SceneObjectModel(new Cube(), infoModel.Id);
                     break;
                 case SceneObjectType.Cylinder:
-                    model = new ObjectModel(new Cylinder(), infoModel.Id);
+                    model = new SceneObjectModel(new Cylinder(), infoModel.Id);
                     break;
                 case SceneObjectType.Disk:
-                    model = new ObjectModel(new Disk(), infoModel.Id);
+                    model = new SceneObjectModel(new Disk(), infoModel.Id);
                     break;
                 case SceneObjectType.Sphere:
-                    model = new ObjectModel(new Sphere(), infoModel.Id);
+                    model = new SceneObjectModel(new Sphere(), infoModel.Id);
                     break;
                 default:
                     break;
@@ -464,11 +498,11 @@ namespace WaveDev.ModelR.ViewModels
                 OnSceneObjectCreated(objectInfoModel);
         }
 
-        private async Task<ObjectModel> CreateObjectModel<T>() where T : SceneElement, new()
+        private async Task<SceneObjectModel> CreateObjectModel<T>() where T : SceneElement, new()
         {
             try
             {
-                var model = new ObjectModel(new T());
+                var model = new SceneObjectModel(new T());
 
                 await _proxy.CreateSceneObject(model);
 
@@ -488,7 +522,7 @@ namespace WaveDev.ModelR.ViewModels
             return null;
         }
 
-        private LinearTransformation GetObjectsLinearTransformation(ObjectModel model)
+        private LinearTransformation GetObjectsLinearTransformation(SceneObjectModel model)
         {
             // TODO: [RS] Exception Handling!
 
@@ -508,6 +542,17 @@ namespace WaveDev.ModelR.ViewModels
             }
 
             return transformation;
+        }
+
+        private Task ExecuteScript()
+        {
+            var script = Script;
+
+
+
+
+
+            return null;
         }
 
         #endregion

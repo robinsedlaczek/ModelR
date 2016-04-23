@@ -8,7 +8,7 @@ using SharpGL.SceneGraph.Transformations;
 
 namespace WaveDev.ModelR.ViewModels
 {
-    public class ObjectModel : ViewModelBase
+    public class SceneObjectModel : ViewModelBase
     {
         #region Private Fields
 
@@ -19,7 +19,7 @@ namespace WaveDev.ModelR.ViewModels
 
         #region Construction
 
-        public ObjectModel(SceneElement sceneElement, Guid? id = null)
+        public SceneObjectModel(SceneElement sceneElement, Guid? id = null)
         {
             if (sceneElement == null)
                 throw new ArgumentNullException("sceneElement");

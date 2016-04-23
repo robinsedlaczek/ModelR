@@ -174,7 +174,7 @@ namespace WaveDev.ModelR.Communication
             }
         }
 
-        public async Task CreateSceneObject(ObjectModel sceneObject)
+        public async Task CreateSceneObject(SceneObjectModel sceneObject)
         {
             var type = SceneObjectType.Light;
 
@@ -189,7 +189,10 @@ namespace WaveDev.ModelR.Communication
             else if (sceneObject.SceneElement is Sphere)
                 type = SceneObjectType.Sphere;
 
-            var infoModel = new SceneObjectInfoModel(sceneObject.Id, _sceneId) { SceneObjectType = type };
+            var infoModel = new SceneObjectInfoModel(sceneObject.Id, _sceneId)
+            {
+                SceneObjectType = type
+            };
 
             try
             {
@@ -201,7 +204,7 @@ namespace WaveDev.ModelR.Communication
             }
         }
 
-        public async Task TransformSceneObject(ObjectModel sceneObject)
+        public async Task TransformSceneObject(SceneObjectModel sceneObject)
         {
             var infoModel = new SceneObjectInfoModel(sceneObject.Id, _sceneId);
 

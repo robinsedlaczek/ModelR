@@ -11,7 +11,9 @@
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
     xmlns:mvvm="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"   
     xmlns:local="clr-namespace:WaveDev.ModelR.ViewModels"
-    Title="MainWindow" Height="400" Width="800" WindowStartupLocation="CenterScreen"
+    Title="MainWindow" 
+    Width="1100"  Height="900"
+    WindowStartupLocation="CenterScreen"
     Icon="/WaveDev.ModelR;component/Images/Application.ico"
     Loaded="OnWindowLoaded"
     Unloaded="OnWindowUnloaded"
@@ -20,12 +22,12 @@
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <mvvm:EventToCommand Command="{Binding InitializeCommunicationCommand}"/>
+            <!--<mvvm:EventToCommand Command="{Binding InitializeCommunicationCommand}"/>-->
         </i:EventTrigger>
     </i:Interaction.Triggers>
     
     <Grid x:Name="LayoutRoot">
-        <ad:DockingManager x:Name="DockManager" Grid.Column="0">
+        <ad:DockingManager x:Name="DockManager" >
             <adl:LayoutRoot>
                 <adl:LayoutPanel Orientation="Horizontal">
                     
@@ -53,21 +55,36 @@
                             </ListView>
                         </adl:LayoutAnchorable>
                     </adl:LayoutAnchorablePane>
-                    
-                    <adl:LayoutDocumentPane>
-                        <adl:LayoutAnchorable Title="Render View">
-                            <WPF:OpenGLControl x:Name="OpenGLControl" Grid.Column="2" 
-                                   OpenGLDraw="OnOpenGlControlDraw" 
-                                   OpenGLInitialized="OnOpenGlControlInitialized" 
-                                   MouseRightButtonDown="OnOpenGlControlMouseRightButtonDown" 
-                                   MouseLeftButtonDown="OnOpenGLControlMouseLeftButtonDown"
-                                   MouseLeftButtonUp="OnOpenGLControlMouseLeftButtonUp"
-                                   MouseMove="OnOpenGLControlMouseMove"
-                                   KeyDown="OnOpenGLControlKeyDown"
-                                   KeyUp="OnOpenGLControlKeyUp"
-                                   Focusable="True"/>
-                        </adl:LayoutAnchorable>
-                    </adl:LayoutDocumentPane>
+
+                    <adl:LayoutPanel Orientation="Vertical">
+                        <adl:LayoutDocumentPane>
+                            <adl:LayoutAnchorable Title="Render View">
+                                <WPF:OpenGLControl x:Name="OpenGLControl" 
+                                       OpenGLDraw="OnOpenGlControlDraw" 
+                                       OpenGLInitialized="OnOpenGlControlInitialized" 
+                                       MouseRightButtonDown="OnOpenGlControlMouseRightButtonDown" 
+                                       MouseLeftButtonDown="OnOpenGLControlMouseLeftButtonDown"
+                                       MouseLeftButtonUp="OnOpenGLControlMouseLeftButtonUp"
+                                       MouseMove="OnOpenGLControlMouseMove"
+                                       KeyDown="OnOpenGLControlKeyDown"
+                                       KeyUp="OnOpenGLControlKeyUp"
+                                       Focusable="True"/>
+                            </adl:LayoutAnchorable>
+                        </adl:LayoutDocumentPane>
+
+                        <adl:LayoutAnchorablePane DockWidth="200" DockHeight="240">
+                            <adl:LayoutAnchorable Title="Script" >
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Button Grid.Row="0" Content="Go" Command="{Binding ExecuteScriptCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="32" Height="32"/>
+                                    <TextBox Grid.Row="1" Text="{Binding Script, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                                </Grid>
+                            </adl:LayoutAnchorable>
+                        </adl:LayoutAnchorablePane>
+                    </adl:LayoutPanel>
                     
                 </adl:LayoutPanel>
             </adl:LayoutRoot>
