@@ -15,6 +15,9 @@ using System.Linq;
 using GalaSoft.MvvmLight.Threading;
 using System.Globalization;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
+using System.Collections.Generic;
 
 namespace WaveDev.ModelR.ViewModels
 {
@@ -23,6 +26,7 @@ namespace WaveDev.ModelR.ViewModels
         #region Private Fields
 
         private ObservableCollection<SceneObjectModel> _objects;
+        private ObservableCollection<UserModel> _users;
         private RelayCommand _createTeapotCommand;
         private RelayCommand _createCubeCommand;
         private RelayCommand _createSphereCommand;
@@ -35,7 +39,6 @@ namespace WaveDev.ModelR.ViewModels
         private SceneObjectModel _selectedObject;
         private ModelRHubClientProxy _proxy;
         private UserModel _selectedUser;
-        private ObservableCollection<UserModel> _users;
         private string _script;
 
         #endregion
@@ -51,6 +54,7 @@ namespace WaveDev.ModelR.ViewModels
             };
 
             SceneObjectModels = new ObservableCollection<SceneObjectModel>();
+            Errors = new ObservableCollection<MessageViewModel>();
 
             // [RS] Set translation as initial object transformation tool.
             SwitchToTranslationCommand.Execute(null);
@@ -141,6 +145,11 @@ namespace WaveDev.ModelR.ViewModels
             {
                 Set<string>(ref _script, value);
             }
+        }
+
+        public IList<MessageViewModel> Errors
+        {
+            get;
         }
 
         #region Commands 
@@ -498,7 +507,8 @@ namespace WaveDev.ModelR.ViewModels
                 OnSceneObjectCreated(objectInfoModel);
         }
 
-        private async Task<SceneObjectModel> CreateObjectModel<T>() where T : SceneElement, new()
+        private async Task<SceneObjectModel> CreateObjectModel<T>() 
+            where T : SceneElement, new()
         {
             try
             {
@@ -544,15 +554,41 @@ namespace WaveDev.ModelR.ViewModels
             return transformation;
         }
 
-        private Task ExecuteScript()
+        private async Task ExecuteScript()
         {
-            var script = Script;
+            try
+            {
+                var script = Script;
 
+                var scriptOptions = ScriptOptions.Default
+                    .WithReferences(typeof(SceneElement).Assembly)
+                    .WithImports("SharpGL.SceneGraph.Core")
+                    .WithImports("SharpGL.SceneGraph.Quadrics");
 
+                var state = await CSharpScript.RunAsync(script, scriptOptions);
 
+                foreach (var variable in state.Variables)
+                {
+                    var sceneElement = variable.Value as SceneElement;
 
+                    if (sceneElement== null)
+                        continue;
 
-            return null;
+                    var model = new SceneObjectModel(sceneElement);
+                    _objects.Add(model);
+
+                    SelectedObject = model;
+
+                    // await _proxy.CreateSceneObject(model);
+                }
+
+            }
+            catch (Exception exception)
+        	{
+                var message = new MessageViewModel(exception.Message);
+
+                Errors.Add(message);                
+            }
         }
 
         #endregion

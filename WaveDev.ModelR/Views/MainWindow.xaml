@@ -31,7 +31,7 @@
             <adl:LayoutRoot>
                 <adl:LayoutPanel Orientation="Horizontal">
                     
-                    <adl:LayoutAnchorablePane DockWidth="250">
+                    <adl:LayoutAnchorablePane x:Name="ObjectBrowserPane" DockWidth="250">
                         <adl:LayoutAnchorable Title="Scene Graph">
                             <ListView x:Name="ObjectsListView" ItemsSource="{Binding SceneObjectModels}" SelectedItem="{Binding SelectedObject, Mode=TwoWay}" ItemTemplate="{DynamicResource ObjectListViewItemTemplate}" Background="SlateGray" KeyDown="OnOpenGLControlKeyDown" KeyUp="OnOpenGLControlKeyUp" >
                                 <ListView.Resources>
@@ -57,7 +57,7 @@
                     </adl:LayoutAnchorablePane>
 
                     <adl:LayoutPanel Orientation="Vertical">
-                        <adl:LayoutDocumentPane>
+                        <adl:LayoutDocumentPane x:Name="RenderPane">
                             <adl:LayoutAnchorable Title="Render View">
                                 <WPF:OpenGLControl x:Name="OpenGLControl" 
                                        OpenGLDraw="OnOpenGlControlDraw" 
@@ -72,20 +72,46 @@
                             </adl:LayoutAnchorable>
                         </adl:LayoutDocumentPane>
 
-                        <adl:LayoutAnchorablePane DockWidth="200" DockHeight="240">
+                        <adl:LayoutAnchorablePane x:Name="ScriptPane" DockWidth="200" DockHeight="240">
                             <adl:LayoutAnchorable Title="Script" >
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
-                                    <Button Grid.Row="0" Content="Go" Command="{Binding ExecuteScriptCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="32" Height="32"/>
+                                    <Button Grid.Row="0" Content="Go" Command="{Binding ExecuteScriptCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="25" Height="25" Margin="0,3"/>
                                     <TextBox Grid.Row="1" Text="{Binding Script, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                                 </Grid>
                             </adl:LayoutAnchorable>
                         </adl:LayoutAnchorablePane>
+                        
+                        <adl:LayoutAnchorablePane x:Name="ErrorPane" DockWidth="200" DockHeight="200">
+                            <adl:LayoutAnchorable Title="ErrorList" >
+                                <Grid>
+                                    <ListView x:Name="ErrorListView" ItemsSource="{Binding Errors}" ItemTemplate="{DynamicResource ErrorListViewItemTemplate}" Background="LightGray" >
+                                        <ListView.Resources>
+                                            <DataTemplate x:Key="ErrorListViewItemTemplate">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Border BorderThickness="1" Grid.Column="0">
+                                                        <Image Width="16" Height="16" Margin="2" VerticalAlignment="Stretch" Source="/WaveDev.ModelR;component/Images/Error.png"/>
+                                                    </Border>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Id}" Foreground="Black" Padding="10,2,10,2" FontSize="12" VerticalAlignment="Center" />
+                                                    <TextBlock Grid.Column="2" Text="{Binding Message}" Foreground="Black" Padding="10,2,10,2" FontSize="12" VerticalAlignment="Center" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListView.Resources>
+                                    </ListView>
+                                </Grid>
+                            </adl:LayoutAnchorable>
+                        </adl:LayoutAnchorablePane>
                     </adl:LayoutPanel>
-                    
+                   
                 </adl:LayoutPanel>
             </adl:LayoutRoot>
         </ad:DockingManager>
