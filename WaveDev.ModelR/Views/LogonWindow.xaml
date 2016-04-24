@@ -5,8 +5,8 @@
         xmlns:mvvm="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
         xmlns:converter="clr-namespace:Xceed.Wpf.AvalonDock.Converters;assembly=Xceed.Wpf.AvalonDock"
         Title="ModelR - Logon" 
-        MinHeight="370" MinWidth="390"
-        Height="370" Width="390"
+        MinHeight="380" MinWidth="500"
+        Height="380" Width="500"
         WindowStartupLocation="CenterScreen"
         Loaded="OnWindowLoaded"
         DataContext="{Binding Logon, Source={StaticResource Locator}}" 
@@ -14,17 +14,26 @@
 
     <Grid Background="SlateGray">
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="0">
-            <TextBlock Text="ModelR" FontSize="40" Foreground="White" VerticalAlignment="Center" Padding="25,0,0,0"/>
-            <TextBlock Text="v0.1.0" FontSize="20" Foreground="White" VerticalAlignment="Center" Padding="10,16,0,0"/>
-        </StackPanel>
+        <Grid Grid.Row="0" Margin="0,10" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1" VerticalAlignment="Center" Background="#AAAAAA" >
+            <Image Grid.Column="0" Source="/WaveDev.ModelR;component/Images/Application.ico" VerticalAlignment="Center" Width="60" Height="60" Margin="10,0" />
+            <TextBlock Grid.Column="1" Text="ModelR" FontSize="40" Foreground="White" VerticalAlignment="Center" Padding="10,0,0,0"/>
+            <TextBlock Grid.Column="2" Text="v0.1.0" FontSize="20" Foreground="White" VerticalAlignment="Center" Padding="10,16,0,0"/>
+            <TextBlock Grid.Column="3" Text="{Binding ServerUrl}" Foreground="#88FFFF11" VerticalAlignment="Bottom" HorizontalAlignment="Right" Padding="0,0,10,10" />
+        </Grid>
+        
+        <Grid Grid.Row="1" Background="#AAAAAA" Margin="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="*"/>
@@ -53,7 +62,7 @@
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            
+
                             <TextBlock Grid.Row="0"  Text="{Binding Name}" Foreground="Black" FontSize="14" VerticalAlignment="Stretch" />
                             <TextBlock Grid.Row="1"  Text="{Binding Description}" Foreground="Black" FontSize="10" VerticalAlignment="Stretch" />
                         </Grid>
@@ -62,12 +71,9 @@
             </ComboBox>
         </Grid>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,10,15">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="0,0,10,0">
             <Button x:Name="LoginButton" Content="Login" IsDefault="True" Width="120" Height="36" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=PasswordBox}" Click="OnLoginButtonClick" HorizontalAlignment="Right" Margin="5"/>
             <Button x:Name="CancelButton" Content="Cancel" IsCancel="True" Width="120" Height="36" Command="{Binding CancelLoginCommand}" HorizontalAlignment="Right" Margin="5"/>
         </StackPanel>
-        
-        <TextBlock Grid.Row="2" Text="{Binding ServerUrl}" Foreground="#FF111155" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10,0"/>
-
     </Grid>
 </Window>
