@@ -19,6 +19,7 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System.Collections.Generic;
 using System.Reflection;
+using WaveDev.ModelR.Scripting;
 
 namespace WaveDev.ModelR.ViewModels
 {
@@ -561,7 +562,8 @@ namespace WaveDev.ModelR.ViewModels
                     .WithReferences(references)
                     .WithImports(imports);
 
-                var globals = new MyGlobals() { Model = new UserModel("test", null), Number = 1 };
+                var context = new ScriptingContext(UserModels, SceneObjectModels);
+                var globals = new ScriptingGlobals(context);
                 var state = await CSharpScript.RunAsync(script, scriptOptions, globals);
 
                 foreach (var variable in state.Variables)
@@ -585,12 +587,5 @@ namespace WaveDev.ModelR.ViewModels
 
         #endregion
 
-    }
-
-    public class MyGlobals
-    {
-        public UserModel Model { get; set; }
-
-        public int Number { get; set; }
     }
 }
