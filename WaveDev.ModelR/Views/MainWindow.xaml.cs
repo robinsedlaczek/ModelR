@@ -231,6 +231,12 @@ namespace WaveDev.ModelR.Views
             _model.Script = ScriptEditor.Text;
         }
 
+        private void ScriptEditor_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F5 && _model.ExecuteScriptCommand.CanExecute(null))
+                _model.ExecuteScriptCommand.Execute(null);
+        }
+
         #endregion
 
         #region Private Methods
@@ -249,10 +255,5 @@ namespace WaveDev.ModelR.Views
 
         #endregion
 
-        private void ScriptEditor_KeyDown(object sender, KeyEventArgs e)
-        {
-            var key = e.Key;
-
-        }
     }
 }
