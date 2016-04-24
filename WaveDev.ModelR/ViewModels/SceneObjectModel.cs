@@ -12,7 +12,6 @@ namespace WaveDev.ModelR.ViewModels
     {
         #region Private Fields
 
-        private LinearTransformation _transformation;
         private Guid _id;
 
         #endregion
@@ -46,17 +45,15 @@ namespace WaveDev.ModelR.ViewModels
         {
             get
             {
-                return _transformation;
-            }
-
-            set
-            {
                 var objectSpace = SceneElement as IHasObjectSpace;
 
-                if (objectSpace != null)
-                    objectSpace.Transformation = value;
+                if (objectSpace == null)
+                    return null;
 
-                Set(ref _transformation, value);
+                if (objectSpace.Transformation == null)
+                    objectSpace.Transformation = new LinearTransformation();
+
+                return objectSpace.Transformation;
             }
         }
 
@@ -128,5 +125,6 @@ namespace WaveDev.ModelR.ViewModels
         }
 
         #endregion
+
     }
 }

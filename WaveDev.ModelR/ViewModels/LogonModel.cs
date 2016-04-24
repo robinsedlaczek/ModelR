@@ -29,6 +29,7 @@ namespace WaveDev.ModelR.ViewModels
         {
             _serverUrl = Constants.ModelRServerUrl;
 
+            UserName = "REMOVE dirty hack in LogonModel !!";
             InitializeCommunicationCommand.Execute(null);
         }
 
@@ -85,6 +86,9 @@ namespace WaveDev.ModelR.ViewModels
 
                         if (passwordBox != null)
                             password = passwordBox.Password;
+
+                        UserName = "Robin";
+                        password = "robin";
 
                         try
                         {

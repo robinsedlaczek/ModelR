@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace WaveDev.ModelR.ViewModels
 {
@@ -63,6 +64,8 @@ namespace WaveDev.ModelR.ViewModels
         #endregion
 
         #region Public Members
+
+        #region Bindable Properties
 
         public Axies WorldAxies
         {
@@ -152,7 +155,9 @@ namespace WaveDev.ModelR.ViewModels
             get;
         }
 
-        #region Commands 
+        #endregion
+
+        #region Bindable Commands 
 
         public ICommand InitializeCommunicationCommand
         {
@@ -200,7 +205,7 @@ namespace WaveDev.ModelR.ViewModels
                                 if (SelectedObject == null)
                                     return;
 
-                                var transformation = GetObjectsLinearTransformation(SelectedObject);
+                                var transformation = SelectedObject.Transformation;
 
                                 transformation.TranslateX += x;
                                 transformation.TranslateY += y;
@@ -241,7 +246,7 @@ namespace WaveDev.ModelR.ViewModels
                                 if (SelectedObject == null)
                                     return;
 
-                                var transformation = GetObjectsLinearTransformation(SelectedObject);
+                                var transformation = SelectedObject.Transformation;
 
                                 transformation.RotateX += 10 * x;
                                 transformation.RotateY += 10 * y;
@@ -282,7 +287,7 @@ namespace WaveDev.ModelR.ViewModels
                                 if (SelectedObject == null)
                                     return;
 
-                                var transformation = GetObjectsLinearTransformation(SelectedObject);
+                                var transformation = SelectedObject.Transformation;
 
                                 transformation.ScaleX += x;
                                 transformation.ScaleY += y;
@@ -441,7 +446,7 @@ namespace WaveDev.ModelR.ViewModels
 
             if (infoModel.Transformation != null)
             {
-                var transformation = GetObjectsLinearTransformation(model);
+                var transformation = model.Transformation;
 
                 transformation.TranslateX = infoModel.Transformation.TranslateX;
                 transformation.TranslateY = infoModel.Transformation.TranslateY;
@@ -461,8 +466,6 @@ namespace WaveDev.ModelR.ViewModels
 
         private void OnSceneObjectTransformed(SceneObjectInfoModel model)
         {
-            // TODO: [RS] Exception Handling!
-
             var objectToTransform = (from objectFound in _objects
                                      where objectFound.Id == model.Id
                                      select objectFound).FirstOrDefault();
@@ -470,7 +473,7 @@ namespace WaveDev.ModelR.ViewModels
             if (objectToTransform == null)
                 throw new InvalidOperationException(string.Format("Changed scene object ('{0}') cannot be found in the local scene.", model.Id));
 
-            var transformation = GetObjectsLinearTransformation(objectToTransform);
+            var transformation = objectToTransform.Transformation;
 
             transformation.TranslateX = model.Transformation.TranslateX;
             transformation.TranslateY = model.Transformation.TranslateY;
@@ -532,56 +535,45 @@ namespace WaveDev.ModelR.ViewModels
             return null;
         }
 
-        private LinearTransformation GetObjectsLinearTransformation(SceneObjectModel model)
-        {
-            // TODO: [RS] Exception Handling!
-
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            LinearTransformation transformation;
-
-            if (model.Transformation == null)
-            {
-                transformation = new LinearTransformation();
-                model.Transformation = transformation;
-            }
-            else
-            {
-                transformation = model.Transformation;
-            }
-
-            return transformation;
-        }
-
         private async Task ExecuteScript()
         {
             try
             {
                 var script = Script;
 
-                var scriptOptions = ScriptOptions.Default
-                    .WithReferences(typeof(SceneElement).Assembly)
-                    .WithImports("SharpGL.SceneGraph.Core")
-                    .WithImports("SharpGL.SceneGraph.Quadrics");
+                var references = new Assembly[]
+                {
+                    // [RS] To use SharpGL types.
+                    typeof(SceneElement).Assembly, 
+                    // [RS] To use types from the UI, e.g. the view models.
+                    typeof(SceneModel).Assembly
+                };
 
-                var state = await CSharpScript.RunAsync(script, scriptOptions);
+                var imports = new string[]
+                {
+                    "SharpGL.SceneGraph.Core",
+                    "SharpGL.SceneGraph.Quadrics",
+                    "SharpGL.SceneGraph.Transformations",
+                    "WaveDev.ModelR.ViewModels"
+                };
+
+                var scriptOptions = ScriptOptions.Default
+                    .WithReferences(references)
+                    .WithImports(imports);
+
+                var globals = new MyGlobals() { Model = new UserModel("test", null), Number = 1 };
+                var state = await CSharpScript.RunAsync(script, scriptOptions, globals);
 
                 foreach (var variable in state.Variables)
                 {
-                    var sceneElement = variable.Value as SceneElement;
-
-                    if (sceneElement== null)
-                        continue;
-
-                    var model = new SceneObjectModel(sceneElement);
-                    _objects.Add(model);
-
-                    SelectedObject = model;
-
-                    // await _proxy.CreateSceneObject(model);
+                    if (variable.Value is SceneObjectModel)
+                    {
+                        var model = variable.Value as SceneObjectModel;
+                        _objects.Add(model);
+                        SelectedObject = model;
+                        await _proxy.CreateSceneObject(model);
+                    }
                 }
-
             }
             catch (Exception exception)
         	{
@@ -593,5 +585,12 @@ namespace WaveDev.ModelR.ViewModels
 
         #endregion
 
+    }
+
+    public class MyGlobals
+    {
+        public UserModel Model { get; set; }
+
+        public int Number { get; set; }
     }
 }

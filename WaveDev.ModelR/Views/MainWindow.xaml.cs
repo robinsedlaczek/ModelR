@@ -28,7 +28,7 @@ namespace WaveDev.ModelR.Views
 
         #endregion
 
-        #region Constrcution
+        #region Construction
 
         public MainWindow()
         {
@@ -226,6 +226,11 @@ namespace WaveDev.ModelR.Views
                 _leftAltKeyPressed = false;
         }
 
+        private void OnScriptEditorTextChanged(object sender, EventArgs e)
+        {
+            _model.Script = ScriptEditor.Text;
+        }
+
         #endregion
 
         #region Private Methods
@@ -244,5 +249,10 @@ namespace WaveDev.ModelR.Views
 
         #endregion
 
+        private void ScriptEditor_KeyDown(object sender, KeyEventArgs e)
+        {
+            var key = e.Key;
+
+        }
     }
 }
