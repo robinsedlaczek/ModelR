@@ -188,8 +188,6 @@
     <Compile Include="ViewModels\UserModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Messages\LogonRequiredMessage.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="Views\OverlayAdorner.cs" />
     <Compile Include="Views\UserListControl.xaml.cs">
       <DependentUpon>UserListControl.xaml</DependentUpon>
