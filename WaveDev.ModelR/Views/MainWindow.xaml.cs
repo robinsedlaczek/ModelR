@@ -38,9 +38,6 @@ namespace WaveDev.ModelR.Views
             _positionDelta = new[] { 0f, 0f, 0f };
 
             _model = ViewModelLocator.Scene;
-            //_model = new SceneModel();
-            //DataContext = _model;
-            //DataContext = ViewModelLocator.Scene;
 
             MenuPopup.Loaded += (s, ee) =>
             {
@@ -232,7 +229,7 @@ namespace WaveDev.ModelR.Views
         {
             _model.Script = ScriptEditor.Text;
 
-            // await _model.ExecuteScriptOnChange();
+            await _model.ExecuteScriptOnChange();
         }
 
         private void OnScriptEditorKeyDown(object sender, KeyEventArgs e)

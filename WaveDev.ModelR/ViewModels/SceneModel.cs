@@ -421,8 +421,6 @@ namespace WaveDev.ModelR.ViewModels
 
         private void OnSceneObjectCreated(SceneObjectInfoModel infoModel)
         {
-            // TODO: [RS] Exception Handling!
-
             SceneObjectModel model = null;
 
             switch (infoModel.SceneObjectType)
