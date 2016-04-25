@@ -54,7 +54,7 @@ namespace WaveDev.ModelR.ViewModels
 
         #region Public Members
 
-        public LogonModel Logon
+        public static LogonModel Logon
         {
             get
             {
@@ -62,7 +62,7 @@ namespace WaveDev.ModelR.ViewModels
             }
         }
 
-        public SceneModel Scene
+        public static SceneModel Scene
         {
             get
             {

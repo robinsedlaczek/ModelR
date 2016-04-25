@@ -36,9 +36,11 @@ namespace WaveDev.ModelR.Views
 
             _lastPosition = new[] { 0.0, 0.0, 0.0 };
             _positionDelta = new[] { 0f, 0f, 0f };
-            _model = new SceneModel();
 
-            DataContext = _model;
+            _model = ViewModelLocator.Scene;
+            //_model = new SceneModel();
+            //DataContext = _model;
+            //DataContext = ViewModelLocator.Scene;
 
             MenuPopup.Loaded += (s, ee) =>
             {
@@ -226,12 +228,14 @@ namespace WaveDev.ModelR.Views
                 _leftAltKeyPressed = false;
         }
 
-        private void OnScriptEditorTextChanged(object sender, EventArgs e)
+        private async void OnScriptEditorTextChanged(object sender, EventArgs e)
         {
             _model.Script = ScriptEditor.Text;
+
+            // await _model.ExecuteScriptOnChange();
         }
 
-        private void ScriptEditor_KeyDown(object sender, KeyEventArgs e)
+        private void OnScriptEditorKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.F5 && _model.ExecuteScriptCommand.CanExecute(null))
                 _model.ExecuteScriptCommand.Execute(null);

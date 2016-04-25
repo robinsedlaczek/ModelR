@@ -20,6 +20,7 @@ using Microsoft.CodeAnalysis.Scripting;
 using System.Collections.Generic;
 using System.Reflection;
 using WaveDev.ModelR.Scripting;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace WaveDev.ModelR.ViewModels
 {
@@ -427,19 +428,19 @@ namespace WaveDev.ModelR.ViewModels
             switch (infoModel.SceneObjectType)
             {
                 case SceneObjectType.Teapot:
-                    model = new SceneObjectModel(new Teapot(), infoModel.Id);
+                    model = new SceneObjectModel(new Teapot() { Name = infoModel.Name }, infoModel.Id);
                     break;
                 case SceneObjectType.Cube:
-                    model = new SceneObjectModel(new Cube(), infoModel.Id);
+                    model = new SceneObjectModel(new Cube() { Name = infoModel.Name }, infoModel.Id);
                     break;
                 case SceneObjectType.Cylinder:
-                    model = new SceneObjectModel(new Cylinder(), infoModel.Id);
+                    model = new SceneObjectModel(new Cylinder() { Name = infoModel.Name }, infoModel.Id);
                     break;
                 case SceneObjectType.Disk:
-                    model = new SceneObjectModel(new Disk(), infoModel.Id);
+                    model = new SceneObjectModel(new Disk() { Name = infoModel.Name }, infoModel.Id);
                     break;
                 case SceneObjectType.Sphere:
-                    model = new SceneObjectModel(new Sphere(), infoModel.Id);
+                    model = new SceneObjectModel(new Sphere() { Name = infoModel.Name }, infoModel.Id);
                     break;
                 default:
                     break;
@@ -505,7 +506,7 @@ namespace WaveDev.ModelR.ViewModels
 
         private async Task LoadSceneObjectsAsync()
         {
-            var sceneObjects = await _proxy.GetSceneObjects();
+            var sceneObjects = await _proxy.GetSceneObjects(ViewModelLocator.Logon.SelectedScene.Id);
 
             foreach (var objectInfoModel in sceneObjects.AsParallel())
                 OnSceneObjectCreated(objectInfoModel);
@@ -581,11 +582,68 @@ namespace WaveDev.ModelR.ViewModels
         	{
                 var message = new MessageViewModel(exception.Message);
 
-                Errors.Add(message);                
+                Errors.Add(message);
+            }
+        }
+
+        public async Task ExecuteScriptOnChange()
+        {
+            try
+            {
+                var code = Script;
+
+                var references = new Assembly[]
+                {
+                    // [RS] To use SharpGL types.
+                    typeof(SceneElement).Assembly, 
+                    // [RS] To use types from the UI, e.g. the view models.
+                    typeof(SceneModel).Assembly
+                };
+
+                var imports = new string[]
+                {
+                    "SharpGL.SceneGraph.Core",
+                    "SharpGL.SceneGraph.Quadrics",
+                    "SharpGL.SceneGraph.Transformations",
+                    "WaveDev.ModelR.ViewModels"
+                };
+
+                var scriptOptions = ScriptOptions.Default
+                    .WithReferences(references)
+                    .WithImports(imports);
+
+                var context = new ScriptingContext(UserModels, SceneObjectModels);
+                var globals = new ScriptingGlobals(context);
+
+                var script = CSharpScript.Create(code, scriptOptions, typeof(ScriptingGlobals));
+                var diagnostics = script.Compile();
+
+                if (diagnostics.Count() > 0)
+                    return;
+
+                var state = await script.RunAsync(globals);
+
+                //var state = await CSharpScript.RunAsync(code, scriptOptions, globals);
+
+                foreach (var variable in state.Variables)
+                {
+                    if (variable.Value is SceneObjectModel)
+                    {
+                        var model = variable.Value as SceneObjectModel;
+                        _objects.Add(model);
+                        SelectedObject = model;
+                        await _proxy.CreateSceneObject(model);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                var message = new MessageViewModel(exception.Message);
+
+                Errors.Add(message);
             }
         }
 
         #endregion
-
     }
 }

@@ -243,11 +243,11 @@ namespace WaveDev.ModelR.Communication
             }
         }
 
-        public async Task<IEnumerable<SceneObjectInfoModel>> GetSceneObjects()
+        public async Task<IEnumerable<SceneObjectInfoModel>> GetSceneObjects(Guid sceneId)
         {
             try
             {
-                return await _proxy.Invoke<IEnumerable<SceneObjectInfoModel>>("GetSceneObjects");
+                return await _proxy.Invoke<IEnumerable<SceneObjectInfoModel>>("GetSceneObjects", sceneId);
             }
             catch (InvalidOperationException exception)
             {

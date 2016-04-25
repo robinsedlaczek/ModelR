@@ -27,11 +27,13 @@ namespace WaveDev.ModelR.Server
             {
                 s_scenes = new Dictionary<Guid, SceneInfoModel>();
 
-                var scene = new SceneInfoModel(Guid.NewGuid()) { Name = "Scene 1", Description = "The first default scene at the server." };
+                var scene = new SceneInfoModel(Guid.NewGuid()) { Name = "Scene 1 - Empty", Description = "An empty scene." };
                 s_scenes.Add(scene.Id, scene);
 
-                scene = new SceneInfoModel(Guid.NewGuid()) {Name = "Scene 2", Description = "Just another scene."};
+                scene = new SceneInfoModel(Guid.NewGuid()) { Name = "Scene 2 - Demo", Description = "A demo scene with some geometry." };
                 s_scenes.Add(scene.Id, scene);
+
+                BuildDemoScene(scene);
             }
         }
 
@@ -147,11 +149,11 @@ namespace WaveDev.ModelR.Server
         }
 
         [Authorize]
-        public IEnumerable<SceneObjectInfoModel> GetSceneObjects()
+        public IEnumerable<SceneObjectInfoModel> GetSceneObjects(Guid sceneId)
         {
             var objects = 
                 from scene in s_scenes.Values
-                where scene.UserInfoModels.Any(user => user.UserName == Context.User.Identity.Name)
+                where scene.UserInfoModels.Any(user => user.UserName == Context.User.Identity.Name) && scene.Id == sceneId
                 select scene.SceneObjectInfoModels;
 
             return objects.FirstOrDefault();
@@ -174,6 +176,27 @@ namespace WaveDev.ModelR.Server
             }
 
             return byteArray;
+        }
+
+        private static void BuildDemoScene(SceneInfoModel scene)
+        {
+            scene.SceneObjectInfoModels.Add(new SceneObjectInfoModel(Guid.NewGuid(), scene.Id)
+            {
+                Name = "Snowman - Legs",
+                SceneObjectType = Shared.SceneObjectType.Sphere,
+            });
+
+            scene.SceneObjectInfoModels.Add(new SceneObjectInfoModel(Guid.NewGuid(), scene.Id)
+            {
+                Name = "Snowman - Torso",
+                SceneObjectType = Shared.SceneObjectType.Sphere
+            });
+
+            scene.SceneObjectInfoModels.Add(new SceneObjectInfoModel(Guid.NewGuid(), scene.Id)
+            {
+                Name = "Snowman - Head",
+                SceneObjectType = Shared.SceneObjectType.Sphere
+            });
         }
 
         #endregion

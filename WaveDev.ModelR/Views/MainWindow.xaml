@@ -13,7 +13,7 @@
     xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:local="clr-namespace:WaveDev.ModelR.ViewModels"
     Title="MainWindow" 
-    Width="1300"  Height="1100"
+    Width="1200"  Height="800"
     WindowStartupLocation="CenterScreen"
     Icon="/WaveDev.ModelR;component/Images/Application.ico"
     Loaded="OnWindowLoaded"
@@ -83,7 +83,7 @@
                                     <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="LightGray">
                                         <Button Content="Run (F5)" Command="{Binding ExecuteScriptCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="25" Margin="1,5" Padding="5,0"/>
                                     </Border>
-                                    <avalon:TextEditor x:Name="ScriptEditor" Grid.Row="1" KeyDown="ScriptEditor_KeyDown" TextChanged="OnScriptEditorTextChanged" FontFamily="Consolas" SyntaxHighlighting="C#" FontSize="10pt"/>
+                                    <avalon:TextEditor x:Name="ScriptEditor" Grid.Row="1" KeyDown="OnScriptEditorKeyDown" TextChanged="OnScriptEditorTextChanged" FontFamily="Consolas" SyntaxHighlighting="C#" FontSize="10pt"/>
                                 </Grid>
                             </adl:LayoutAnchorable>
                         </adl:LayoutAnchorablePane>
