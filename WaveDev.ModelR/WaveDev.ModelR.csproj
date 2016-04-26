@@ -184,6 +184,7 @@
     <Compile Include="NotifyTaskCompletion.cs" />
     <Compile Include="Scripting\ScriptingContext.cs" />
     <Compile Include="Scripting\ScriptingGlobals.cs" />
+    <Compile Include="Scripting\ScriptingManager.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\UserModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />

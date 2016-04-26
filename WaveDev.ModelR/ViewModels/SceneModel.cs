@@ -40,7 +40,6 @@ namespace WaveDev.ModelR.ViewModels
         private RelayCommand _switchToScaleCommand;
         private RelayCommand _executeScriptCommand;
         private SceneObjectModel _selectedObject;
-        private ModelRHubClientProxy _proxy;
         private UserModel _selectedUser;
         private string _script;
 
@@ -169,13 +168,13 @@ namespace WaveDev.ModelR.ViewModels
                 {
                     try
                     {
-                        _proxy = ModelRHubClientProxy.GetInstance();
+                        var proxy = ModelRHubClientProxy.GetInstance();
 
                         //// TODO: [RS] Handlers should be unregistered somewhere!?
-                        _proxy.SceneObjectCreated += model => OnSceneObjectCreated(model);
-                        _proxy.SceneObjectTransformed += model => OnSceneObjectTransformed(model);
-                        _proxy.UserJoined += model => OnUserJoined(model);
-                        _proxy.UserLoggedOff += model => OnUserLoggedOff(model);
+                        proxy.SceneObjectCreated += model => OnSceneObjectCreated(model);
+                        proxy.SceneObjectTransformed += model => OnSceneObjectTransformed(model);
+                        proxy.UserJoined += model => OnUserJoined(model);
+                        proxy.UserLoggedOff += model => OnUserLoggedOff(model);
 
                         await LoadUsersAsync();
                         await LoadSceneObjectsAsync();
@@ -184,7 +183,7 @@ namespace WaveDev.ModelR.ViewModels
                     {
                         // [RS] If there are errors during initialisation, the application should be shut down. That's why the
                         //      ExceptionCausedApplicationShutdownMessage message will be send here.
-                        Messenger.Default.Send<ExceptionCausedApplicationShutdownMessage>(
+                        Messenger.Default.Send(
                             new ExceptionCausedApplicationShutdownMessage()
                             {
                                 Exception = exception,
@@ -215,7 +214,7 @@ namespace WaveDev.ModelR.ViewModels
 
                                 try
                                 {
-                                    await _proxy.TransformSceneObject(SelectedObject);
+                                    await ModelRHubClientProxy.GetInstance().TransformSceneObject(SelectedObject);
                                 }
                                 catch (UserNotAuthorizedException exception)
                                 {
@@ -256,7 +255,7 @@ namespace WaveDev.ModelR.ViewModels
 
                                 try
                                 {
-                                    await _proxy.TransformSceneObject(SelectedObject);
+                                    await ModelRHubClientProxy.GetInstance().TransformSceneObject(SelectedObject);
                                 }
                                 catch (UserNotAuthorizedException exception)
                                 {
@@ -297,7 +296,7 @@ namespace WaveDev.ModelR.ViewModels
 
                                 try
                                 {
-                                    await _proxy.TransformSceneObject(SelectedObject);
+                                    await ModelRHubClientProxy.GetInstance().TransformSceneObject(SelectedObject);
                                 }
                                 catch (UserNotAuthorizedException exception)
                                 {
@@ -390,7 +389,7 @@ namespace WaveDev.ModelR.ViewModels
             {
                 if (_executeScriptCommand == null)
                 {
-                    _executeScriptCommand = new RelayCommand(async parameter => await ExecuteScript(), () => true);
+                    _executeScriptCommand = new RelayCommand(async parameter => await ScriptingManager.ExecuteScript(Script), () => true);
                 }
 
                 return _executeScriptCommand;
@@ -494,7 +493,7 @@ namespace WaveDev.ModelR.ViewModels
 
         private async Task LoadUsersAsync()
         {
-            var users = await _proxy.GetUsers();
+            var users = await ModelRHubClientProxy.GetInstance().GetUsers();
 
             var userModels = from user in users
                              select new UserModel(user.UserName, user.Image);
@@ -504,7 +503,7 @@ namespace WaveDev.ModelR.ViewModels
 
         private async Task LoadSceneObjectsAsync()
         {
-            var sceneObjects = await _proxy.GetSceneObjects(ViewModelLocator.Logon.SelectedScene.Id);
+            var sceneObjects = await ModelRHubClientProxy.GetInstance().GetSceneObjects(ViewModelLocator.Logon.SelectedScene.Id);
 
             foreach (var objectInfoModel in sceneObjects.AsParallel())
                 OnSceneObjectCreated(objectInfoModel);
@@ -517,7 +516,7 @@ namespace WaveDev.ModelR.ViewModels
             {
                 var model = new SceneObjectModel(new T());
 
-                await _proxy.CreateSceneObject(model);
+                await ModelRHubClientProxy.GetInstance().CreateSceneObject(model);
 
                 _objects.Add(model);
 
@@ -533,113 +532,6 @@ namespace WaveDev.ModelR.ViewModels
             }
 
             return null;
-        }
-
-        private async Task ExecuteScript()
-        {
-            try
-            {
-                var script = Script;
-
-                var references = new Assembly[]
-                {
-                    // [RS] To use SharpGL types.
-                    typeof(SceneElement).Assembly, 
-                    // [RS] To use types from the UI, e.g. the view models.
-                    typeof(SceneModel).Assembly
-                };
-
-                var imports = new string[]
-                {
-                    "SharpGL.SceneGraph.Core",
-                    "SharpGL.SceneGraph.Quadrics",
-                    "SharpGL.SceneGraph.Transformations",
-                    "WaveDev.ModelR.ViewModels"
-                };
-
-                var scriptOptions = ScriptOptions.Default
-                    .WithReferences(references)
-                    .WithImports(imports);
-
-                var context = new ScriptingContext(UserModels, SceneObjectModels);
-                var globals = new ScriptingGlobals(context);
-                var state = await CSharpScript.RunAsync(script, scriptOptions, globals);
-
-                foreach (var variable in state.Variables)
-                {
-                    if (variable.Value is SceneObjectModel)
-                    {
-                        var model = variable.Value as SceneObjectModel;
-                        _objects.Add(model);
-                        SelectedObject = model;
-                        await _proxy.CreateSceneObject(model);
-                    }
-                }
-            }
-            catch (Exception exception)
-        	{
-                var message = new MessageViewModel(exception.Message);
-
-                Errors.Add(message);
-            }
-        }
-
-        public async Task ExecuteScriptOnChange()
-        {
-            try
-            {
-                var code = Script;
-
-                var references = new Assembly[]
-                {
-                    // [RS] To use SharpGL types.
-                    typeof(SceneElement).Assembly, 
-                    // [RS] To use types from the UI, e.g. the view models.
-                    typeof(SceneModel).Assembly
-                };
-
-                var imports = new string[]
-                {
-                    "SharpGL.SceneGraph.Core",
-                    "SharpGL.SceneGraph.Quadrics",
-                    "SharpGL.SceneGraph.Transformations",
-                    "WaveDev.ModelR.ViewModels"
-                };
-
-                var scriptOptions = ScriptOptions.Default
-                    .WithReferences(references)
-                    .WithImports(imports);
-
-                var context = new ScriptingContext(UserModels, SceneObjectModels);
-                var globals = new ScriptingGlobals(context);
-
-                var script = CSharpScript.Create(code, scriptOptions, typeof(ScriptingGlobals));
-                var diagnostics = script.Compile();
-
-                if (diagnostics.Count() > 0)
-                    return;
-
-                var state = await script.RunAsync(globals);
-
-                //var state = await CSharpScript.RunAsync(code, scriptOptions, globals);
-
-                foreach (var variable in state.Variables)
-                {
-                    if (variable.Value is SceneObjectModel)
-                    {
-                        var model = variable.Value as SceneObjectModel;
-                        _objects.Add(model);
-                        SelectedObject = model;
-                        await _proxy.CreateSceneObject(model);
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                var message = new MessageViewModel(exception.Message);
-
-                Errors.Add(message);
-            }
         }
 
         #endregion

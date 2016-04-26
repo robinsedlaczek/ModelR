@@ -61,7 +61,7 @@ namespace WaveDev.ModelR.Communication
         /// <returns>Returns an instance of this proxy class.</returns>
         public static ModelRHubClientProxy GetInstance(string url = Constants.ModelRServerUrl, bool createIfNotExist = true)
         {
-            var urlChanged = s_instance!=null && String.Compare(s_instance.ServerUrl, url, StringComparison.Ordinal) != 0;
+            var urlChanged = s_instance != null && String.Compare(s_instance.ServerUrl, url, StringComparison.Ordinal) != 0;
 
             if ((s_instance == null || urlChanged) && createIfNotExist)
                 s_instance = new ModelRHubClientProxy(url);
@@ -198,7 +198,7 @@ namespace WaveDev.ModelR.Communication
             {
                 await _proxy.Invoke("CreateSceneObject", infoModel);
             }
-            catch (InvalidOperationException exception)
+            catch (InvalidOperationException)
             {
                 throw new UserNotAuthorizedException(string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized or known in the system.", LoggedInUserName), LoggedInUserName);
             }
@@ -225,7 +225,7 @@ namespace WaveDev.ModelR.Communication
             {
                 await _proxy.Invoke("TransformSceneObject", infoModel);
             }
-            catch (InvalidOperationException exception)
+            catch (InvalidOperationException)
             {
                 throw new UserNotAuthorizedException(string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized or known in the system.", LoggedInUserName), LoggedInUserName);
             }
@@ -237,7 +237,7 @@ namespace WaveDev.ModelR.Communication
             {
                 return await _proxy.Invoke<IEnumerable<UserInfoModel>>("GetUsers");
             }
-            catch (InvalidOperationException exception)
+            catch (InvalidOperationException)
             {
                 throw new UserNotAuthorizedException(string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized or known in the system.", LoggedInUserName), LoggedInUserName);
             }
@@ -249,7 +249,7 @@ namespace WaveDev.ModelR.Communication
             {
                 return await _proxy.Invoke<IEnumerable<SceneObjectInfoModel>>("GetSceneObjects", sceneId);
             }
-            catch (InvalidOperationException exception)
+            catch (InvalidOperationException)
             {
                 throw new UserNotAuthorizedException(string.Format(CultureInfo.CurrentUICulture, "The user '{0}' is not authorized or known in the system.", LoggedInUserName), LoggedInUserName);
             }
