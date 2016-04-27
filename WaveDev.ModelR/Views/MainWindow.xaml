@@ -72,7 +72,7 @@
                             </adl:LayoutAnchorable>
                         </adl:LayoutDocumentPane>
 
-                        <!--<adl:LayoutAnchorablePane x:Name="ScriptPane" DockWidth="200" DockHeight="240" >
+                        <adl:LayoutAnchorablePane x:Name="ScriptPane" DockWidth="200" DockHeight="240" >
                             <adl:LayoutAnchorable Title="Scripting" >
                                 <Grid>
                                     <Grid.RowDefinitions>
@@ -112,7 +112,7 @@
                                     </ListView>
                                 </Grid>
                             </adl:LayoutAnchorable>
-                        </adl:LayoutAnchorablePane>-->
+                        </adl:LayoutAnchorablePane>
                     </adl:LayoutPanel>
                    
                 </adl:LayoutPanel>

@@ -10,6 +10,7 @@ using GalaSoft.MvvmLight.Messaging;
 using WaveDev.ModelR.Messages;
 using WaveDev.ModelR.Views;
 using Xceed.Wpf.AvalonDock;
+using WaveDev.ModelR.Scripting;
 
 namespace WaveDev.ModelR.Views
 {
@@ -228,9 +229,9 @@ namespace WaveDev.ModelR.Views
 
         private async void OnScriptEditorTextChanged(object sender, EventArgs e)
         {
-            //_model.Script = ScriptEditor.Text;
+            _model.Script = ScriptEditor.Text;
 
-            //await _model.ExecuteScriptOnChange();
+            await ScriptingManager.ExecuteScript(ScriptEditor.Text, true);
         }
 
         private void OnScriptEditorKeyDown(object sender, KeyEventArgs e)

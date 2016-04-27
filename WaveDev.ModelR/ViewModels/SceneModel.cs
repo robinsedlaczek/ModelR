@@ -389,7 +389,7 @@ namespace WaveDev.ModelR.ViewModels
             {
                 if (_executeScriptCommand == null)
                 {
-                    _executeScriptCommand = new RelayCommand(async parameter => await ScriptingManager.ExecuteScript(Script), () => true);
+                    _executeScriptCommand = new RelayCommand(async parameter => await ScriptingManager.ExecuteScript(Script, false), () => true);
                 }
 
                 return _executeScriptCommand;
