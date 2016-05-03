@@ -231,7 +231,7 @@ namespace WaveDev.ModelR.Views
         {
             _model.Script = ScriptEditor.Text;
 
-            await ScriptingManager.ExecuteScript(ScriptEditor.Text, true);
+            await ScriptingManager.ExecuteScript(ScriptEditor.Text, false);
         }
 
         private void OnScriptEditorKeyDown(object sender, KeyEventArgs e)

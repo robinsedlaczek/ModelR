@@ -1,9 +1,11 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Scripting;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.Scripting.Hosting;
 using SharpGL.SceneGraph.Core;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -44,9 +46,7 @@ namespace WaveDev.ModelR.Scripting
                 var context = new ScriptingContext(sceneModel.UserModels, sceneModel.SceneObjectModels);
                 var globals = new ScriptingGlobals(context);
 
-                var assemblyLoader = new InteractiveAssemblyLoader();
-
-                var script = CSharpScript.Create(scriptCode, scriptOptions, typeof(ScriptingGlobals), assemblyLoader);
+                var script = CSharpScript.Create(scriptCode, scriptOptions, typeof(ScriptingGlobals));
                 var diagnostics = script.Compile();
 
                 if (!forceExecution && diagnostics.Count() > 0)
