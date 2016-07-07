@@ -35,6 +35,7 @@ namespace WaveDev.ModelR.Scripting
                 {
                     "SharpGL.SceneGraph.Core",
                     "SharpGL.SceneGraph.Quadrics",
+                    "SharpGL.SceneGraph.Primitives",
                     "SharpGL.SceneGraph.Transformations",
                     "WaveDev.ModelR.ViewModels"
                 };
@@ -47,6 +48,7 @@ namespace WaveDev.ModelR.Scripting
                 var globals = new ScriptingGlobals(context);
 
                 var script = CSharpScript.Create(scriptCode, scriptOptions, typeof(ScriptingGlobals));
+
                 var diagnostics = script.Compile();
 
                 if (!forceExecution && diagnostics.Count() > 0)
