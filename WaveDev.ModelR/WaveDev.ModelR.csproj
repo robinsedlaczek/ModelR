@@ -61,6 +61,10 @@
     <ApplicationIcon>Images\Application.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Apex, Version=1.2.1.0, Culture=neutral, PublicKeyToken=98d06957926c086d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharpGL\Apex.dll</HintPath>
+    </Reference>
     <Reference Include="GalaSoft.MvvmLight, Version=5.2.0.37222, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
       <HintPath>packages\MvvmLightLibs.5.2.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
       <Private>True</Private>
@@ -102,6 +106,21 @@
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpGL, Version=2.3.0.1, Culture=neutral, PublicKeyToken=27fc851303210b27, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharpGL\SharpGL.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpGL.SceneGraph, Version=2.3.0.1, Culture=neutral, PublicKeyToken=27fc851303210b27, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharpGL\SharpGL.SceneGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpGL.Serialization">
+      <HintPath>..\SharpGL\SharpGL.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpGL.WPF, Version=2.3.0.1, Culture=neutral, PublicKeyToken=27fc851303210b27, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharpGL\SharpGL.WPF.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -252,18 +271,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SharpGL\source\SharpGL\Core\SharpGL.SceneGraph\SharpGL.SceneGraph.csproj">
-      <Project>{47bcaa39-edad-4404-b6bd-4742b0abb523}</Project>
-      <Name>SharpGL.SceneGraph</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SharpGL\source\SharpGL\Core\SharpGL.WPF\SharpGL.WPF.csproj">
-      <Project>{53e67055-13d2-4467-bb57-79589afac2cd}</Project>
-      <Name>SharpGL.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SharpGL\source\SharpGL\Core\SharpGL\SharpGL.csproj">
-      <Project>{5ef45533-e2c7-46f2-b4a3-b8f36cd406e0}</Project>
-      <Name>SharpGL</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Neumann.TouchControls\Neumann.TouchControls.csproj">
       <Project>{e66a9455-7aa9-4271-8cd5-06c71d8dd5c8}</Project>
       <Name>Neumann.TouchControls</Name>
